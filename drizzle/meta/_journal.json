@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1698740719854,
+      "tag": "0000_secret_talkback",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1698741933087,
+      "tag": "0001_polite_firelord",
+      "breakpoints": true
+    }
+  ]
+}
