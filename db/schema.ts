@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { pgTable, primaryKey, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: uuid("id").notNull().primaryKey(),
@@ -70,12 +70,20 @@ export const tagsRelations = relations(tags, ({ many }) => ({
   postTagRelations: many(postTagRelation),
 }));
 
-export const postTagRelation = pgTable("post_tag_relations", {
-  postId: uuid("post_id").notNull().primaryKey(),
-  tagId: uuid("tag_id").notNull().primaryKey(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
+export const postTagRelation = pgTable(
+  "post_tag_relations",
+  {
+    postId: uuid("post_id").notNull(),
+    tagId: uuid("tag_id").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => {
+    return {
+      pk: primaryKey(table.postId, table.tagId),
+    };
+  }
+);
 
 export const postTagRelationRelations = relations(postTagRelation, ({ one }) => ({
   post: one(posts, {
