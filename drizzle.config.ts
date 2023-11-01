@@ -1,12 +1,12 @@
+import dotenv from "dotenv";
 import type { Config } from "drizzle-kit";
+dotenv.config();
 
 export default {
   schema: "./db/schema.ts",
   out: "./drizzle",
   driver: "pg",
   dbCredentials: {
-    connectionString: process.env.NEXT_PUBLIC_DATABASE_URL as string,
-    // connectionString:
-    //   "postgresql://postgres:lAYK1RGoFDzYq5mZ@db.fevzlrlkxizwlmxsqxer.supabase.co:5432/postgres",
+    connectionString: process.env.DATABASE_URL as string,
   },
 } satisfies Config;
