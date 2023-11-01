@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "a2d2fc89-d706-4b37-8f76-e65c8574c5b2",
+  "id": "86ccba57-1873-4bc2-ac97-53f58d9b04a3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "comments": {
@@ -143,13 +143,13 @@
         "post_id": {
           "name": "post_id",
           "type": "uuid",
-          "primaryKey": true,
+          "primaryKey": false,
           "notNull": true
         },
         "tag_id": {
           "name": "tag_id",
           "type": "uuid",
-          "primaryKey": true,
+          "primaryKey": false,
           "notNull": true
         },
         "created_at": {
@@ -169,7 +169,15 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "post_tag_relations_post_id_tag_id": {
+          "name": "post_tag_relations_post_id_tag_id",
+          "columns": [
+            "post_id",
+            "tag_id"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "posts": {

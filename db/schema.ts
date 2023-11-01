@@ -25,7 +25,9 @@ export const usersRelations = relations(users, ({ one, many }) => ({
 
 export const posts = pgTable("posts", {
   id: uuid("id").notNull().primaryKey(),
-  userId: uuid("user_id").notNull(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id),
   title: text("title").notNull(),
   content: text("content").notNull(),
   musicFileUrl: text("music_file_url").notNull(),
@@ -44,7 +46,10 @@ export const postsRelations = relations(posts, ({ one, many }) => ({
 }));
 
 export const profiles = pgTable("profiles", {
-  id: uuid("id").notNull().primaryKey(),
+  id: uuid("id")
+    .notNull()
+    .primaryKey()
+    .references(() => users.id),
   displayName: text("display_name").notNull(),
   overview: text("overview").notNull(),
   avatarUrl: text("avatar_url").notNull(),
@@ -73,8 +78,12 @@ export const tagsRelations = relations(tags, ({ many }) => ({
 export const postTagRelation = pgTable(
   "post_tag_relations",
   {
-    postId: uuid("post_id").notNull(),
-    tagId: uuid("tag_id").notNull(),
+    postId: uuid("post_id")
+      .notNull()
+      .references(() => posts.id),
+    tagId: uuid("tag_id")
+      .notNull()
+      .references(() => tags.id),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
@@ -98,8 +107,12 @@ export const postTagRelationRelations = relations(postTagRelation, ({ one }) => 
 
 export const comments = pgTable("comments", {
   id: uuid("id").notNull().primaryKey(),
-  userId: uuid("user_id").notNull(),
-  postId: uuid("post_id").notNull(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id),
+  postId: uuid("post_id")
+    .notNull()
+    .references(() => posts.id),
   comment: text("comment").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -118,8 +131,12 @@ export const commentsRelations = relations(comments, ({ one }) => ({
 
 export const follows = pgTable("follows", {
   id: uuid("id").notNull().primaryKey(),
-  userId: uuid("user_id").notNull(),
-  followingUserId: uuid("following_user_id").notNull(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id),
+  followingUserId: uuid("following_user_id")
+    .notNull()
+    .references(() => users.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -137,8 +154,12 @@ export const followsRelations = relations(follows, ({ one }) => ({
 
 export const likes = pgTable("likes", {
   id: uuid("id").notNull().primaryKey(),
-  postId: uuid("post_id").notNull(),
-  userId: uuid("user_id").notNull(),
+  postId: uuid("post_id")
+    .notNull()
+    .references(() => posts.id),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

@@ -24,10 +24,11 @@ CREATE TABLE IF NOT EXISTS "likes" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "post_tag_relations" (
-	"post_id" uuid PRIMARY KEY NOT NULL,
-	"tag_id" uuid PRIMARY KEY NOT NULL,
+	"post_id" uuid NOT NULL,
+	"tag_id" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT post_tag_relations_post_id_tag_id PRIMARY KEY("post_id","tag_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "posts" (
