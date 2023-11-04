@@ -14,10 +14,17 @@ export async function POST(request: Request) {
     cookies: () => cookieStore,
   });
 
-  await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
+
+  if (error) {
+    if (error instanceof Error) {
+      console.log(error.message);
+      return NextResponse.error();
+    }
+  }
 
   return NextResponse.redirect(requestUrl.origin, {
     status: 301,
