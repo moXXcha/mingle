@@ -5,7 +5,6 @@ import { NextResponse } from "next/server";
 import type { Database } from "../supabase";
 
 export async function POST(request: Request) {
-  const requestUrl = new URL(request.url);
   const formData = await request.formData();
   const email = String(formData.get("email"));
   const password = String(formData.get("password"));
@@ -14,19 +13,19 @@ export async function POST(request: Request) {
     cookies: () => cookieStore,
   });
 
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { data: _authData, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error) {
     if (error instanceof Error) {
-      console.log(error.message);
-      return NextResponse.error();
+      console.error("error: ", error.message);
+      return NextResponse.json(error.message, { status: 401 });
     }
   }
 
-  return NextResponse.redirect(requestUrl.origin, {
-    status: 301,
+  return NextResponse.json({
+    status: 200,
   });
 }
