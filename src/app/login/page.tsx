@@ -6,7 +6,6 @@ export default function Login() {
       <label htmlFor="password">Password</label>
       <input type="password" name="password" />
       <button>Sign In</button>
-      <button formAction="/auth/sign-up">Sign Up</button>
     </form>
   );
 }
