@@ -1,11 +1,13 @@
+import loginAction from "./actions";
+
 export default function Login() {
   return (
-    <form action="/auth/login" method="post">
-      <label htmlFor="email">Email</label>
+    <form action={loginAction}>
+      <label id="email">Email</label>
       <input name="email" required />
-      <label htmlFor="password">Password</label>
+      <label id="password">Password</label>
       <input type="password" name="password" required />
-      <button>Sign In</button>
+      <button type="submit">Sign In</button>
     </form>
   );
 }
