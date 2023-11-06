@@ -1,31 +1,22 @@
 import { Database } from "@/app/auth/supabase";
-import { AuthSchema } from "@/types/types";
 import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
 // ? 関数名
-export async function login(rawEmail: string, rawPassword: string) {
-  console.log("login");
+export async function login(email: string, password: string) {
   try {
-    // 引数のvalidation
-    const { email: validatedEmail, password: validatedPassword } = AuthSchema.parse({
-      email: rawEmail,
-      password: rawPassword,
-    });
-
     // Supabaseのclientを作成
     const cookieStore = cookies();
     const supabase = createServerActionClient<Database>({ cookies: () => cookieStore });
 
     // login
     const { data: _authData, error } = await supabase.auth.signInWithPassword({
-      email: validatedEmail,
-      password: validatedPassword,
+      email: email,
+      password: password,
     });
 
     if (error) {
       if (error instanceof Error) {
-        console.error("error: ", error.message);
         throw new Error(error.message);
       }
     }
@@ -39,10 +30,3 @@ export async function login(rawEmail: string, rawPassword: string) {
     }
   }
 }
-
-/*
-
-formDataのvalidation これactionsでは？
-DTO
-
-*/
