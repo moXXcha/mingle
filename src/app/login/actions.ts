@@ -6,14 +6,14 @@ import { redirect } from "next/navigation";
 
 export default async function loginAction(formData: FormData) {
   try {
+    // validation
     const { email, password } = AuthSchema.parse({
       email: formData.get("email"),
       password: formData.get("password"),
     });
-    console.log(email, password);
 
-    const result = await login(email, password);
-    console.log(result);
+    // login
+    await login(email, password);
 
     console.log("login success");
   } catch (error) {
