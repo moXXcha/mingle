@@ -1,6 +1,7 @@
 import { Database } from "@/types/supabase";
 import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
+import "server-only";
 
 // ? 関数名
 export async function login(email: string, password: string) {
