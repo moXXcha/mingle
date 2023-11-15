@@ -1,7 +1,7 @@
-"use server";
+'use server';
 
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
 export default async function Home() {
   const cookieStore = cookies();
@@ -13,5 +13,11 @@ export default async function Home() {
 
   console.log(data);
 
-  return <div></div>;
+  return (
+    <div>
+      <form action="api/auth/logout" method="post">
+        <button type="submit">Logout</button>
+      </form>
+    </div>
+  );
 }
