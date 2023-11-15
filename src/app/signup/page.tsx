@@ -1,13 +1,15 @@
-"use server";
+'use server';
 
-export default async function Signup() {
+export default function Signup() {
   return (
     <form action="/auth/sign-up" method="post">
-      <label htmlFor="email">Email</label>
-      <input name="email" required />
-      <label htmlFor="password">Password</label>
-      <input type="password" name="password" required />
-      <button>Sign Up</button>
+      <label htmlFor="email">
+        <input name="email" required />
+      </label>
+      <label htmlFor="password">
+        <input type="password" name="password" required />
+      </label>
+      <button type="submit">Sign Up</button>
     </form>
   );
 }
