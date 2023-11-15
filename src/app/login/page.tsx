@@ -1,6 +1,6 @@
 'use server';
 
-export default function Login() {
+export default async function Login() {
   return (
     <form method="post" action="api/auth/login">
       <label htmlFor="email">

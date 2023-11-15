@@ -1,6 +1,6 @@
 'use server';
 
-export default function Signup() {
+export default async function Signup() {
   return (
     <form action="/auth/sign-up" method="post">
       <label htmlFor="email">
