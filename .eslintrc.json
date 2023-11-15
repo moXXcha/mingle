@@ -1,3 +1,20 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "airbnb",
+    "plugin:@typescript-eslint/recommended",
+    "airbnb-typescript",
+    "next/core-web-vitals",
+    "prettier"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    /*
+    Detected default export in 'file path'. 
+    Export a named export for each HTTP method instead.
+    上記の警告が出るので、一旦offにする
+    */
+    "import/prefer-default-export": "off"
+  }
 }
