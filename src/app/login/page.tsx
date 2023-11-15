@@ -1,3 +1,5 @@
+'use server';
+
 export default function Login() {
   return (
     <form method="post" action="api/auth/login">
