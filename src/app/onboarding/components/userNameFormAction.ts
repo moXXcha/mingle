@@ -5,10 +5,11 @@ import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import 'server-only';
 
-export async function userNameFormAction(formData: FormData) {
-  console.log('userNameFormAction');
+export async function userNameFormAction(
+  prevState: { message: string },
+  formData: FormData,
+) {
   const userName = formData.get('userName') as string;
-  console.log(userName);
 
   const cookieStore = cookies();
   const supabase = createServerActionClient({ cookies: () => cookieStore });
@@ -24,17 +25,16 @@ export async function userNameFormAction(formData: FormData) {
       throw new Error('data is null');
     }
 
-    console.log(data.session?.user.id);
-    console.log(data.session?.user.email);
-
     await createUser(
       data.session?.user.id as string,
       userName,
       data.session?.user.email as string,
     );
+
+    return { message: 'ユーザー名を登録しました' };
   } catch (error) {
-    if (error instanceof Error) {
-      console.log(error.message);
-    }
+    const errorMessage =
+      error instanceof Error ? error.message : '不明なエラーが発生しました';
+    return { message: errorMessage };
   }
 }

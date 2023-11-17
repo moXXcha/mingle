@@ -1,25 +1,32 @@
-'use server';
+'use client';
 
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { useFormState } from 'react-dom';
 import { userNameFormAction } from './userNameFormAction';
 
-export default async function UserNameForm() {
-  const cookieStore = cookies();
+const initialState = {
+  message: '',
+};
 
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
-  const { data, error } = await supabase.auth.getSession();
-
-  if (error) console.log(error);
+export default function UserNameForm() {
+  const [state, formAction] = useFormState(userNameFormAction, initialState);
 
   return (
     <div>
       ユーザーネームを決めてください
-      <form action={userNameFormAction}>
-        <input type="text" name="userName" required />
+      <form action={formAction}>
+        <label htmlFor="userName">
+          user name
+          <input
+            className="border"
+            type="text"
+            id="userName"
+            name="userName"
+            required
+          />
+        </label>
         <button type="submit">submit</button>
+        <p>{state?.message}</p>
       </form>
-      <div>{data.session?.user.email}</div>
     </div>
   );
 }
