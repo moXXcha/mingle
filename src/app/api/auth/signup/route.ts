@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
       throw new Error(error.message);
     }
 
+    // TODO オンボーディングにリダイレクトする
     return NextResponse.redirect(requestUrl.origin, {
       status: 301,
     });
