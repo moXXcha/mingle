@@ -1,7 +1,8 @@
 'use server';
 
-import UserNameForm from './components/UserNameForm';
+import ProfileForm from './components/ProfileForm';
 
 export default async function Home() {
-  return <UserNameForm />;
+  // return <UserNameForm />;
+  return <ProfileForm />;
 }
