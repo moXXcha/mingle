@@ -21,11 +21,6 @@ export async function profileFormAction(
   if (getSessionError) {
     throw new Error(getSessionError.message);
   }
-
-  console.log('displayName: ', displayName);
-  console.log('overview: ', overview);
-  console.log('avatar: ', avatar);
-
   // TODO validation
 
   try {
@@ -46,6 +41,12 @@ export async function profileFormAction(
     }
 
     return { message: 'プロフィールを作成しました' };
+    /*
+    ? プロフィールを作成した時点で、userName, Profileは作成されている
+    ここで、/にredirectしても良いのでは？
+    clientにプロフィールが作成されたことを通知して、ユーザーのアクション後にredirectしたい
+
+    */
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : '不明なエラーが発生しました';
