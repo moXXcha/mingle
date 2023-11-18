@@ -4,37 +4,18 @@ import { eq } from 'drizzle-orm';
 import 'server-only';
 import { db } from '../db';
 
-// usersテーブルに同じユーザーネームが存在するかを確認
-export async function doesUserNameExist(
-  userName: string,
+// 特定のフィールドに一致するユーザーが存在するかを確認
+async function doesUserExist(
+  column: keyof typeof users.$inferSelect,
+  value: string,
   tx: Transaction,
 ): Promise<boolean> {
-  const existingUser = await tx
-    .select({
-      userName: users.userName,
-    })
-    .from(users)
-    .where(eq(users.userName, userName));
-
-  // ユーザーが存在すればtrueを返す
-  return existingUser.length !== 0;
+  const condition = eq(users[column], value);
+  const existingUser = await tx.select().from(users).where(condition);
+  return existingUser.length > 0;
 }
 
-// usersテーブルに同じidが存在するかを確認
-export async function doesUserIdExist(
-  id: string,
-  tx: Transaction,
-): Promise<boolean> {
-  const existingUser = await tx
-    .select({
-      id: users.id,
-    })
-    .from(users)
-    .where(eq(users.id, id));
-
-  // ユーザーが存在すればtrueを返す
-  return existingUser.length !== 0;
-}
+// これはレイヤーが違う
 
 // ユーザーを作成
 export async function createUser(
@@ -43,26 +24,23 @@ export async function createUser(
   email: string,
 ): Promise<void> {
   try {
+    // INSERTする前に、ユーザー名とユーザーIDが既に使われていないかを確認しているのは
+    // 単一責任の原則に従っている？？
     await db.transaction(async (tx) => {
-      // ユーザーネームが存在するかを確認
-      if (await doesUserNameExist(userName, tx)) {
-        throw new Error('このユーザー名は既に使われています');
+      if (await doesUserExist('userName', userName, tx)) {
+        throw new Error(`ユーザー名 "${userName}" は既に使われています`);
       }
 
-      // ユーザーIDが存在するかを確認
-      if (await doesUserIdExist(id, tx)) {
-        throw new Error('このユーザーIDは既に使われています');
+      if (await doesUserExist('id', id, tx)) {
+        throw new Error(`ユーザーID "${id}" は既に使われています`);
       }
-      // 新しいユーザーを作成
-      await tx.insert(users).values({
-        id,
-        userName,
-        email,
-      });
+
+      await tx.insert(users).values({ id, userName, email });
     });
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(error.message);
     }
+    throw new Error('不明なエラーが発生しました');
   }
 }
