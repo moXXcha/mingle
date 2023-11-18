@@ -1,7 +1,7 @@
 'use server';
 
 import { createUser } from '@/server/user/user-dto';
-import { createClient } from '@/utils/supabase/server';
+import { createAdminAuthClient } from '@/utils/supabase/adminAuthClient';
 import { cookies } from 'next/headers';
 import 'server-only';
 
@@ -12,7 +12,7 @@ export async function userNameFormAction(
   const userName = formData.get('userName') as string;
 
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = createAdminAuthClient(cookieStore);
 
   try {
     const { data, error } = await supabase.auth.getSession();
@@ -30,6 +30,20 @@ export async function userNameFormAction(
       userName,
       data.session?.user.email as string,
     );
+
+    // useNameを作成したFlagをtrueにする
+    const { error: userError } = await supabase.auth.admin.updateUserById(
+      data.session?.user.id as string,
+      {
+        user_metadata: {
+          hasUserName: true,
+        },
+      },
+    );
+
+    if (userError) {
+      throw new Error(userError.message);
+    }
 
     return { message: 'ユーザー名を登録しました' };
   } catch (error) {
