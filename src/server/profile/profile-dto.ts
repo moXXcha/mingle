@@ -1,6 +1,8 @@
 import { createClient } from '@/utils/supabase/server';
+import { profiles } from 'db/schema';
 import { cookies } from 'next/headers';
 import 'server-only';
+import { db } from '../db';
 
 export async function createProfile(
   displayName: string,
@@ -45,13 +47,14 @@ export async function createProfile(
 
     // console.log('ストレージにuploadした後のdata: ', data);
 
-    // // プロフィールを作成
-    // await db.insert(profiles).values({
-    //   id: session.session?.user.id as string,
-    //   displayName,
-    //   overview,
-    //   avatarUrl: data.path,
-    // });
+    // プロフィールを作成
+    await db.insert(profiles).values({
+      id: session.session?.user.id as string,
+      displayName,
+      overview,
+      // avatarUrl: data.path,
+      avatarUrl: 'tmp: StorageのURLを入れる',
+    });
 
     return { message: 'プロフィールを作成しました' };
   } catch (error) {

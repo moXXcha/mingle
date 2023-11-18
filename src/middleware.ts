@@ -28,10 +28,18 @@ export async function middleware(req: NextRequest) {
   const {
     data: { user },
   } = await supabase.supabase.auth.getUser();
-  // hasUserNameがfalseなら、ユーザー名登録画面にリダイレクト
+  // hasUserNameがfalseなら、/onboardingにリダイレクト
   if (!user?.user_metadata.hasUserName) {
     console.log(
       'ユーザー名が登録されていないので、ユーザー名登録画面にリダイレクト',
+    );
+    return NextResponse.redirect(new URL('/onboarding', req.url));
+  }
+
+  // hasProfileがfalseなら、/onboardingにリダイレクト
+  if (!user?.user_metadata.hasProfile) {
+    console.log(
+      'プロフィールが登録されていないので、プロフィール登録画面にリダイレクト',
     );
     return NextResponse.redirect(new URL('/onboarding', req.url));
   }
