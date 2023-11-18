@@ -17,13 +17,23 @@ export async function middleware(req: NextRequest) {
   const { data, error } = await supabase.supabase.auth.getSession();
 
   if (error) {
-    console.error(error.message);
+    console.log(error.message);
   }
 
-  console.log('session: ', data.session);
   if (!data.session) {
     console.log('loginしていないので、login画面にリダイレクト');
     return NextResponse.redirect(new URL('/login', req.url));
+  }
+
+  const {
+    data: { user },
+  } = await supabase.supabase.auth.getUser();
+  // hasUserNameがfalseなら、ユーザー名登録画面にリダイレクト
+  if (!user?.user_metadata.hasUserName) {
+    console.log(
+      'ユーザー名が登録されていないので、ユーザー名登録画面にリダイレクト',
+    );
+    return NextResponse.redirect(new URL('/onboarding', req.url));
   }
 
   return res;
