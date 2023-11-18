@@ -1,13 +1,12 @@
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import 'server-only';
-import type { Database } from './types/supabase';
+import { createClient } from './utils/supabase/middleware';
 
 export async function middleware(req: NextRequest) {
   console.log('middleware');
   const res = NextResponse.next();
-  const supabase = createMiddlewareClient<Database>({ req, res });
+  const supabase = createClient(req);
 
   if (req.nextUrl.pathname === '/login') {
     console.log('login画面なので、何もしない');
@@ -15,7 +14,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // ユーザーのsessionを更新
-  const { data, error } = await supabase.auth.getSession();
+  const { data, error } = await supabase.supabase.auth.getSession();
 
   if (error) {
     console.error(error.message);

@@ -1,7 +1,7 @@
 'use server';
 
 import { createUser } from '@/server/user/user-dto';
-import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import 'server-only';
 
@@ -12,7 +12,7 @@ export async function userNameFormAction(
   const userName = formData.get('userName') as string;
 
   const cookieStore = cookies();
-  const supabase = createServerActionClient({ cookies: () => cookieStore });
+  const supabase = createClient(cookieStore);
 
   try {
     const { data, error } = await supabase.auth.getSession();
