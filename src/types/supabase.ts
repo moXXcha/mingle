@@ -1,4 +1,10 @@
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
 
 export interface Database {
   public: {
@@ -30,19 +36,19 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "comments_post_id_posts_id_fk";
-            columns: ["post_id"];
+            foreignKeyName: 'comments_post_id_posts_id_fk';
+            columns: ['post_id'];
             isOneToOne: false;
-            referencedRelation: "posts";
-            referencedColumns: ["id"];
+            referencedRelation: 'posts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "comments_user_id_users_id_fk";
-            columns: ["user_id"];
+            foreignKeyName: 'comments_user_id_users_id_fk';
+            columns: ['user_id'];
             isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          }
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
         ];
       };
       follows: {
@@ -69,19 +75,19 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "follows_following_user_id_users_id_fk";
-            columns: ["following_user_id"];
+            foreignKeyName: 'follows_following_user_id_users_id_fk';
+            columns: ['following_user_id'];
             isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "follows_user_id_users_id_fk";
-            columns: ["user_id"];
+            foreignKeyName: 'follows_user_id_users_id_fk';
+            columns: ['user_id'];
             isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          }
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
         ];
       };
       likes: {
@@ -108,19 +114,19 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "likes_post_id_posts_id_fk";
-            columns: ["post_id"];
+            foreignKeyName: 'likes_post_id_posts_id_fk';
+            columns: ['post_id'];
             isOneToOne: false;
-            referencedRelation: "posts";
-            referencedColumns: ["id"];
+            referencedRelation: 'posts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "likes_user_id_users_id_fk";
-            columns: ["user_id"];
+            foreignKeyName: 'likes_user_id_users_id_fk';
+            columns: ['user_id'];
             isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          }
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
         ];
       };
       post_tag_relations: {
@@ -144,19 +150,19 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "post_tag_relations_post_id_posts_id_fk";
-            columns: ["post_id"];
+            foreignKeyName: 'post_tag_relations_post_id_posts_id_fk';
+            columns: ['post_id'];
             isOneToOne: false;
-            referencedRelation: "posts";
-            referencedColumns: ["id"];
+            referencedRelation: 'posts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "post_tag_relations_tag_id_tags_id_fk";
-            columns: ["tag_id"];
+            foreignKeyName: 'post_tag_relations_tag_id_tags_id_fk';
+            columns: ['tag_id'];
             isOneToOne: false;
-            referencedRelation: "tags";
-            referencedColumns: ["id"];
-          }
+            referencedRelation: 'tags';
+            referencedColumns: ['id'];
+          },
         ];
       };
       posts: {
@@ -189,12 +195,12 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "posts_user_id_users_id_fk";
-            columns: ["user_id"];
+            foreignKeyName: 'posts_user_id_users_id_fk';
+            columns: ['user_id'];
             isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          }
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
         ];
       };
       profiles: {
@@ -224,12 +230,12 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "profiles_id_users_id_fk";
-            columns: ["id"];
+            foreignKeyName: 'profiles_id_users_id_fk';
+            columns: ['id'];
             isOneToOne: true;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          }
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
         ];
       };
       tags: {

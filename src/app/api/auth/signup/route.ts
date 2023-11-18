@@ -1,5 +1,5 @@
 import { AuthSchema } from '@/types/types';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import 'server-only';
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     });
 
     const cookieStore = cookies();
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+    const supabase = createClient(cookieStore);
 
     // sign uo
     const { error } = await supabase.auth.signUp({
@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
       throw new Error(error.message);
     }
 
+    // TODO オンボーディングにリダイレクトする
     return NextResponse.redirect(requestUrl.origin, {
       status: 301,
     });
