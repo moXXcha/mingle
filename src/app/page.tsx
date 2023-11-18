@@ -10,7 +10,7 @@ export default async function Home() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const metadata = user.user_metadata;
+  const metadata = user?.user_metadata;
   console.log('metadata: ', metadata);
 
   return (
