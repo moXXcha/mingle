@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "generate": "drizzle-kit generate:pg",
-    "push": "drizzle-kit push:pg"
+    "push": "drizzle-kit push:pg",
+    "pull": "drizzle-kit introspect:pg"
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.8.4",
