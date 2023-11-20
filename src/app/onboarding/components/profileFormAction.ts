@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 import 'server-only';
 
 export async function profileFormAction(
-  prevState: { message: string },
+  _prevState: { message: string },
   formData: FormData,
 ): Promise<{ message: string }> {
   const displayName = formData.get('displayName') as string;
@@ -33,19 +33,19 @@ export async function profileFormAction(
   try {
     await createProfile(displayName, overview, avatar);
 
-    // // profileを作成したFlagをtrueにする
-    // const { error } = await supabase.auth.admin.updateUserById(
-    //   data.session?.user.id as string,
-    //   {
-    //     user_metadata: {
-    //       hasProfile: true,
-    //     },
-    //   },
-    // );
+    // profileを作成したFlagをtrueにする
+    const { error } = await supabase.auth.admin.updateUserById(
+      data.session?.user.id as string,
+      {
+        user_metadata: {
+          hasProfile: true,
+        },
+      },
+    );
 
-    // if (error) {
-    //   throw new Error(error.message);
-    // }
+    if (error) {
+      throw new Error(error.message);
+    }
 
     return { message: 'プロフィールを作成しました' };
   } catch (error) {

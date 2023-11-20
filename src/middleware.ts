@@ -44,16 +44,26 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/onboarding', req.url));
   }
 
+  // hasUserNameとhasProfileがtrue and /onboarding/にリダイレクト
+  if (
+    user?.user_metadata.hasUserName &&
+    user?.user_metadata.hasProfile &&
+    req.nextUrl.pathname === '/onboarding'
+  ) {
+    console.log(
+      'ユーザー名とプロフィールが登録されているので、/にリダイレクト',
+    );
+    return NextResponse.redirect(new URL('/', req.url));
+  }
+
   return res;
 }
 
 export const config = {
-  matcher: ['/', '/hoge/:path*'],
+  matcher: ['/', '/onboarding'],
 };
 
 /*
-TODO
-
 Uncaught SyntaxError: expected expression, got '<'
 matcher: ['/:path*'] にすると、上記エラーが出る
 これはNext.jsのバグ
