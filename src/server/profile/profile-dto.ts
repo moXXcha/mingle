@@ -1,13 +1,12 @@
+import { putImage } from '@/utils/storage';
 import { createClient } from '@/utils/supabase/server';
-import { profiles } from 'db/schema';
 import { cookies } from 'next/headers';
 import 'server-only';
-import { db } from '../db';
 
 export async function createProfile(
   displayName: string,
   overview: string,
-  avatar: Blob,
+  avatar: File,
 ) {
   console.log('createProfile');
   const cookieStore = cookies();
@@ -24,37 +23,22 @@ export async function createProfile(
       throw new Error(sessionError.message);
     }
 
-    const uniquePart = `${Date.now()}-${Math.random().toString(36)}`; // タイムスタンプとランダムな文字列
-    console.log('uniquePart: ', uniquePart);
+    const pathName = `${session.session?.user.id}/avatar`;
 
     // ! ここで動いていない
     // TODO Storageにavatarをuploadする
-    // // avatarをsupabase storageにアップロード
-    // const { data, error } = await supabase.storage
-    //   .from('avatars')
-    //   .upload(`${uniquePart}`, avatar);
 
-    // console.log('data: ', data);
-    // console.log('error: ', error);
+    const url = await putImage(avatar, pathName);
+    console.log('url: ', url);
 
-    // if (error) {
-    //   throw new Error(error.message);
-    // }
-
-    // if (!data) {
-    //   throw new Error('data is null');
-    // }
-
-    // console.log('ストレージにuploadした後のdata: ', data);
-
-    // プロフィールを作成
-    await db.insert(profiles).values({
-      id: session.session?.user.id as string,
-      displayName,
-      overview,
-      // avatarUrl: data.path,
-      avatarUrl: 'tmp: StorageのURLを入れる',
-    });
+    // // プロフィールを作成
+    // await db.insert(profiles).values({
+    //   id: session.session?.user.id as string,
+    //   displayName,
+    //   overview,
+    //   // avatarUrl: data.path,
+    //   avatarUrl: 'tmp: StorageのURLを入れる',
+    // });
 
     return { message: 'プロフィールを作成しました' };
   } catch (error) {

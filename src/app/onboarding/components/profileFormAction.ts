@@ -11,12 +11,14 @@ export async function profileFormAction(
 ): Promise<{ message: string }> {
   const displayName = formData.get('displayName') as string;
   const overview = formData.get('overview') as string;
-  const avatar = formData.get('avatar') as Blob;
+  const avatar = formData.get('avatar') as File;
+  console.log('avatar: ', avatar);
 
   const cookieStore = cookies();
   const supabase = createAdminAuthClient(cookieStore);
 
   const { data, error: getSessionError } = await supabase.auth.getSession();
+  console.log('data: ', data);
 
   if (getSessionError) {
     throw new Error(getSessionError.message);
@@ -31,19 +33,19 @@ export async function profileFormAction(
   try {
     await createProfile(displayName, overview, avatar);
 
-    // profileを作成したFlagをtrueにする
-    const { error } = await supabase.auth.admin.updateUserById(
-      data.session?.user.id as string,
-      {
-        user_metadata: {
-          hasProfile: true,
-        },
-      },
-    );
+    // // profileを作成したFlagをtrueにする
+    // const { error } = await supabase.auth.admin.updateUserById(
+    //   data.session?.user.id as string,
+    //   {
+    //     user_metadata: {
+    //       hasProfile: true,
+    //     },
+    //   },
+    // );
 
-    if (error) {
-      throw new Error(error.message);
-    }
+    // if (error) {
+    //   throw new Error(error.message);
+    // }
 
     return { message: 'プロフィールを作成しました' };
   } catch (error) {
