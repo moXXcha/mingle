@@ -1,5 +1,8 @@
 'use server';
 
+import { Profile } from './components/Profile';
+
+// eslint-disable-next-line @typescript-eslint/require-await
 export default async function Home({
   params,
 }: {
@@ -12,6 +15,7 @@ export default async function Home({
   return (
     <div>
       <h1>Page for user {userName}</h1>
+      <Profile />
     </div>
   );
 }
