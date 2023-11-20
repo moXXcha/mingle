@@ -1,6 +1,7 @@
 import { putImage } from '@/utils/storage';
 import { createClient } from '@/utils/supabase/server';
 import { profiles } from 'db/schema';
+import { eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import 'server-only';
 import { db } from '../db';
@@ -40,5 +41,25 @@ export async function createProfile(
     const errorMessage =
       error instanceof Error ? error.message : '不明なエラーが発生しました';
     return { message: errorMessage };
+  }
+}
+
+export async function getProfileByUserId(userId: string) {
+  try {
+    const result = await db
+      .select()
+      .from(profiles)
+      .where(eq(profiles.id, userId));
+
+    if (result.length === 0) {
+      throw new Error('プロフィールが見つかりませんでした');
+    }
+
+    console.log('result: ', result);
+    return result[0];
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : '不明なエラーが発生しました';
+    console.error('Error getting profile: ', errorMessage);
   }
 }
