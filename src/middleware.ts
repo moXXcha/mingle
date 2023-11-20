@@ -44,7 +44,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/onboarding', req.url));
   }
 
-  // hasUserNameとhasProfileがtrue and /onboar/にリダイレクト
+  // hasUserNameとhasProfileがtrue and /onboarding/にリダイレクト
   if (
     user?.user_metadata.hasUserName &&
     user?.user_metadata.hasProfile &&
