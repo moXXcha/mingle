@@ -1,7 +1,9 @@
 import { putImage } from '@/utils/storage';
 import { createClient } from '@/utils/supabase/server';
+import { profiles } from 'db/schema';
 import { cookies } from 'next/headers';
 import 'server-only';
+import { db } from '../db';
 
 export async function createProfile(
   displayName: string,
@@ -13,32 +15,25 @@ export async function createProfile(
   const supabase = createClient(cookieStore);
 
   try {
-    console.log(avatar);
     // ユーザーのセッションを取得
     const { data: session, error: sessionError } =
       await supabase.auth.getSession();
-    console.log('getSessionのdata: ', session);
 
     if (sessionError) {
       throw new Error(sessionError.message);
     }
 
-    const pathName = `${session.session?.user.id}/avatar`;
-
-    // ! ここで動いていない
-    // TODO Storageにavatarをuploadする
-
-    const url = await putImage(avatar, pathName);
+    // Storageにavatarをuploadする
+    const url = await putImage(avatar, `avatars/${session.session?.user.id}`);
     console.log('url: ', url);
 
-    // // プロフィールを作成
-    // await db.insert(profiles).values({
-    //   id: session.session?.user.id as string,
-    //   displayName,
-    //   overview,
-    //   // avatarUrl: data.path,
-    //   avatarUrl: 'tmp: StorageのURLを入れる',
-    // });
+    // プロフィールを作成
+    await db.insert(profiles).values({
+      id: session.session?.user.id as string,
+      displayName,
+      overview,
+      avatarUrl: url,
+    });
 
     return { message: 'プロフィールを作成しました' };
   } catch (error) {
