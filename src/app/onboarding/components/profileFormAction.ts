@@ -4,17 +4,29 @@ import { createProfile } from '@/server/profile/profile-dto';
 import 'server-only';
 
 export async function profileFormAction(
-  prevState: { message: string },
+  _prevState: { message: string },
   formData: FormData,
 ): Promise<{ message: string }> {
   const displayName = formData.get('displayName') as string;
   const overview = formData.get('overview') as string;
-  const avatar = formData.get('avatar') as Blob;
+  const avatar = formData.get('avatar') as File;
+  console.log('avatar: ', avatar);
 
   // const cookieStore = cookies();
   // const supabase = createAdminAuthClient(cookieStore);
 
-  // const { data, error: getSessionError } = await supabase.auth.getSession();
+
+  const { data, error: getSessionError } = await supabase.auth.getSession();
+  console.log('data: ', data);
+
+  if (getSessionError) {
+    throw new Error(getSessionError.message);
+  }
+
+  console.log('displayName: ', displayName);
+  console.log('overview: ', overview);
+  console.log('avatar: ', avatar);
+
 
   // if (getSessionError) {
   //   throw new Error(getSessionError.message);
