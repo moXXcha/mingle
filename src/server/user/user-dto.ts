@@ -1,6 +1,6 @@
 import { Transaction } from '@/types/types';
-import { users } from 'db/schema';
 import { eq } from 'drizzle-orm';
+import { users } from 'drizzle/schema';
 import 'server-only';
 import { db } from '../db';
 
@@ -64,5 +64,27 @@ export async function createUser(
     if (error instanceof Error) {
       throw new Error(error.message);
     }
+  }
+}
+
+// ユーザーを取得する
+export async function getUserByUserId(userId: string) {
+  try {
+    const result = await db
+      .select({
+        id: users.id,
+        userName: users.userName,
+        email: users.email,
+      })
+      .from(users)
+      .where(eq(users.id, userId));
+
+    if (result.length === 0) {
+      throw new Error('ユーザーが見つかりませんでした');
+    }
+
+    return result[0];
+  } catch (error) {
+    console.log(error);
   }
 }
