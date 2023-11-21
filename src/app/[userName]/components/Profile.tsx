@@ -1,33 +1,25 @@
 'use server';
 
-import { getProfileByUserId } from '@/server/profile/profile-dto';
-import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
+import { getProfileByUserName } from '@/server/profile/profile-dto';
 import Image from 'next/image';
 
-export const Profile = async () => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+type Props = {
+  userName: string;
+};
 
-  const { data, error } = await supabase.auth.getSession();
-
-  if (error) {
-    console.log(error);
-  }
-
+export const Profile = async (props: Props) => {
   // データ取得
-  // ? userName userId どちらで取得するのが良い？
-  const profile = await getProfileByUserId(data.session?.user.id as string);
-  console.log(profile);
+  const profile = await getProfileByUserName(props.userName);
   return (
     <div>
-      <div>{profile?.displayName}</div>
-      <div>{profile?.overview}</div>
+      <div>表示名: {profile?.displayName}</div>
+      <div>概要: {profile?.overview}</div>
       <Image
         src={profile?.avatarUrl as string}
         alt="icon"
         width={200}
         height={200}
+        priority={true}
       />
     </div>
   );
