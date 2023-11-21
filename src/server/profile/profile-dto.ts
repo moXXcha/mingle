@@ -1,9 +1,7 @@
 import { putImage } from '@/utils/storage';
 import { createClient } from '@/utils/supabase/server';
-import { profiles } from 'db/schema';
 import { cookies } from 'next/headers';
 import 'server-only';
-import { db } from '../db';
 
 export async function createProfile(
   displayName: string,

@@ -1,8 +1,6 @@
 'use server';
 
 import { createProfile } from '@/server/profile/profile-dto';
-import { createAdminAuthClient } from '@/utils/supabase/adminAuthClient';
-import { cookies } from 'next/headers';
 import 'server-only';
 
 export async function profileFormAction(
@@ -14,8 +12,9 @@ export async function profileFormAction(
   const avatar = formData.get('avatar') as File;
   console.log('avatar: ', avatar);
 
-  const cookieStore = cookies();
-  const supabase = createAdminAuthClient(cookieStore);
+  // const cookieStore = cookies();
+  // const supabase = createAdminAuthClient(cookieStore);
+
 
   const { data, error: getSessionError } = await supabase.auth.getSession();
   console.log('data: ', data);
@@ -28,26 +27,36 @@ export async function profileFormAction(
   console.log('overview: ', overview);
   console.log('avatar: ', avatar);
 
+
+  // if (getSessionError) {
+  //   throw new Error(getSessionError.message);
+  // }
   // TODO validation
 
   try {
     await createProfile(displayName, overview, avatar);
 
-    // profileを作成したFlagをtrueにする
-    const { error } = await supabase.auth.admin.updateUserById(
-      data.session?.user.id as string,
-      {
-        user_metadata: {
-          hasProfile: true,
-        },
-      },
-    );
+    // // profileを作成したFlagをtrueにする
+    // const { error } = await supabase.auth.admin.updateUserById(
+    //   data.session?.user.id as string,
+    //   {
+    //     user_metadata: {
+    //       hasProfile: true,
+    //     },
+    //   },
+    // );
 
-    if (error) {
-      throw new Error(error.message);
-    }
+    // if (error) {
+    //   throw new Error(error.message);
+    // }
 
     return { message: 'プロフィールを作成しました' };
+    /*
+    ? プロフィールを作成した時点で、userName, Profileは作成されている
+    ここで、/にredirectしても良いのでは？
+    clientにプロフィールが作成されたことを通知して、ユーザーのアクション後にredirectしたい
+
+    */
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : '不明なエラーが発生しました';

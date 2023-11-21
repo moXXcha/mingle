@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
+import Link from 'next/link';
 import ProfileForm from './components/ProfileForm';
 import UserNameForm from './components/UserNameForm';
 
@@ -21,7 +22,19 @@ export default async function Home() {
     return <ProfileForm />;
   }
 
+  // オンボーディングが完了したら、ホーム画面にリダイレクトする
   if (user.user_metadata.hasProfile) {
-    return <div>オンボーディング完了</div>;
+    console.log(
+      'オンボーディングが完了したので、ホーム画面にリダイレクトします。',
+    );
+    // modalかbuttonを押したら、ホーム画面にリダイレクトする
+    return (
+      <div>
+        <p>プロフィールが作成できました</p>
+        <Link className="border" href="/">
+          ホーム画面に戻る
+        </Link>
+      </div>
+    );
   }
 }
