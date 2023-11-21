@@ -1,7 +1,7 @@
 import { putImage } from '@/utils/storage';
 import { createClient } from '@/utils/supabase/server';
-import { profiles } from 'db/schema';
 import { eq } from 'drizzle-orm';
+import { profiles, users } from 'drizzle/schema';
 import { cookies } from 'next/headers';
 import 'server-only';
 import { db } from '../db';
@@ -44,12 +44,18 @@ export async function createProfile(
   }
 }
 
-export async function getProfileByUserId(userId: string) {
+export async function getProfileByUserName(userName: string) {
   try {
+    // users.userNameと一致するプロフィールを取得
     const result = await db
-      .select()
-      .from(profiles)
-      .where(eq(profiles.id, userId));
+      .select({
+        displayName: profiles.displayName,
+        overview: profiles.overview,
+        avatarUrl: profiles.avatarUrl,
+      })
+      .from(users)
+      .leftJoin(profiles, eq(users.id, profiles.id))
+      .where(eq(users.userName, userName));
 
     if (result.length === 0) {
       throw new Error('プロフィールが見つかりませんでした');
