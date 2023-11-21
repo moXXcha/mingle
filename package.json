@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "generate": "drizzle-kit generate:pg",
-    "push": "drizzle-kit push:pg"
+    "push": "drizzle-kit push:pg",
+    "pull": "drizzle-kit introspect:pg"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.454.0",

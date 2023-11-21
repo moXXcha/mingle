@@ -3,8 +3,10 @@
 import { useFormState } from 'react-dom';
 import { userNameFormAction } from './userNameFormAction';
 
+// TODO userNameFormAction.tsの型定義を参照したい 逆でも良い
 const initialState = {
   message: '',
+  isSuccess: false,
 };
 
 export default function UserNameForm() {

@@ -21,7 +21,7 @@ export interface Database {
         Insert: {
           comment: string;
           created_at?: string;
-          id: string;
+          id?: string;
           post_id: string;
           updated_at?: string;
           user_id: string;
@@ -62,7 +62,7 @@ export interface Database {
         Insert: {
           created_at?: string;
           following_user_id: string;
-          id: string;
+          id?: string;
           updated_at?: string;
           user_id: string;
         };
@@ -100,7 +100,7 @@ export interface Database {
         };
         Insert: {
           created_at?: string;
-          id: string;
+          id?: string;
           post_id: string;
           updated_at?: string;
           user_id: string;
@@ -178,7 +178,7 @@ export interface Database {
         Insert: {
           content: string;
           created_at?: string;
-          id: string;
+          id?: string;
           music_file_url: string;
           title: string;
           updated_at?: string;
@@ -230,7 +230,7 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'profiles_id_users_id_fk';
+            foreignKeyName: 'profiles_id_fkey';
             columns: ['id'];
             isOneToOne: true;
             referencedRelation: 'users';
@@ -247,7 +247,7 @@ export interface Database {
         };
         Insert: {
           created_at?: string;
-          id: string;
+          id?: string;
           name?: string | null;
           updated_at?: string;
         };
@@ -281,7 +281,15 @@ export interface Database {
           updated_at?: string;
           user_name?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'users_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
       };
     };
     Views: {
