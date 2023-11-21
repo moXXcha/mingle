@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 import 'server-only';
 
 export async function userNameFormAction(
-  prevState: { message: string },
+  _prevState: { message: string; isSuccess: boolean },
   formData: FormData,
 ) {
   const userName = formData.get('userName') as string;
@@ -45,10 +45,11 @@ export async function userNameFormAction(
       throw new Error(userError.message);
     }
 
-    return { message: 'ユーザー名を登録しました' };
+    return { message: 'ユーザー名を登録しました', isSuccess: true };
+    // redirect('/onboarding');
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : '不明なエラーが発生しました';
-    return { message: errorMessage };
+    return { message: errorMessage, isSuccess: false };
   }
 }

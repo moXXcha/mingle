@@ -4,7 +4,6 @@ import { eq } from 'drizzle-orm';
 import { profiles, users } from 'drizzle/schema';
 import { cookies } from 'next/headers';
 import 'server-only';
-import { db } from '../db';
 
 export async function createProfile(
   displayName: string,
