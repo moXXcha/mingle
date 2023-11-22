@@ -1,22 +1,13 @@
 'use server';
 
-import { getPostsByUserName } from '@/server/post/post-dto';
+import { getPosts } from '@/server/post/post-dto';
 import Image from 'next/image';
 
-export default async function Home({
-  params,
-}: {
-  params: { userName: string };
-}) {
-  const { userName } = params;
-  console.log('userName: ', userName);
-
-  // 自分の投稿を取得
-  const data = await getPostsByUserName(userName);
-
+export const MusicCardList = async () => {
+  const posts = await getPosts();
   return (
     <div>
-      {data?.map((post) => (
+      {posts?.map((post) => (
         <div key={post.id}>
           <div>タイトル:{post.title}</div>
           <div>概要:{post.content}</div>
@@ -38,4 +29,4 @@ export default async function Home({
       ))}
     </div>
   );
-}
+};

@@ -1,31 +1,87 @@
-import { eq } from 'drizzle-orm';
-import { posts, users } from 'drizzle/schema';
+import { InferSelectModel, eq } from 'drizzle-orm';
+import { posts, profiles, tags, users } from 'drizzle/schema';
 import 'server-only';
 import { db } from '../db';
 
-export const getPostsByUserName = async (userName: string) => {
+type PostModel = InferSelectModel<typeof posts>;
+type TagModel = InferSelectModel<typeof tags>;
+type UserModel = InferSelectModel<typeof users>;
+type ProfileModel = InferSelectModel<typeof profiles>;
+
+type PostDetail = {
+  id: PostModel['id'];
+  title: PostModel['title'];
+  content: PostModel['content'];
+  createdAt: PostModel['createdAt'];
+  updatedAt: PostModel['updatedAt'];
+  tags: TagModel['name'][];
+  userName: UserModel['userName'];
+  displayName: ProfileModel['displayName'];
+  avatarUrl: ProfileModel['avatarUrl'];
+};
+
+// 投稿データを取得する共通関数
+// userName が指定された場合はそのユーザーに関連する投稿を取得する
+export const getPostsData = async (
+  userName?: string,
+): Promise<PostDetail[]> => {
   try {
-    const result = await db
-      .select({
-        id: posts.id,
-        title: posts.title,
-        content: posts.content,
-        musicFileUrl: posts.musicFileUrl,
-        createdAt: posts.createdAt,
-        updatedAt: posts.updatedAt,
-      })
-      .from(users)
-      .leftJoin(posts, eq(users.id, posts.userId))
-      .where(eq(users.userName, userName));
+    // ユーザーとその投稿、タグ、プロフィールを取得
+    const result = await db.query.users.findMany({
+      with: {
+        posts: {
+          with: {
+            postTagRelations: {
+              with: {
+                tag: true,
+              },
+            },
+          },
+          // 投稿を作成日時の昇順で取得（新しい投稿を先頭に）
+          orderBy: (posts, { asc }) => [asc(posts.createdAt)],
+        },
+        profile: true,
+      },
+      where: userName ? eq(users.userName, userName) : undefined,
+      limit: 10,
+    });
 
-    if (result.length === 0) {
-      throw new Error('投稿が見つかりませんでした');
-    }
-
-    return result;
+    // 取得したデータを整形
+    return result.flatMap((user) =>
+      user.posts.map((post) => ({
+        id: post.id,
+        title: post.title,
+        content: post.content,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        tags: post.postTagRelations.map((relation) => relation.tag.name),
+        userName: user.userName,
+        displayName: user.profile.displayName,
+        avatarUrl: user.profile.avatarUrl,
+      })),
+    );
   } catch (error) {
-    console.log(error);
+    console.error('Error fetching posts:', error);
+    throw new Error(`Failed to fetch posts for user: ${userName}`); // エラーメッセージを具体的に
   }
+};
+
+// 全ての投稿を取得する関数
+export const getPosts = async (): Promise<PostDetail[]> => {
+  return getPostsData();
+};
+
+// 特定のユーザー名に基づいて投稿を取得する関数
+export const getPostsByUserName = async (
+  userName: string,
+): Promise<PostDetail[]> => {
+  const data = await getPostsData(userName);
+
+  if (data.length === 0) {
+    throw new Error(`No posts found for the user: ${userName}`); // エラーメッセージを具体的に
+  }
+
+  return data;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
