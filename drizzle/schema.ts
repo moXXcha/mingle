@@ -1,139 +1,87 @@
+import { relations } from 'drizzle-orm';
 import {
-  pgEnum,
   pgTable,
   primaryKey,
   text,
   timestamp,
-  unique,
   uuid,
 } from 'drizzle-orm/pg-core';
 
-export const keyStatus = pgEnum('key_status', [
-  'default',
-  'valid',
-  'invalid',
-  'expired',
-]);
-export const keyType = pgEnum('key_type', [
-  'aead-ietf',
-  'aead-det',
-  'hmacsha512',
-  'hmacsha256',
-  'auth',
-  'shorthash',
-  'generichash',
-  'kdf',
-  'secretbox',
-  'secretstream',
-  'stream_xchacha20',
-]);
-export const aalLevel = pgEnum('aal_level', ['aal1', 'aal2', 'aal3']);
-export const codeChallengeMethod = pgEnum('code_challenge_method', [
-  's256',
-  'plain',
-]);
-export const factorStatus = pgEnum('factor_status', ['unverified', 'verified']);
-export const factorType = pgEnum('factor_type', ['totp', 'webauthn']);
-
-export const comments = pgTable('comments', {
-  id: uuid('id').defaultRandom().primaryKey().notNull(),
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => users.id),
-  postId: uuid('post_id')
-    .notNull()
-    .references(() => posts.id),
-  comment: text('comment').notNull(),
-  createdAt: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
+export const users = pgTable('users', {
+  id: uuid('id').notNull().primaryKey().defaultRandom(),
+  userName: text('user_name').notNull().unique(),
+  email: text('email').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export const likes = pgTable('likes', {
-  id: uuid('id').defaultRandom().primaryKey().notNull(),
-  postId: uuid('post_id')
-    .notNull()
-    .references(() => posts.id),
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => users.id),
-  createdAt: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
-});
+export const usersRelations = relations(users, ({ one, many }) => ({
+  posts: many(posts),
+  profile: one(profiles, {
+    fields: [users.id],
+    references: [profiles.id],
+  }),
+  comments: many(comments),
+  follows: many(follows),
+  following: one(follows, {
+    fields: [users.id],
+    references: [follows.followingUserId],
+  }),
+}));
 
 export const posts = pgTable('posts', {
-  id: uuid('id').defaultRandom().primaryKey().notNull(),
+  id: uuid('id').notNull().primaryKey().defaultRandom(),
   userId: uuid('user_id')
     .notNull()
     .references(() => users.id),
   title: text('title').notNull(),
   content: text('content').notNull(),
   musicFileUrl: text('music_file_url').notNull(),
-  createdAt: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
+
+export const postsRelations = relations(posts, ({ one, many }) => ({
+  user: one(users, {
+    fields: [posts.userId],
+    references: [users.id],
+  }),
+  postTagRelations: many(postTagRelation),
+  comments: many(comments),
+  likes: many(likes),
+}));
 
 export const profiles = pgTable('profiles', {
   id: uuid('id')
-    .primaryKey()
     .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
+    .primaryKey()
+    .references(() => users.id),
   displayName: text('display_name').notNull(),
   overview: text('overview').notNull(),
   avatarUrl: text('avatar_url').notNull(),
-  createdAt: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export const tags = pgTable(
-  'tags',
-  {
-    id: uuid('id').defaultRandom().primaryKey().notNull(),
-    name: text('name'),
-    createdAt: timestamp('created_at', { mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp('updated_at', { mode: 'string' })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => {
-    return {
-      tagsNameUnique: unique('tags_name_unique').on(table.name),
-    };
-  },
-);
+export const profilesRelations = relations(profiles, ({ one }) => ({
+  user: one(users, {
+    fields: [profiles.id],
+    references: [users.id],
+  }),
+}));
 
-export const follows = pgTable('follows', {
-  id: uuid('id').defaultRandom().primaryKey().notNull(),
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => users.id),
-  followingUserId: uuid('following_user_id')
-    .notNull()
-    .references(() => users.id),
-  createdAt: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
+export const tags = pgTable('tags', {
+  id: uuid('id').notNull().primaryKey().defaultRandom(),
+  name: text('name').unique(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export const users = pgTable(
-  'users',
-  {
-    id: uuid('id').primaryKey().notNull(),
-    userName: text('user_name').notNull(),
-    email: text('email').notNull(),
-    createdAt: timestamp('created_at', { mode: 'string' }),
-    updatedAt: timestamp('updated_at', { mode: 'string' })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => {
-    return {
-      usersUserNameUnique: unique('users_user_name_unique').on(table.userName),
-    };
-  },
-);
+export const tagsRelations = relations(tags, ({ many }) => ({
+  postTagRelations: many(postTagRelation),
+}));
 
-export const postTagRelations = pgTable(
+export const postTagRelation = pgTable(
   'post_tag_relations',
   {
     postId: uuid('post_id')
@@ -142,16 +90,94 @@ export const postTagRelations = pgTable(
     tagId: uuid('tag_id')
       .notNull()
       .references(() => tags.id),
-    createdAt: timestamp('created_at', { mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp('updated_at', { mode: 'string' })
-      .defaultNow()
-      .notNull(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
   },
-  (table) => {
-    return {
-      postTagRelationsPostIdTagId: primaryKey(table.postId, table.tagId),
-    };
-  },
+  (table) => ({
+    pk: primaryKey(table.postId, table.tagId),
+  }),
 );
+
+export const postTagRelationRelations = relations(
+  postTagRelation,
+  ({ one }) => ({
+    post: one(posts, {
+      fields: [postTagRelation.postId],
+      references: [posts.id],
+    }),
+    tag: one(tags, {
+      fields: [postTagRelation.tagId],
+      references: [tags.id],
+    }),
+  }),
+);
+
+export const comments = pgTable('comments', {
+  id: uuid('id').notNull().primaryKey().defaultRandom(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id),
+  postId: uuid('post_id')
+    .notNull()
+    .references(() => posts.id),
+  comment: text('comment').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export const commentsRelations = relations(comments, ({ one }) => ({
+  user: one(users, {
+    fields: [comments.userId],
+    references: [users.id],
+  }),
+  post: one(posts, {
+    fields: [comments.postId],
+    references: [posts.id],
+  }),
+}));
+
+export const follows = pgTable('follows', {
+  id: uuid('id').notNull().primaryKey().defaultRandom(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id),
+  followingUserId: uuid('following_user_id')
+    .notNull()
+    .references(() => users.id),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export const followsRelations = relations(follows, ({ one }) => ({
+  user: one(users, {
+    fields: [follows.userId],
+    references: [users.id],
+  }),
+  followingUser: one(users, {
+    fields: [follows.followingUserId],
+    references: [users.id],
+  }),
+}));
+
+export const likes = pgTable('likes', {
+  id: uuid('id').notNull().primaryKey().defaultRandom(),
+  postId: uuid('post_id')
+    .notNull()
+    .references(() => posts.id),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export const likesRelations = relations(likes, ({ one }) => ({
+  post: one(posts, {
+    fields: [likes.postId],
+    references: [posts.id],
+  }),
+  user: one(users, {
+    fields: [likes.userId],
+    references: [users.id],
+  }),
+}));
