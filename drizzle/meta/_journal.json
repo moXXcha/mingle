@@ -15,6 +15,13 @@
       "when": 1698846082094,
       "tag": "0001_awesome_carlie_cooper",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1700624900397,
+      "tag": "0002_goofy_sasquatch",
+      "breakpoints": true
     }
   ]
 }
