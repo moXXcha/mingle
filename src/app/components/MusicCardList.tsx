@@ -2,6 +2,7 @@
 
 import { getPosts } from '@/server/post/post-dto';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export const MusicCardList = async () => {
   const posts = await getPosts();
@@ -11,7 +12,7 @@ export const MusicCardList = async () => {
         <div key={post.id}>
           <div>タイトル:{post.title}</div>
           <div>概要:{post.content}</div>
-          <div>投稿者名:{post.displayName}</div>
+          <Link href={`/${post.userName}`}>投稿者名:{post.displayName}</Link>
 
           <div>タグ:</div>
           {post.tags.map((tag) => (
