@@ -3,7 +3,6 @@
 import { getPostsByUserName } from '@/server/post/post-dto';
 import Image from 'next/image';
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export default async function Home({
   params,
 }: {
@@ -14,7 +13,6 @@ export default async function Home({
 
   // 自分の投稿を取得
   const data = await getPostsByUserName(userName);
-  console.log('data: ', data);
 
   return (
     <div>
@@ -22,13 +20,20 @@ export default async function Home({
         <div key={post.id}>
           <div>タイトル:{post.title}</div>
           <div>概要:{post.content}</div>
+          <div>投稿者名:{post.displayName}</div>
+
+          <div>タグ:</div>
+          {post.tags.map((tag) => (
+            <div key={tag}>{tag}</div>
+          ))}
           <Image
-            src={post.musicFileUrl as string}
+            src={post.avatarUrl}
             alt="Picture of the author"
             width={500}
             height={500}
             priority={true}
           />
+          <hr />
         </div>
       ))}
     </div>
