@@ -5,6 +5,7 @@ import { profiles, users } from 'drizzle/schema';
 import { cookies } from 'next/headers';
 import 'server-only';
 import { db } from '../db';
+import { getUserByUserId } from '../user/user-dto';
 
 export async function createProfile(
   displayName: string,
@@ -24,8 +25,13 @@ export async function createProfile(
       throw new Error(sessionError.message);
     }
 
+    const user = await getUserByUserId(session.session?.user.id as string);
+
     // Storageにavatarをuploadする
-    const url = await putImage(avatar, `avatars/${session.session?.user.id}`);
+    const url = await putImage(
+      avatar,
+      `avatars/${user?.userName}_${new Date().toISOString()}`,
+    );
     console.log('url: ', url);
 
     // プロフィールを作成

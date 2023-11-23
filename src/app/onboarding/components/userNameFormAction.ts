@@ -9,6 +9,7 @@ export async function userNameFormAction(
   _prevState: { message: string; isSuccess: boolean },
   formData: FormData,
 ) {
+  // TODO 英字数字のみ許可する
   const userName = formData.get('userName') as string;
 
   const cookieStore = cookies();
