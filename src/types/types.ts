@@ -12,6 +12,8 @@ export type Auth = z.infer<typeof AuthSchema>;
 
 export type Transaction = PgTransaction<
   PostgresJsQueryResultHKT,
-  Record<string, never>,
-  ExtractTablesWithRelations<Record<string, never>>
+  typeof import('/Users/kou12345/workspace/mingle-web/drizzle/schema'),
+  ExtractTablesWithRelations<
+    typeof import('/Users/kou12345/workspace/mingle-web/drizzle/schema')
+  >
 >;
