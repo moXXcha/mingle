@@ -17,3 +17,12 @@ export type Transaction = PgTransaction<
     typeof import('/Users/kou12345/workspace/mingle-web/drizzle/schema')
   >
 >;
+
+// ユーザーを作成
+export const CreatePost = z.object({
+  userId: z.string().uuid(),
+  title: z.string(),
+  content: z.string(),
+  musicFileUrl: z.string().url(),
+  tags: z.array(z.string().uuid()),
+});
