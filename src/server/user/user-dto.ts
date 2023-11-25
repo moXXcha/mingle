@@ -4,6 +4,10 @@ import { users } from 'drizzle/schema';
 import 'server-only';
 import { db } from '../db';
 
+// ! リポジトリ
+
+// DB操作
+
 // 特定のフィールドに一致するユーザーが存在するかを確認
 async function doesUserExist(
   column: keyof typeof users.$inferSelect,
@@ -16,6 +20,12 @@ async function doesUserExist(
 }
 
 // これはレイヤーが違う
+
+// ! サービス
+
+// ユースケースの作成
+// リポジトリの呼び出し
+// 機能を作成する サービスと機能はone to one
 
 // ユーザーを作成
 export async function createUser(

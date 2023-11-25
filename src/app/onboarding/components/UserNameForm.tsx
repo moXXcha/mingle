@@ -12,6 +12,8 @@ const initialState = {
 export default function UserNameForm() {
   const [state, formAction] = useFormState(userNameFormAction, initialState);
 
+  // ? validation??
+
   return (
     <div>
       ユーザーネームを決めてください
