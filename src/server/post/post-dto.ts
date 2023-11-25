@@ -92,3 +92,12 @@ export const getLikedPostsByUserName = async (userName: string) => {
   //     console.log(error);
   //   }
 };
+
+// // 引数の型
+// export const createPost = async (
+//   userId: string,
+//   title: string,
+//   content: string,
+//   musicFileUrl: string,
+//   tags: string[],
+// ) => {};
