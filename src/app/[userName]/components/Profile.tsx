@@ -1,6 +1,6 @@
 'use server';
 
-import { getProfileByUserName } from '@/server/profile/profile-dto';
+import { getProfileByUserName } from '@/server/service/profile';
 import Image from 'next/image';
 
 type Props = {
@@ -12,10 +12,10 @@ export const Profile = async (props: Props) => {
   const profile = await getProfileByUserName(props.userName);
   return (
     <div>
-      <div>表示名: {profile?.displayName}</div>
-      <div>概要: {profile?.overview}</div>
+      <div>表示名: {profile.displayName}</div>
+      <div>概要: {profile.overview}</div>
       <Image
-        src={profile?.avatarUrl as string}
+        src={profile.avatarUrl as string}
         alt="icon"
         width={200}
         height={200}
