@@ -3,7 +3,7 @@ import { profiles, users } from 'drizzle/schema';
 import 'server-only';
 import { db } from '../db';
 
-export async function getProfileByUserName(userName: string): Promise<
+export async function selectProfileByUserName(userName: string): Promise<
   {
     displayName: string | null;
     overview: string | null;
