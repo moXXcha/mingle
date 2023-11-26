@@ -7,26 +7,17 @@ import { db } from '../db';
 // ? 複数のタグを一度に作成する は必要？
 
 // 全てのタグを取得する
-export const getTags = async () => {
-  try {
-    const result = await db
-      .select({
-        name: tags.name,
-      })
-      .from(tags);
-    console.log('result: ', result);
+export const selectTags = async () => {
+  const result = await db
+    .select({
+      id: tags.id,
+      name: tags.name,
+    })
+    .from(tags)
+    .orderBy(tags.createdAt);
+  console.log('result: ', result);
 
-    if (result.length === 0) {
-      throw new Error('タグが見つかりませんでした');
-    }
-
-    return result;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-    throw new Error('不明なエラーが発生しました');
-  }
+  return result;
 };
 
 // タグを作成する
