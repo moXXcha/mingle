@@ -1,12 +1,26 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 'use server';
 
-// eslint-disable-next-line @typescript-eslint/require-await
+import { getTags } from '@/server/service/tag';
+import { createPostFormAction } from './action';
+
 export default async function Home() {
-  // ! 音声ファイルのuploadはformAction???
+  // ! とりあえずタグの入力は一つのみ受け付ける
+
+  const tags = await getTags();
+  console.log('tags: ', tags);
   return (
     <div>
+      <div>
+        <div>タグ</div>
+        {tags?.map((tag) => (
+          <div key={tag.id}>
+            <div>{tag.name}</div>
+          </div>
+        ))}
+      </div>
       <div>新規投稿</div>
-      <form action="">
+      <form action={createPostFormAction}>
         <label htmlFor="title">
           タイトル
           <input
