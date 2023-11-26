@@ -1,6 +1,6 @@
 'use server';
 
-import { getPostsByUserName } from '@/server/post/post-dto';
+import { getPostsByUserName } from '@/server/service/post';
 import Image from 'next/image';
 
 export default async function Home({
