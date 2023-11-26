@@ -1,6 +1,6 @@
 'use server';
 
-import { createUser } from '@/server/user/user-dto';
+import { createUser } from '@/server/service/user';
 import { createAdminAuthClient } from '@/utils/supabase/adminAuthClient';
 import { cookies } from 'next/headers';
 import 'server-only';
@@ -9,6 +9,11 @@ export async function userNameFormAction(
   _prevState: { message: string; isSuccess: boolean },
   formData: FormData,
 ) {
+  // ? これはサーバーレス関数？？？
+
+  // TODO バリデーション
+
+  // TODO 英字数字のみ許可する
   const userName = formData.get('userName') as string;
 
   const cookieStore = cookies();

@@ -1,6 +1,6 @@
 'use server';
 
-import { getPosts } from '@/server/post/post-dto';
+import { getPosts } from '@/server/service/post';
 import Image from 'next/image';
 import Link from 'next/link';
 

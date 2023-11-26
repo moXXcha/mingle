@@ -4,7 +4,7 @@ type Props = {
   userName: string;
 };
 
-const ProfileTab = (props: Props) => {
+export const ProfileTab = (props: Props) => {
   return (
     <div>
       <Link href={`/${props.userName}`}>Posts</Link>
@@ -13,5 +13,3 @@ const ProfileTab = (props: Props) => {
     </div>
   );
 };
-
-export default ProfileTab;

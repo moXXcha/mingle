@@ -1,5 +1,6 @@
 'use server';
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export default async function Signup() {
   return (
     <form action="/auth/sign-up" method="post">
