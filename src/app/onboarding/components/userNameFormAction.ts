@@ -1,14 +1,9 @@
 'use server';
 
-import { createUser } from '@/server/user/user-dto';
+import { createUser } from '@/server/service/user';
 import { createAdminAuthClient } from '@/utils/supabase/adminAuthClient';
 import { cookies } from 'next/headers';
 import 'server-only';
-
-// ! コントローラー
-// frontのバリデーショn
-// サービスの呼び出し
-// response
 
 export async function userNameFormAction(
   _prevState: { message: string; isSuccess: boolean },
