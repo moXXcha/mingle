@@ -1,6 +1,6 @@
 'use server';
 
-import { createProfile } from '@/server/profile/profile-dto';
+import { createProfile } from '@/server/service/profile';
 import { createAdminAuthClient } from '@/utils/supabase/adminAuthClient';
 import { cookies } from 'next/headers';
 import 'server-only';
