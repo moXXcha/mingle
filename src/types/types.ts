@@ -1,7 +1,13 @@
-import { ExtractTablesWithRelations } from 'drizzle-orm';
+import { ExtractTablesWithRelations, InferSelectModel } from 'drizzle-orm';
 import { PgTransaction } from 'drizzle-orm/pg-core';
 import { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js';
 import { z } from 'zod';
+import {
+  posts,
+  profiles,
+  tags,
+  users,
+} from '/Users/kou12345/workspace/mingle-web/drizzle/schema';
 
 export const AuthSchema = z.object({
   email: z.string().email(),
@@ -26,3 +32,20 @@ export const CreatePost = z.object({
   musicFileUrl: z.string().url(),
   tags: z.array(z.string().uuid()),
 });
+
+export type PostModel = InferSelectModel<typeof posts>;
+export type TagModel = InferSelectModel<typeof tags>;
+export type UserModel = InferSelectModel<typeof users>;
+export type ProfileModel = InferSelectModel<typeof profiles>;
+
+export type PostDetail = {
+  id: PostModel['id'];
+  title: PostModel['title'];
+  content: PostModel['content'];
+  createdAt: PostModel['createdAt'];
+  updatedAt: PostModel['updatedAt'];
+  tags: TagModel['name'][];
+  userName: UserModel['userName'];
+  displayName: ProfileModel['displayName'];
+  avatarUrl: ProfileModel['avatarUrl'];
+};
