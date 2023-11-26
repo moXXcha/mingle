@@ -4,6 +4,7 @@ import {
   doesUserExistById,
   doesUserExistByUserName,
   insertUser,
+  selectUserByUserId,
 } from '../repository/user';
 
 // ユーザーを作成
@@ -30,4 +31,14 @@ export async function createUser(
     }
     throw new Error('不明なエラーが発生しました');
   }
+}
+
+// ユーザーを取得する
+export async function getUserByUserId(userId: string): Promise<{
+  id: string;
+  userName: string;
+  email: string;
+}> {
+  const result = await selectUserByUserId(userId);
+  return result;
 }
