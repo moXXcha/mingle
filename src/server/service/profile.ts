@@ -1,10 +1,9 @@
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { createAvatar } from '../repository/avatar';
-import { insertProfile } from '../repository/profile';
+import { insertProfile, selectProfileByUserName } from '../repository/profile';
 import { getUserByUserId } from '../repository/user';
 
-// ! これはサービス
 export async function createProfile(
   displayName: string,
   overview: string,
@@ -43,4 +42,9 @@ export async function createProfile(
       error instanceof Error ? error.message : '不明なエラーが発生しました';
     return { message: errorMessage };
   }
+}
+
+export async function getProfileByUserName(userName: string) {
+  const result = await selectProfileByUserName(userName);
+  return result[0];
 }
