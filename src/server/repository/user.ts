@@ -25,7 +25,7 @@ export async function doesUserExistByUserName(
 }
 
 // ユーザーを取得する
-export async function getUserByUserId(userId: string): Promise<{
+export async function selectUserByUserId(userId: string): Promise<{
   id: string;
   userName: string;
   email: string;
