@@ -1,28 +1,12 @@
-import { InferSelectModel, eq } from 'drizzle-orm';
-import { posts, profiles, tags, users } from 'drizzle/schema';
+import { PostDetail } from '@/types/types';
+import { eq } from 'drizzle-orm';
+import { users } from 'drizzle/schema';
 import 'server-only';
 import { db } from '../db';
 
-type PostModel = InferSelectModel<typeof posts>;
-type TagModel = InferSelectModel<typeof tags>;
-type UserModel = InferSelectModel<typeof users>;
-type ProfileModel = InferSelectModel<typeof profiles>;
-
-type PostDetail = {
-  id: PostModel['id'];
-  title: PostModel['title'];
-  content: PostModel['content'];
-  createdAt: PostModel['createdAt'];
-  updatedAt: PostModel['updatedAt'];
-  tags: TagModel['name'][];
-  userName: UserModel['userName'];
-  displayName: ProfileModel['displayName'];
-  avatarUrl: ProfileModel['avatarUrl'];
-};
-
 // 投稿データを取得する共通関数
 // userName が指定された場合はそのユーザーに関連する投稿を取得する
-export const getPostsData = async (
+export const selectPostsData = async (
   userName?: string,
 ): Promise<PostDetail[]> => {
   // ユーザーとその投稿、タグ、プロフィールを取得
@@ -62,20 +46,20 @@ export const getPostsData = async (
 };
 
 // 全ての投稿を取得する関数
-export const getPosts = async (): Promise<PostDetail[]> => {
-  return getPostsData();
+export const selectPosts = async (): Promise<PostDetail[]> => {
+  return selectPostsData();
 };
 
 // 特定のユーザー名に基づいて投稿を取得する関数
-export const getPostsByUserName = async (
+export const selectPostsByUserName = async (
   userName: string,
 ): Promise<PostDetail[]> => {
-  const data = await getPostsData(userName);
+  const data = await selectPostsData(userName);
   return data;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getLikedPostsByUserName = async (userName: string) => {
+export const selectLikedPostsByUserName = async (userName: string) => {
   //   try {
   //     const result = await db.select().from(posts);
   //   } catch (error) {
