@@ -1,3 +1,4 @@
+import { Failure, Result, Success } from '@/types/types';
 import {
   PutObjectCommand,
   PutObjectCommandInput,
@@ -20,11 +21,13 @@ const client = new S3Client({
   },
 });
 
+// TODO putImageとputAudioは共通化できる
+
 // 画像をアップロードする関数
 export const putImage = async (
   file: File,
   pathName: string,
-): Promise<string> => {
+): Promise<Result<string, Error>> => {
   try {
     const buffer = await fileToBuffer(file);
 
@@ -41,10 +44,11 @@ export const putImage = async (
     await client.send(new PutObjectCommand(uploadParams));
 
     // アップロードされた画像のURLを返す
-    return `${process.env.IMAGE_HOST_URL}/${pathName}`;
+    return new Success(`${process.env.IMAGE_HOST_URL}/${pathName}`);
   } catch (error) {
-    console.error('Error uploading image: ', error);
-    throw error instanceof Error ? error : new Error('Unknown error occurred');
+    return new Failure(
+      error instanceof Error ? error : new Error('Unknown error occurred'),
+    );
   }
 };
 
@@ -52,26 +56,24 @@ export const putImage = async (
 export const putAudio = async (
   file: File,
   pathName: string,
-): Promise<string> => {
+): Promise<Result<string, Error>> => {
   try {
     const buffer = await fileToBuffer(file);
 
-    // アップロードパラメータの設定
     const uploadParams: PutObjectCommandInput = {
       Bucket: 'mingle',
       Key: pathName,
       Body: buffer,
-      ContentType: 'audio/mpeg', // MP3ファイル用のコンテントタイプ
+      ContentType: 'audio/mpeg',
       ACL: 'public-read',
     };
 
-    // コマンドの実行
     await client.send(new PutObjectCommand(uploadParams));
 
-    // アップロードされたオーディオのURLを返す
-    return `${process.env.IMAGE_HOST_URL}/${pathName}`;
+    return new Success(`${process.env.IMAGE_HOST_URL}/${pathName}`);
   } catch (error) {
-    console.error('Error uploading audio: ', error);
-    throw error instanceof Error ? error : new Error('Unknown error occurred');
+    return new Failure(
+      error instanceof Error ? error : new Error('Unknown error occurred'),
+    );
   }
 };
