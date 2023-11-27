@@ -1,7 +1,7 @@
 import { PostDetail } from '@/types/types';
 import 'server-only';
 import { db } from '../db';
-import { uploadMusicFile } from '../repository/musicfile';
+import { uploadMusicFile } from '../repository/musicFile';
 import {
   insertPost,
   selectPosts,
