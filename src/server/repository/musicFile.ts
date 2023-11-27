@@ -1,4 +1,4 @@
-import { putImage } from '@/utils/storage';
+import { putAudio } from '@/utils/storage';
 import 'server-only';
 
 export async function uploadMusicFile(
@@ -6,8 +6,9 @@ export async function uploadMusicFile(
   title: string,
   userName: string,
 ) {
-  // /music/{title}_{userName}-{timestamp}.mp3
-  const pathName = `/music/${title}_${userName}-${Date.now()}.mp3`;
-  const url = await putImage(musicFile, pathName);
+  const url = await putAudio(
+    musicFile,
+    `/music/${title}_${userName}_${Date.now()}.mp3`,
+  );
   return url;
 }
