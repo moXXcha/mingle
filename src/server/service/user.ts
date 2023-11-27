@@ -4,6 +4,7 @@ import {
   doesUserExistById,
   doesUserExistByUserName,
   insertUser,
+  selectUserByUserId,
 } from '../repository/user';
 
 // ユーザーを作成
@@ -22,7 +23,7 @@ export async function createUser(
         throw new Error(`ユーザーID "${id}" は既に使われています`);
       }
 
-      await insertUser({ id, userName, email }, tx);
+      await insertUser(tx, { id, userName, email });
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -30,4 +31,16 @@ export async function createUser(
     }
     throw new Error('不明なエラーが発生しました');
   }
+}
+
+// ユーザーを取得する
+export async function getUserByUserId(userId: string): Promise<{
+  id: string;
+  userName: string;
+  email: string;
+}> {
+  return await db.transaction(async (tx) => {
+    const result = await selectUserByUserId(tx, userId);
+    return result;
+  });
 }

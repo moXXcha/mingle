@@ -1,6 +1,6 @@
-import { PostDetail } from '@/types/types';
+import { PostDetail, Transaction } from '@/types/types';
 import { eq } from 'drizzle-orm';
-import { users } from 'drizzle/schema';
+import { posts, users } from 'drizzle/schema';
 import 'server-only';
 import { db } from '../db';
 
@@ -67,11 +67,31 @@ export const selectLikedPostsByUserName = async (userName: string) => {
   //   }
 };
 
-// // 引数の型
-// export const createPost = async (
-//   userId: string,
-//   title: string,
-//   content: string,
-//   musicFileUrl: string,
-//   tags: string[],
-// ) => {};
+export const insertPost = async (
+  tx: Transaction,
+  {
+    userId,
+    title,
+    content,
+    musicFileUrl,
+  }: {
+    userId: string;
+    title: string;
+    content: string;
+    musicFileUrl: string;
+  },
+): Promise<string> => {
+  const result = await tx
+    .insert(posts)
+    .values({
+      userId,
+      title,
+      content,
+      musicFileUrl,
+    })
+    .returning({ id: posts.id });
+
+  console.log('insertPost id: ', result[0].id);
+
+  return result[0].id;
+};

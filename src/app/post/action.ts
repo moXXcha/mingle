@@ -1,4 +1,6 @@
-import { CreatePost } from '@/types/types';
+'use server';
+
+import { createPost } from '@/server/service/post';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import 'server-only';
@@ -16,28 +18,22 @@ export async function createPostFormAction(formData: FormData) {
       throw new Error('ログインしてください');
     }
 
-    // tagをselect or insertするのはどこ？
+    // TODO validation
 
-    /*
-    ? 疑問点
-
-    - musicFileをStorageにuploadするのはどこ？
-    - tagsをselect or insertするのはどこ？
-    新しいtagだった場合、insertする必要がある
-
-    */
-
-    // validation
-    CreatePost.parse({
+    const postId = await createPost({
       userId: user.id,
       title: formData.get('title') as string,
       content: formData.get('content') as string,
-      musicFileUrl: formData.get('musicFileUrl') as string,
+      musicFile: formData.get('musicFile') as File,
       tags: formData.getAll('tags') as string[],
     });
+
+    console.log('postId: ', postId);
+
+    return { message: '投稿を作成しました' };
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : '不明なエラーが発生しました';
-    return { message: errorMessage };
+    console.log('errorMessage: ', errorMessage);
   }
 }
