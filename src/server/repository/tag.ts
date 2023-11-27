@@ -1,13 +1,8 @@
-import { Failure, Result, Success, Transaction } from '@/types/types';
+import { Failure, Result, Success, Tag, Transaction } from '@/types/types';
 import { eq } from 'drizzle-orm';
 import { tags } from 'drizzle/schema';
 import 'server-only';
 import { db } from '../db';
-
-type Tag = {
-  id: string;
-  name: string;
-};
 
 // 全てのタグを取得する
 export async function selectTags(): Promise<Result<Tag, Error>> {
