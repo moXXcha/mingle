@@ -1,3 +1,4 @@
+import { Transaction } from '@/types/types';
 import { eq } from 'drizzle-orm';
 import { tags } from 'drizzle/schema';
 import 'server-only';
@@ -23,8 +24,11 @@ export async function selectTags() {
 // タグを作成する
 // TODO returnは何を返す？
 // ? すでに存在するか検証する？？
-export async function insertTag(name: string): Promise<string> {
-  const result = await db
+export async function insertTag(
+  tx: Transaction,
+  name: string,
+): Promise<string> {
+  const result = await tx
     .insert(tags)
     .values({ name })
     .returning({ id: tags.id });
@@ -32,8 +36,11 @@ export async function insertTag(name: string): Promise<string> {
 }
 
 // タグが存在するか確認し、存在する場合はそのIDを返す
-export async function findTagIdByName(name: string): Promise<string | null> {
-  const result = await db
+export async function findTagIdByName(
+  tx: Transaction,
+  name: string,
+): Promise<string | null> {
+  const result = await tx
     .select({ id: tags.id })
     .from(tags)
     .where(eq(tags.name, name))
