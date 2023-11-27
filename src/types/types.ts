@@ -75,3 +75,8 @@ export type PostDetail = {
   displayName: ProfileModel['displayName'];
   avatarUrl: ProfileModel['avatarUrl'];
 };
+
+export type Tag = {
+  id: string;
+  name: string;
+};
