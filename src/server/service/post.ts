@@ -1,4 +1,4 @@
-import { PostDetail } from '@/types/types';
+import { Failure, PostDetail, Result } from '@/types/types';
 import 'server-only';
 import { db } from '../db';
 import { uploadMusicFile } from '../repository/musicFile';
@@ -13,14 +13,22 @@ import { createOrGetTags } from './tag';
 
 export async function getPostsByUserName(
   userName: string,
-): Promise<PostDetail[]> {
+): Promise<Result<PostDetail[], Error>> {
   const result = await selectPostsByUserName(userName);
-  return result;
+  if (result.isSuccess()) {
+    return result;
+  } else {
+    return result;
+  }
 }
 
-export async function getPosts(): Promise<PostDetail[]> {
+export async function getPosts(): Promise<Result<PostDetail[], Error>> {
   const result = await selectPosts();
-  return result;
+  if (result.isSuccess()) {
+    return result;
+  } else {
+    return result;
+  }
 }
 
 export async function createPost({
@@ -35,22 +43,26 @@ export async function createPost({
   content: string;
   musicFile: File;
   tags: string[];
-}): Promise<string | void> {
-  // トランザクション開始
-  return await db
-    .transaction(async (tx) => {
+}): Promise<Result<string, Error>> {
+  try {
+    // トランザクション開始
+    return await db.transaction(async (tx) => {
       // ユーザー存在確認
       const user = await selectUserByUserId(tx, userId);
-      if (!user) {
-        throw new Error('User not found');
+      if (user.isFailure()) {
+        throw new Error('ユーザーが見つかりませんでした');
       }
 
       // 音声ファイルのアップロード
       const musicFileUrl = await uploadMusicFile(
         musicFile,
         title,
-        user.userName,
+        user.value.userName,
       );
+
+      if (musicFileUrl.isFailure()) {
+        throw new Error('音声ファイルのアップロードに失敗しました');
+      }
 
       // タグの処理
       const tagIds = await createOrGetTags(tx, tags);
@@ -73,10 +85,10 @@ export async function createPost({
       // ! ここでreturnできていない？
       // 新しい投稿のIDを返す
       return newPostId;
-    })
-    .catch((error) => {
-      if (error instanceof Error) {
-        throw new Error(`Failed to create post: ${error.message}`);
-      }
     });
+  } catch (error) {
+    return new Failure(
+      error instanceof Error ? error : new Error('Unknown error'),
+    );
+  }
 }
