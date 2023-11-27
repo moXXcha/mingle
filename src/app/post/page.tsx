@@ -31,9 +31,15 @@ export default async function Home() {
             required
           />
         </label>
-        <label htmlFor="music">
+        <label htmlFor="musicFile">
           音声ファイル
-          <input type="file" accept=".mp3" id="music" name="music" required />
+          <input
+            type="file"
+            accept=".mp3"
+            id="musicFile"
+            name="musicFile"
+            required
+          />
         </label>
         <label htmlFor="tags">
           タグ
