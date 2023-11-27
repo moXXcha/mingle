@@ -2,7 +2,6 @@ import { Transaction } from '@/types/types';
 import { eq } from 'drizzle-orm';
 import { users } from 'drizzle/schema';
 import 'server-only';
-import { db } from '../db';
 
 // IDに一致するユーザーが存在するかを確認
 export async function doesUserExistById(
@@ -25,12 +24,15 @@ export async function doesUserExistByUserName(
 }
 
 // ユーザーを取得する
-export async function getUserByUserId(userId: string): Promise<{
+export async function selectUserByUserId(
+  tx: Transaction,
+  userId: string,
+): Promise<{
   id: string;
   userName: string;
   email: string;
 }> {
-  const result = await db
+  const result = await tx
     .select({
       id: users.id,
       userName: users.userName,
@@ -48,6 +50,7 @@ export async function getUserByUserId(userId: string): Promise<{
 
 // ユーザーを作成する
 export async function insertUser(
+  tx: Transaction,
   {
     id,
     userName,
@@ -57,7 +60,6 @@ export async function insertUser(
     userName: string;
     email: string;
   },
-  tx: Transaction,
 ): Promise<void> {
   await tx.insert(users).values({ id, userName, email });
 }

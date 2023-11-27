@@ -2,7 +2,7 @@ import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { createAvatar } from '../repository/avatar';
 import { insertProfile, selectProfileByUserName } from '../repository/profile';
-import { getUserByUserId } from '../repository/user';
+import { getUserByUserId } from './user';
 
 export async function createProfile(
   displayName: string,

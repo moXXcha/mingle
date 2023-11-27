@@ -25,13 +25,15 @@ export type Transaction = PgTransaction<
 >;
 
 // ユーザーを作成
-export const CreatePost = z.object({
+export const CreatePostSchema = z.object({
   userId: z.string().uuid(),
   title: z.string(),
   content: z.string(),
   musicFileUrl: z.string().url(),
-  tags: z.array(z.string().uuid()),
+  tags: z.array(z.string()),
 });
+
+export type CreatePost = z.infer<typeof CreatePostSchema>;
 
 export type PostModel = InferSelectModel<typeof posts>;
 export type TagModel = InferSelectModel<typeof tags>;

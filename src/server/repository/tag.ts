@@ -1,3 +1,5 @@
+import { Transaction } from '@/types/types';
+import { eq } from 'drizzle-orm';
 import { tags } from 'drizzle/schema';
 import 'server-only';
 import { db } from '../db';
@@ -7,40 +9,43 @@ import { db } from '../db';
 // ? 複数のタグを一度に作成する は必要？
 
 // 全てのタグを取得する
-export const getTags = async () => {
-  try {
-    const result = await db
-      .select({
-        name: tags.name,
-      })
-      .from(tags);
-    console.log('result: ', result);
+export async function selectTags() {
+  const result = await db
+    .select({
+      id: tags.id,
+      name: tags.name,
+    })
+    .from(tags)
+    .orderBy(tags.createdAt);
 
-    if (result.length === 0) {
-      throw new Error('タグが見つかりませんでした');
-    }
-
-    return result;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-    throw new Error('不明なエラーが発生しました');
-  }
-};
+  return result;
+}
 
 // タグを作成する
 // TODO returnは何を返す？
 // ? すでに存在するか検証する？？
-export const createTag = async (name: string) => {
-  try {
-    const result = await db.insert(tags).values({ name });
+export async function insertTag(
+  tx: Transaction,
+  name: string,
+): Promise<string> {
+  const result = await tx
+    .insert(tags)
+    .values({ name })
+    .returning({ id: tags.id });
+  return result[0].id;
+}
 
-    console.log('result: ', result);
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-    throw new Error('不明なエラーが発生しました');
-  }
-};
+// タグが存在するか確認し、存在する場合はそのIDを返す
+export async function findTagIdByName(
+  tx: Transaction,
+  name: string,
+): Promise<string | null> {
+  const result = await tx
+    .select({ id: tags.id })
+    .from(tags)
+    .where(eq(tags.name, name))
+    .limit(1);
+
+  // タグが見つかった場合はそのIDを返し、見つからない場合はnullを返す
+  return result.length > 0 ? result[0].id : null;
+}
