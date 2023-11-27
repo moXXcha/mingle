@@ -47,3 +47,31 @@ export const putImage = async (
     throw error instanceof Error ? error : new Error('Unknown error occurred');
   }
 };
+
+// MP3ファイルをアップロードする関数
+export const putAudio = async (
+  file: File,
+  pathName: string,
+): Promise<string> => {
+  try {
+    const buffer = await fileToBuffer(file);
+
+    // アップロードパラメータの設定
+    const uploadParams: PutObjectCommandInput = {
+      Bucket: 'mingle',
+      Key: pathName,
+      Body: buffer,
+      ContentType: 'audio/mpeg', // MP3ファイル用のコンテントタイプ
+      ACL: 'public-read',
+    };
+
+    // コマンドの実行
+    await client.send(new PutObjectCommand(uploadParams));
+
+    // アップロードされたオーディオのURLを返す
+    return `${process.env.IMAGE_HOST_URL}/${pathName}`;
+  } catch (error) {
+    console.error('Error uploading audio: ', error);
+    throw error instanceof Error ? error : new Error('Unknown error occurred');
+  }
+};
