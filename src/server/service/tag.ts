@@ -1,10 +1,14 @@
-import { Transaction } from '@/types/types';
+import { Result, Tag, Transaction } from '@/types/types';
 import 'server-only';
 import { findTagIdByName, insertTag, selectTags } from '../repository/tag';
 
-export async function getTags() {
+export async function getTags(): Promise<Result<Tag, Error>> {
   const result = await selectTags();
-  return result;
+  if (result.isSuccess()) {
+    return result;
+  } else {
+    return result;
+  }
 }
 
 // タグを作成または取得する関数
