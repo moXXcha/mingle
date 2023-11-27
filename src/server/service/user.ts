@@ -38,8 +38,8 @@ export async function getUserByUserId(userId: string): Promise<{
   id: string;
   userName: string;
   email: string;
-} | void> {
-  await db.transaction(async (tx) => {
+}> {
+  return await db.transaction(async (tx) => {
     const result = await selectUserByUserId(tx, userId);
     return result;
   });
