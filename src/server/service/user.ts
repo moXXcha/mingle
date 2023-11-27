@@ -23,7 +23,7 @@ export async function createUser(
         throw new Error(`ユーザーID "${id}" は既に使われています`);
       }
 
-      await insertUser({ id, userName, email }, tx);
+      await insertUser(tx, { id, userName, email });
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -38,7 +38,9 @@ export async function getUserByUserId(userId: string): Promise<{
   id: string;
   userName: string;
   email: string;
-}> {
-  const result = await selectUserByUserId(userId);
-  return result;
+} | void> {
+  await db.transaction(async (tx) => {
+    const result = await selectUserByUserId(tx, userId);
+    return result;
+  });
 }
