@@ -2,7 +2,7 @@ import { Failure, Result, Success, Tag, Transaction } from '@/types/types';
 import 'server-only';
 import { findTagIdByName, insertTag, selectTags } from '../repository/tag';
 
-export async function getTags(): Promise<Result<Tag, Error>> {
+export async function getTags(): Promise<Result<Tag[], Error>> {
   const result = await selectTags();
   if (result.isSuccess()) {
     return result;

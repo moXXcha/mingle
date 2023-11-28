@@ -5,7 +5,7 @@ import 'server-only';
 import { db } from '../db';
 
 // 全てのタグを取得する
-export async function selectTags(): Promise<Result<Tag, Error>> {
+export async function selectTags(): Promise<Result<Tag[], Error>> {
   try {
     const result = await db
       .select({
@@ -15,10 +15,12 @@ export async function selectTags(): Promise<Result<Tag, Error>> {
       .from(tags)
       .orderBy(tags.createdAt);
 
-    return new Success({
-      id: result[0].id,
-      name: result[0].name as string,
-    });
+    return new Success(
+      result.map((tag) => ({
+        id: tag.id,
+        name: tag.name as string,
+      })),
+    );
   } catch (error) {
     return new Failure(
       error instanceof Error ? error : new Error('Failed to fetch tags'),
