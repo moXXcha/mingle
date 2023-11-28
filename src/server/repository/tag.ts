@@ -45,6 +45,7 @@ export async function insertTag(
 }
 
 // タグが存在するか確認し、存在する場合はそのIDを返す
+// TODO 一度にまとめて、selectした方がいいかも
 export async function findTagIdByName(
   tx: Transaction,
   name: string,
