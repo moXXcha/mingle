@@ -7,13 +7,15 @@ import { createPostFormAction } from './action';
 export default async function Home() {
   // ! とりあえずタグの入力は一つのみ受け付ける
 
-  const tags = await getTags();
-  console.log('tags: ', tags);
+  const tagsResult = await getTags();
+  if (tagsResult.isFailure()) {
+    return <div>タグがありません</div>;
+  }
   return (
     <div>
       <div>
         <div>タグ</div>
-        {tags?.map((tag) => (
+        {tagsResult.value.map((tag) => (
           <div key={tag.id}>
             <div>{tag.name}</div>
           </div>

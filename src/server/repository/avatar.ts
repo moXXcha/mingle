@@ -1,14 +1,18 @@
+import { Failure, Result, Success } from '@/types/types';
 import { putImage } from '@/utils/storage';
 import 'server-only';
 
-// ! これはサービスでは？ utils/storage.tsがリポジトリ層の役割では？
-export async function createAvatar(
+export async function uploadUserAvatar(
   avatar: File,
   userName: string,
-): Promise<string> {
-  const url = await putImage(
-    avatar,
-    `avatars/${userName}_${new Date().toISOString()}`,
-  );
-  return url;
+): Promise<Result<string, Error>> {
+  // ファイル名の生成
+  const fileName = `avatars/${encodeURIComponent(userName)}_${Date.now()}`;
+  const result = await putImage(avatar, fileName);
+
+  if (result.isSuccess()) {
+    return new Success(result.value);
+  } else {
+    return new Failure(result.value);
+  }
 }

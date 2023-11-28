@@ -1,33 +1,38 @@
+import { Failure, Profile, Result, Success } from '@/types/types';
 import { eq } from 'drizzle-orm';
 import { profiles, users } from 'drizzle/schema';
 import 'server-only';
 import { db } from '../db';
 
-export async function selectProfileByUserName(userName: string): Promise<
-  {
-    displayName: string | null;
-    overview: string | null;
-    avatarUrl: string | null;
-  }[]
-> {
-  // users.userNameと一致するプロフィールを取得
-  const result = await db
-    .select({
-      displayName: profiles.displayName,
-      overview: profiles.overview,
-      avatarUrl: profiles.avatarUrl,
-    })
-    .from(users)
-    .leftJoin(profiles, eq(users.id, profiles.id))
-    .where(eq(users.userName, userName))
-    .limit(1);
+export async function selectProfileByUserName(
+  userName: string,
+): Promise<Result<Profile, Error>> {
+  try {
+    const result = await db
+      .select({
+        displayName: profiles.displayName,
+        overview: profiles.overview,
+        avatarUrl: profiles.avatarUrl,
+      })
+      .from(users)
+      .leftJoin(profiles, eq(users.id, profiles.id))
+      .where(eq(users.userName, userName))
+      .limit(1);
 
-  if (result.length === 0) {
-    throw new Error('プロフィールが見つかりませんでした');
+    if (result.length === 0) {
+      throw new Error(`Profile not found for userName: ${userName}`);
+    }
+
+    return new Success({
+      displayName: result[0].displayName as string,
+      overview: result[0].overview as string,
+      avatarUrl: result[0].avatarUrl as string,
+    });
+  } catch (error) {
+    return new Failure(
+      error instanceof Error ? error : new Error('Failed to fetch profile'),
+    );
   }
-
-  console.log('result: ', result);
-  return result;
 }
 
 export async function insertProfile({
@@ -40,11 +45,22 @@ export async function insertProfile({
   displayName: string;
   overview: string;
   avatarUrl: string;
-}) {
-  await db.insert(profiles).values({
-    id,
-    displayName,
-    overview,
-    avatarUrl,
-  });
+}): Promise<Result<string, Error>> {
+  try {
+    const result = await db
+      .insert(profiles)
+      .values({
+        id,
+        displayName,
+        overview,
+        avatarUrl,
+      })
+      .returning({ id: profiles.id });
+
+    return new Success(result[0].id);
+  } catch (error) {
+    return new Failure(
+      error instanceof Error ? error : new Error('Unknown error'),
+    );
+  }
 }
