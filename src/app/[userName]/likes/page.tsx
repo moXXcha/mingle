@@ -1,7 +1,7 @@
 'use server';
 
 // eslint-disable-next-line @typescript-eslint/require-await
-export default async function Home({
+export default async function Page({
   params,
 }: {
   params: { userName: string };

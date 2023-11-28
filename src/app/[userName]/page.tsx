@@ -2,8 +2,9 @@
 
 import { getPostsByUserName } from '@/server/service/post';
 import Image from 'next/image';
+import Link from 'next/link';
 
-export default async function Home({
+export default async function Page({
   params,
 }: {
   params: { userName: string };
@@ -19,6 +20,9 @@ export default async function Home({
 
   return (
     <div>
+      <Link className="border text-blue-500" href={`/${userName}/edit`}>
+        編集
+      </Link>
       {postsResult.value.map((post) => (
         <div key={post.id}>
           <div>タイトル:{post.title}</div>
