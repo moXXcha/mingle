@@ -1,13 +1,7 @@
-import { Failure, Result, Success, Transaction } from '@/types/types';
+import { Failure, Result, Success, Transaction, User } from '@/types/types';
 import { eq } from 'drizzle-orm';
 import { users } from 'drizzle/schema';
 import 'server-only';
-
-type User = {
-  id: string;
-  userName: string;
-  email: string;
-};
 
 // IDに一致するユーザーが存在するかを確認
 export async function doesUserExistById(
