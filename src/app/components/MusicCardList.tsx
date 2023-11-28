@@ -5,10 +5,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export const MusicCardList = async () => {
-  const posts = await getPosts();
+  const postsResult = await getPosts();
+  if (postsResult.isFailure()) {
+    return <div>投稿がありません</div>;
+  }
+
   return (
     <div>
-      {posts?.map((post) => (
+      {postsResult.value.map((post) => (
         <div key={post.id}>
           <div>タイトル:{post.title}</div>
           <div>概要:{post.content}</div>
