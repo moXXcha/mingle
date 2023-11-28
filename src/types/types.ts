@@ -80,3 +80,15 @@ export type Tag = {
   id: string;
   name: string;
 };
+
+export type Profile = {
+  displayName: string;
+  overview: string;
+  avatarUrl: string;
+};
+
+export type User = {
+  id: string;
+  userName: string;
+  email: string;
+};
