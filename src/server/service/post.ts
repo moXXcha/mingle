@@ -1,4 +1,4 @@
-import { Failure, PostDetail, Result } from '@/types/types';
+import { Failure, PostDetail, Result, Success } from '@/types/types';
 import 'server-only';
 import { db } from '../db';
 import { uploadMusicFile } from '../repository/musicFile';
@@ -14,21 +14,11 @@ import { createOrGetTags } from './tag';
 export async function getPostsByUserName(
   userName: string,
 ): Promise<Result<PostDetail[], Error>> {
-  const result = await selectPostsByUserName(userName);
-  if (result.isSuccess()) {
-    return result;
-  } else {
-    return result;
-  }
+  return await selectPostsByUserName(userName);
 }
 
 export async function getPosts(): Promise<Result<PostDetail[], Error>> {
-  const result = await selectPosts();
-  if (result.isSuccess()) {
-    return result;
-  } else {
-    return result;
-  }
+  return await selectPosts();
 }
 
 export async function createPost({
@@ -48,43 +38,41 @@ export async function createPost({
     // トランザクション開始
     return await db.transaction(async (tx) => {
       // ユーザー存在確認
-      const user = await selectUserByUserId(tx, userId);
-      if (user.isFailure()) {
-        throw new Error('ユーザーが見つかりませんでした');
-      }
+      const userResult = await selectUserByUserId(tx, userId);
+      if (userResult.isFailure()) return userResult;
 
       // 音声ファイルのアップロード
-      const musicFileUrl = await uploadMusicFile(
+      const musicFileUrlResult = await uploadMusicFile(
         musicFile,
         title,
-        user.value.userName,
+        userResult.value.userName,
       );
-
-      if (musicFileUrl.isFailure()) {
-        throw new Error('音声ファイルのアップロードに失敗しました');
-      }
+      if (musicFileUrlResult.isFailure()) return musicFileUrlResult;
 
       // タグの処理
-      const tagIds = await createOrGetTags(tx, tags);
+      const tagIdsResult = await createOrGetTags(tx, tags);
+      if (tagIdsResult.isFailure()) return tagIdsResult;
 
       // 投稿の作成
-      const newPostId = await insertPost(tx, {
+      const newPostIdResult = await insertPost(tx, {
         userId,
         title,
         content,
-        musicFileUrl,
+        musicFileUrl: musicFileUrlResult.value,
       });
-
-      console.log('createPost: newPostId: ', newPostId);
+      if (newPostIdResult.isFailure()) return newPostIdResult;
+      console.log('createPost: newPostId: ', newPostIdResult.value);
 
       // 投稿とタグの関連付け
-      await insertPostTagRelation(tx, newPostId, tagIds);
+      const postTagRelationResult = await insertPostTagRelation(
+        tx,
+        newPostIdResult.value,
+        tagIdsResult.value,
+      );
+      if (postTagRelationResult.isFailure()) return postTagRelationResult;
 
-      console.log('hoge: ', newPostId);
-
-      // ! ここでreturnできていない？
       // 新しい投稿のIDを返す
-      return newPostId;
+      return new Success(newPostIdResult.value);
     });
   } catch (error) {
     return new Failure(
