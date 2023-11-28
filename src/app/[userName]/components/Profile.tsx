@@ -9,13 +9,16 @@ type Props = {
 
 export const Profile = async (props: Props) => {
   // データ取得
-  const profile = await getProfileByUserName(props.userName);
+  const profileResult = await getProfileByUserName(props.userName);
+  if (profileResult.isFailure()) {
+    return <div>プロフィールがありません</div>;
+  }
   return (
     <div>
-      <div>表示名: {profile.displayName}</div>
-      <div>概要: {profile.overview}</div>
+      <div>表示名: {profileResult.value.displayName}</div>
+      <div>概要: {profileResult.value.overview}</div>
       <Image
-        src={profile.avatarUrl as string}
+        src={profileResult.value.avatarUrl}
         alt="icon"
         width={200}
         height={200}

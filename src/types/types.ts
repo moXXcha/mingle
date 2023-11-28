@@ -9,6 +9,30 @@ import {
   users,
 } from '/Users/kou12345/workspace/mingle-web/drizzle/schema';
 
+export type Result<T, E> = Success<T, E> | Failure<T, E>;
+
+export class Success<T, E> {
+  constructor(readonly value: T) {}
+  type = 'success' as const;
+  isSuccess(): this is Success<T, E> {
+    return true;
+  }
+  isFailure(): this is Failure<T, E> {
+    return false;
+  }
+}
+
+export class Failure<T, E> {
+  constructor(readonly value: E) {}
+  type = 'failure' as const;
+  isSuccess(): this is Success<T, E> {
+    return false;
+  }
+  isFailure(): this is Failure<T, E> {
+    return true;
+  }
+}
+
 export const AuthSchema = z.object({
   email: z.string().email(),
   password: z.string().min(12),
@@ -50,4 +74,21 @@ export type PostDetail = {
   userName: UserModel['userName'];
   displayName: ProfileModel['displayName'];
   avatarUrl: ProfileModel['avatarUrl'];
+};
+
+export type Tag = {
+  id: string;
+  name: string;
+};
+
+export type Profile = {
+  displayName: string;
+  overview: string;
+  avatarUrl: string;
+};
+
+export type User = {
+  id: string;
+  userName: string;
+  email: string;
 };
