@@ -12,11 +12,14 @@ export default async function Home({
   console.log('userName: ', userName);
 
   // 自分の投稿を取得
-  const data = await getPostsByUserName(userName);
+  const postsResult = await getPostsByUserName(userName);
+  if (postsResult.isFailure()) {
+    return <div>投稿がありません</div>;
+  }
 
   return (
     <div>
-      {data?.map((post) => (
+      {postsResult.value.map((post) => (
         <div key={post.id}>
           <div>タイトル:{post.title}</div>
           <div>概要:{post.content}</div>
