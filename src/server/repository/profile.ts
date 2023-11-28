@@ -1,14 +1,8 @@
-import { Failure, Result, Success } from '@/types/types';
+import { Failure, Profile, Result, Success } from '@/types/types';
 import { eq } from 'drizzle-orm';
 import { profiles, users } from 'drizzle/schema';
 import 'server-only';
 import { db } from '../db';
-
-type Profile = {
-  displayName: string;
-  overview: string;
-  avatarUrl: string;
-};
 
 export async function selectProfileByUserName(
   userName: string,
