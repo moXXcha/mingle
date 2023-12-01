@@ -14,7 +14,7 @@ export async function createProfile(
   overview: string,
   avatar: File,
 ): Promise<Result<Profile, Error>> {
-  console.log('createProfile');
+  console.log('createProfile: START');
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
@@ -43,12 +43,15 @@ export async function createProfile(
     });
     if (insertProfileResult.isFailure()) throw insertProfileResult;
 
+    console.log('createProfile: END');
+
     return new Success({
       displayName,
       overview,
       avatarUrl: urlResult.value,
     });
   } catch (error) {
+    console.log('createProfile ERROR: ', error);
     return new Failure(
       error instanceof Error ? error : new Error('Failed to create profile'),
     );
