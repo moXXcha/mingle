@@ -12,11 +12,6 @@ export async function updatePostFormAction(
   const displayName = formData.get('displayName') as string;
   const overview = formData.get('overview') as string;
   const avatarFile = formData.get('avatarFile') as File;
-  console.log('avatarFile: ', avatarFile);
-
-  /*
-  avatarFileがない場合は、更新しないということにする
-  */
 
   // TODO validation
   const result = await editProfile({
