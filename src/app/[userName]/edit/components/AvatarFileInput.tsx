@@ -12,6 +12,7 @@ export const AvatarFileInput = (props: Props) => {
   console.log('avatarFile: ', avatarFile);
 
   // TODO uploadした画像のプレビューを表示する
+  // TODO 既存の画像を保持しておく
   return (
     <div>
       <div>アイコン</div>
@@ -28,7 +29,6 @@ export const AvatarFileInput = (props: Props) => {
           name="avatarFile"
           id="avatarFile"
           accept="image/*"
-          required
           onChange={(e) => {
             if (e.target.files) {
               setAvatarFile(e.target.files[0]);
