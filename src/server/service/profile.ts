@@ -83,18 +83,32 @@ export async function editProfile(
     const userResult = await getUserByUserId(user.id);
     if (userResult.isFailure()) throw userResult;
 
-    // Storageにavatarをuploadする
-    const urlResult = await uploadUserAvatar(
-      editProfileReq.avatar,
-      userResult.value.userName,
-    );
-    if (urlResult.isFailure()) throw urlResult;
+    let avatarUrl = '';
+    if (editProfileReq.avatar.size === 0) {
+      // avatarの更新をしない
+      // avatarUrlを取得する
+      const profileResult = await selectProfileByUserName(
+        userResult.value.userName,
+      );
+      if (profileResult.isFailure()) throw profileResult;
+      avatarUrl = profileResult.value.avatarUrl;
+    } else {
+      // ! avatarがない場合、ここの関数を呼ばない
+      // Storageにavatarをuploadする
+      const urlResult = await uploadUserAvatar(
+        editProfileReq.avatar,
+        userResult.value.userName,
+      );
+      if (urlResult.isFailure()) throw urlResult;
+
+      avatarUrl = urlResult.value;
+    }
 
     const updateProfileResult = await updateProfile({
       id: user?.id,
       displayName: editProfileReq.displayName,
       overview: editProfileReq.overview,
-      avatarUrl: urlResult.value,
+      avatarUrl,
     });
     if (updateProfileResult.isFailure()) throw updateProfileResult;
 
