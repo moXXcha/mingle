@@ -96,7 +96,7 @@ export async function editProfile(
       if (profileResult.isFailure()) throw profileResult;
       avatarUrl = profileResult.value.avatarUrl;
     } else {
-      // ! avatarがない場合、ここの関数を呼ばない
+      // avatarがない場合、ここの関数を呼ばない
       // Storageにavatarをuploadする
       const urlResult = await uploadUserAvatar(
         editProfileReq.avatar,
