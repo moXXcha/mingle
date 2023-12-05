@@ -4,7 +4,6 @@ import { editProfile } from '@/server/service/profile';
 import { redirect } from 'next/navigation';
 import 'server-only';
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function updatePostFormAction(
   userName: string,
   formData: FormData,
