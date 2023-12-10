@@ -4,7 +4,7 @@
 import { getTags } from '@/server/service/tag';
 import { createPostFormAction } from './action';
 
-export default async function Home() {
+export default async function Page() {
   // ! とりあえずタグの入力は一つのみ受け付ける
 
   const tagsResult = await getTags();

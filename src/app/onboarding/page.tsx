@@ -6,7 +6,7 @@ import Link from 'next/link';
 import ProfileForm from './components/ProfileForm';
 import UserNameForm from './components/UserNameForm';
 
-export default async function Home() {
+export default async function Page() {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
   const {
