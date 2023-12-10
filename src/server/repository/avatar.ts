@@ -7,7 +7,7 @@ export async function uploadUserAvatar(
   userName: string,
 ): Promise<Result<string, Error>> {
   // ファイル名の生成
-  const fileName = `avatars/${encodeURIComponent(userName)}_${Date.now()}`;
+  const fileName = `avatars/${encodeURIComponent(userName)}`;
   const result = await putImage(avatar, fileName);
 
   if (result.isSuccess()) {
