@@ -1,9 +1,10 @@
-import { Failure, PostDetail, Result, Success } from '@/types/types';
+import { Failure, PostDetail, PostModel, Result, Success } from '@/types/types';
 import 'server-only';
 import { db } from '../db';
 import { uploadMusicFile } from '../repository/musicFile';
 import {
   insertPost,
+  selectPostById,
   selectPosts,
   selectPostsByUserName,
 } from '../repository/post';
@@ -15,6 +16,16 @@ export async function getPostsByUserName(
   userName: string,
 ): Promise<Result<PostDetail[], Error>> {
   return await selectPostsByUserName(userName);
+}
+
+export async function getPostById(
+  postId: string,
+): Promise<Result<PostModel, Error>> {
+  const postsResult = await selectPostById(postId);
+
+  if (postsResult.isFailure()) return postsResult;
+
+  return new Success(postsResult.value);
 }
 
 export async function getPosts(): Promise<Result<PostDetail[], Error>> {
