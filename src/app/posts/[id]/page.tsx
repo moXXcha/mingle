@@ -17,9 +17,13 @@ export default async function Signup({ params }: { params: { id: string } }) {
       <div>{id}</div>
       <div>音声データ</div>
       <div>{post.value.title}</div>
-      <div>{post.value.createdAt.toISOString()}</div>
       <audio controls src={post.value.musicFileUrl} />
+      <div>タグ</div>
+      <div>概要</div>
+      <div>icon</div>
+      <div>フォローボタン</div>
       <div>コメント</div>
+      <div>{post.value.createdAt.toISOString()}</div>
     </div>
   );
 }
