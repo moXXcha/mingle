@@ -1,6 +1,7 @@
 import {
   Failure,
   PostDetail,
+  PostModel,
   Result,
   Success,
   Transaction,
@@ -79,6 +80,23 @@ export const selectPostsByUserName = async (
     return new Success(result.value);
   } else {
     return new Failure(result.value);
+  }
+};
+
+// postId に基づいて投稿を取得する関数
+export const selectPostById = async (
+  postId: string,
+): Promise<Result<PostModel, Error>> => {
+  try {
+    const result = await db.select().from(posts).where(eq(posts.id, postId));
+    console.log('selectPostById result: ', result);
+
+    return new Success(result[0]);
+  } catch (error) {
+    console.log(error);
+    return new Failure(
+      error instanceof Error ? error : new Error('Unknown error'),
+    );
   }
 };
 
