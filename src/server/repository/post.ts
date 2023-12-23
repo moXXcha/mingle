@@ -7,12 +7,13 @@ import {
   Transaction,
 } from '@/types/types';
 import { eq } from 'drizzle-orm';
-import { posts, users } from 'drizzle/schema';
+import { postTagRelation, posts, users } from 'drizzle/schema';
 import 'server-only';
 import { db } from '../db';
 
 // 投稿データを取得する共通関数
 // userName が指定された場合はそのユーザーに関連する投稿を取得する
+// TODO 関数名を変更する
 export const selectPostsData = async (
   userName?: string,
 ): Promise<Result<PostDetail[], Error>> => {
@@ -59,6 +60,7 @@ export const selectPostsData = async (
     );
   }
 };
+
 // 全ての投稿を取得する関数
 export const selectPosts = async (): Promise<Result<PostDetail[], Error>> => {
   const result = await selectPostsData();
@@ -100,13 +102,53 @@ export const selectPostById = async (
   }
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const selectLikedPostsByUserName = async (userName: string) => {
-  //   try {
-  //     const result = await db.select().from(posts);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
+// TODO typeファイルに移動
+export type PostData = {
+  id: string;
+  title: string;
+  content: string;
+  musicFileUrl: string;
+  createdAt: Date;
+  updatedAt: Date;
+  tags: string[];
+};
+
+// postId に基づいて投稿を取得する関数
+export const selectPostDataByPostId = async (
+  postId: string,
+): Promise<Result<PostData[], Error>> => {
+  try {
+    // postId に基づいて投稿を取得
+    // ユーザーとその投稿、タグ、プロフィールを取得
+    const result = await db.query.postTagRelation.findFirst({
+      with: {
+        post: true,
+        tag: true,
+      },
+      where: eq(postTagRelation.postId, postId),
+    });
+
+    // 取得したデータを整形
+    const data = [
+      {
+        id: result?.post.id as string,
+        title: result?.post.title as string,
+        content: result?.post.content as string,
+        musicFileUrl: result?.post.musicFileUrl as string,
+        createdAt: result?.post.createdAt as Date,
+        updatedAt: result?.post.updatedAt as Date,
+        tags: [result?.tag.name] as string[],
+      },
+    ];
+
+    console.log('selectPostDataByPostId data: ', data);
+
+    return new Success(data);
+  } catch (error) {
+    return new Failure(
+      error instanceof Error ? error : new Error('Unknown error'),
+    );
+  }
 };
 
 export const insertPost = async (
