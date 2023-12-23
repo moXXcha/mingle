@@ -3,8 +3,10 @@ import 'server-only';
 import { db } from '../db';
 import { uploadMusicFile } from '../repository/musicFile';
 import {
+  PostData,
   insertPost,
   selectPostById,
+  selectPostDataByPostId,
   selectPosts,
   selectPostsByUserName,
 } from '../repository/post';
@@ -85,6 +87,31 @@ export async function createPost({
       // 新しい投稿のIDを返す
       return new Success(newPostIdResult.value);
     });
+  } catch (error) {
+    return new Failure(
+      error instanceof Error ? error : new Error('Unknown error'),
+    );
+  }
+}
+
+export async function getPostDetailByPostId(
+  postId: string,
+): Promise<Result<PostData[], Error>> {
+  /*
+    title
+    content
+    musicFileUrl
+    tags
+    userName
+    userIconUrl
+    を取得する
+  */
+  try {
+    const postDetailResult = await selectPostDataByPostId(postId);
+    if (postDetailResult.isFailure()) return postDetailResult;
+    console.log('getPostDetailByPostId: ', postDetailResult.value);
+
+    return new Success(postDetailResult.value);
   } catch (error) {
     return new Failure(
       error instanceof Error ? error : new Error('Unknown error'),
