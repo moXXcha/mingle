@@ -1,6 +1,8 @@
 'use server';
 
 import { getPostById } from '@/server/service/post';
+import { Comments } from './components/Comments';
+import { MusicPlayer } from './components/MusicPlayer';
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export default async function Signup({ params }: { params: { id: string } }) {
@@ -13,17 +15,11 @@ export default async function Signup({ params }: { params: { id: string } }) {
 
   return (
     <div>
-      <div>詳細画面</div>
-      <div>{id}</div>
-      <div>音声データ</div>
-      <div>{post.value.title}</div>
-      <audio controls src={post.value.musicFileUrl} />
-      <div>タグ</div>
-      <div>概要</div>
-      <div>icon</div>
-      <div>フォローボタン</div>
+      <MusicPlayer postId={id} />
+
+      <hr />
       <div>コメント</div>
-      <div>{post.value.createdAt.toISOString()}</div>
+      <Comments />
     </div>
   );
 }
