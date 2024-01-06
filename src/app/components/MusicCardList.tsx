@@ -14,7 +14,9 @@ export const MusicCardList = async () => {
     <div>
       {postsResult.value.map((post) => (
         <div key={post.id}>
-          <div className="text-xl">タイトル:{post.title}</div>
+          <Link className="text-xl" href={`/posts/${post.id}`}>
+            タイトル: {post.title}
+          </Link>
           <div>概要:{post.content}</div>
           <Link href={`/${post.userName}`}>投稿者名:{post.displayName}</Link>
 
