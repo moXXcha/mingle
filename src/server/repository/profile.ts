@@ -8,6 +8,17 @@ export type ProfileRepository = {
   selectProfileByUserName: (
     userName: string,
   ) => Promise<Result<Profile, Error>>;
+  updateProfile: ({
+    id,
+    displayName,
+    overview,
+    avatarUrl,
+  }: {
+    id: string;
+    displayName: string;
+    overview: string;
+    avatarUrl: string;
+  }) => Promise<Result<string, Error>>;
 };
 
 export const createProfileRepository = () => {
@@ -44,6 +55,36 @@ export const createProfileRepository = () => {
         );
       }
     },
+
+    updateProfile: async ({
+      id,
+      displayName,
+      overview,
+      avatarUrl,
+    }: {
+      id: string;
+      displayName: string;
+      overview: string;
+      avatarUrl: string;
+    }): Promise<Result<string, Error>> => {
+      try {
+        const result = await db
+          .update(profiles)
+          .set({
+            displayName,
+            overview,
+            avatarUrl,
+          })
+          .where(eq(profiles.id, id))
+          .returning({ id: profiles.id });
+
+        return new Success(result[0].id);
+      } catch (error) {
+        return new Failure(
+          error instanceof Error ? error : new Error('updateProfile failed'),
+        );
+      }
+    },
   };
 };
 
@@ -67,36 +108,6 @@ export async function insertProfile({
         overview,
         avatarUrl,
       })
-      .returning({ id: profiles.id });
-
-    return new Success(result[0].id);
-  } catch (error) {
-    return new Failure(
-      error instanceof Error ? error : new Error('Unknown error'),
-    );
-  }
-}
-
-export async function updateProfile({
-  id,
-  displayName,
-  overview,
-  avatarUrl,
-}: {
-  id: string;
-  displayName: string;
-  overview: string;
-  avatarUrl: string;
-}): Promise<Result<string, Error>> {
-  try {
-    const result = await db
-      .update(profiles)
-      .set({
-        displayName,
-        overview,
-        avatarUrl,
-      })
-      .where(eq(profiles.id, id))
       .returning({ id: profiles.id });
 
     return new Success(result[0].id);
