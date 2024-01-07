@@ -1,124 +1,132 @@
 import { Failure, Profile, Result, Success } from '@/types/types';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
-import { uploadUserAvatar } from '../repository/avatar';
-import {
-  insertProfile,
-  selectProfileByUserName,
-  updateProfile,
-} from '../repository/profile';
+import { AvatarRepository } from '../repository/avatar';
+import { ProfileRepository, insertProfile } from '../repository/profile';
 import { getUserByUserId } from './user';
 
-export async function createProfile(
-  displayName: string,
-  overview: string,
-  avatar: File,
-): Promise<Result<Profile, Error>> {
-  console.log('createProfile: START');
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+export const createProfileService = (
+  avatarRepository: AvatarRepository,
+  profileRepository: ProfileRepository,
+) => {
+  return {
+    createProfile: async (
+      displayName: string,
+      overview: string,
+      avatarFile: File,
+    ): Promise<Result<Profile, Error>> => {
+      console.log('createProfile: START');
 
-  try {
-    // ユーザーのセッションを取得
-    const { data: session, error: sessionError } =
-      await supabase.auth.getSession();
-    if (sessionError) throw new Error(sessionError.message);
+      const cookieStore = cookies();
+      const supabase = createClient(cookieStore);
 
-    const userResult = await getUserByUserId(
-      session.session?.user.id as string,
-    );
-    if (userResult.isFailure()) throw userResult;
+      try {
+        // ユーザーのセッションを取得
+        const { data: session, error: sessionError } =
+          await supabase.auth.getSession();
+        if (sessionError) throw new Error(sessionError.message);
 
-    // Storageにavatarをuploadする
-    const urlResult = await uploadUserAvatar(avatar, userResult.value.userName);
-    if (urlResult.isFailure()) throw urlResult;
-    console.log('url: ', urlResult.value);
+        // TODO
+        const userResult = await getUserByUserId(
+          session.session?.user.id as string,
+        );
+        if (userResult.isFailure()) throw userResult;
 
-    // プロフィールを作成
-    const insertProfileResult = await insertProfile({
-      id: userResult.value.id,
-      displayName,
-      overview,
-      avatarUrl: urlResult.value,
-    });
-    if (insertProfileResult.isFailure()) throw insertProfileResult;
+        // Storageにavatarをuploadする
+        const urlResult = await avatarRepository.uploadUserAvatar(
+          avatarFile,
+          userResult.value.userName,
+        );
+        if (urlResult.isFailure()) throw urlResult;
+        console.log('url: ', urlResult.value);
 
-    console.log('createProfile: END');
+        // プロフィールを作成
+        const insertProfileResult = await insertProfile({
+          id: userResult.value.id,
+          displayName,
+          overview,
+          avatarUrl: urlResult.value,
+        });
+        if (insertProfileResult.isFailure()) throw insertProfileResult;
 
-    return new Success({
-      displayName,
-      overview,
-      avatarUrl: urlResult.value,
-    });
-  } catch (error) {
-    console.log('createProfile ERROR: ', error);
-    return new Failure(
-      error instanceof Error ? error : new Error('Failed to create profile'),
-    );
-  }
-}
+        console.log('createProfile: END');
 
-export async function getProfileByUserName(
-  userName: string,
-): Promise<Result<Profile, Error>> {
-  return await selectProfileByUserName(userName);
-}
+        return new Success({
+          displayName,
+          overview,
+          avatarUrl: urlResult.value,
+        });
+      } catch (error) {
+        console.log('createProfile ERROR: ', error);
+        return new Failure(
+          error instanceof Error ? error : new Error('createProfile failed'),
+        );
+      }
+    },
 
-type EditProfileReq = {
-  displayName: string;
-  overview: string;
-  avatar: File;
+    getProfileByUserName: async (
+      userName: string,
+    ): Promise<Result<Profile, Error>> => {
+      return await profileRepository.selectProfileByUserName(userName);
+    },
+  };
 };
 
-export async function editProfile(
-  editProfileReq: EditProfileReq,
-): Promise<Result<string, Error>> {
-  try {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+// type EditProfileReq = {
+//   displayName: string;
+//   overview: string;
+//   avatar: File;
+// };
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+// export async function editProfile(
+//   editProfileReq: EditProfileReq,
+// ): Promise<Result<string, Error>> {
+//   try {
+//     const cookieStore = cookies();
+//     const supabase = createClient(cookieStore);
 
-    if (!user?.id) throw new Error('Failed to get user');
+//     const {
+//       data: { user },
+//     } = await supabase.auth.getUser();
 
-    const userResult = await getUserByUserId(user.id);
-    if (userResult.isFailure()) throw userResult;
+//     if (!user?.id) throw new Error('Failed to get user');
 
-    let avatarUrl = '';
-    if (editProfileReq.avatar.size === 0) {
-      // avatarの更新をしない
-      // avatarUrlを取得する
-      const profileResult = await selectProfileByUserName(
-        userResult.value.userName,
-      );
-      if (profileResult.isFailure()) throw profileResult;
-      avatarUrl = profileResult.value.avatarUrl;
-    } else {
-      // avatarがない場合、ここの関数を呼ばない
-      // Storageにavatarをuploadする
-      const urlResult = await uploadUserAvatar(
-        editProfileReq.avatar,
-        userResult.value.userName,
-      );
-      if (urlResult.isFailure()) throw urlResult;
+//     const userResult = await getUserByUserId(user.id);
+//     if (userResult.isFailure()) throw userResult;
 
-      avatarUrl = urlResult.value;
-    }
+//     let avatarUrl = '';
+//     if (editProfileReq.avatar.size === 0) {
+//       // avatarの更新をしない
+//       // avatarUrlを取得する
+//       const profileResult = await selectProfileByUserName(
+//         userResult.value.userName,
+//       );
+//       if (profileResult.isFailure()) throw profileResult;
+//       avatarUrl = profileResult.value.avatarUrl;
+//     } else {
+//       // avatarがない場合、ここの関数を呼ばない
+//       // Storageにavatarをuploadする
+//       const urlResult = await uploadUserAvatar(
+//         editProfileReq.avatar,
+//         userResult.value.userName,
+//       );
+//       if (urlResult.isFailure()) throw urlResult;
 
-    const updateProfileResult = await updateProfile({
-      id: user?.id,
-      displayName: editProfileReq.displayName,
-      overview: editProfileReq.overview,
-      avatarUrl,
-    });
-    if (updateProfileResult.isFailure()) throw updateProfileResult;
+//       avatarUrl = urlResult.value;
+//     }
 
-    return new Success(updateProfileResult.value);
-  } catch (error) {
-    return new Failure(
-      error instanceof Error ? error : new Error('Failed to update profile'),
-    );
-  }
-}
+//     const updateProfileResult = await updateProfile({
+//       id: user?.id,
+//       displayName: editProfileReq.displayName,
+//       overview: editProfileReq.overview,
+//       avatarUrl,
+//     });
+//     if (updateProfileResult.isFailure()) throw updateProfileResult;
+
+//     return new Success(updateProfileResult.value);
+//   } catch (error) {
+//     return new Failure(
+//       error instanceof Error ? error : new Error('Failed to update profile'),
+//     );
+//   }
+// }
