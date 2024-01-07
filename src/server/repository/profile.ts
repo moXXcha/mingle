@@ -4,36 +4,48 @@ import { profiles, users } from 'drizzle/schema';
 import 'server-only';
 import { db } from '../db';
 
-export async function selectProfileByUserName(
-  userName: string,
-): Promise<Result<Profile, Error>> {
-  try {
-    const result = await db
-      .select({
-        displayName: profiles.displayName,
-        overview: profiles.overview,
-        avatarUrl: profiles.avatarUrl,
-      })
-      .from(users)
-      .leftJoin(profiles, eq(users.id, profiles.id))
-      .where(eq(users.userName, userName))
-      .limit(1);
+export type ProfileRepository = {
+  selectProfileByUserName: (
+    userName: string,
+  ) => Promise<Result<Profile, Error>>;
+};
 
-    if (result.length === 0) {
-      throw new Error(`Profile not found for userName: ${userName}`);
-    }
+export const createProfileRepository = () => {
+  return {
+    selectProfileByUserName: async (
+      userName: string,
+    ): Promise<Result<Profile, Error>> => {
+      try {
+        const result = await db
+          .select({
+            displayName: profiles.displayName,
+            overview: profiles.overview,
+            avatarUrl: profiles.avatarUrl,
+          })
+          .from(users)
+          .leftJoin(profiles, eq(users.id, profiles.id))
+          .where(eq(users.userName, userName))
+          .limit(1);
 
-    return new Success({
-      displayName: result[0].displayName as string,
-      overview: result[0].overview as string,
-      avatarUrl: result[0].avatarUrl as string,
-    });
-  } catch (error) {
-    return new Failure(
-      error instanceof Error ? error : new Error('Failed to fetch profile'),
-    );
-  }
-}
+        if (result.length === 0) {
+          throw new Error(`Profile not found for userName: ${userName}`);
+        }
+
+        return new Success({
+          displayName: result[0].displayName as string,
+          overview: result[0].overview as string,
+          avatarUrl: result[0].avatarUrl as string,
+        });
+      } catch (error) {
+        return new Failure(
+          error instanceof Error
+            ? error
+            : new Error('selectProfileByUserName failed'),
+        );
+      }
+    },
+  };
+};
 
 export async function insertProfile({
   id,
