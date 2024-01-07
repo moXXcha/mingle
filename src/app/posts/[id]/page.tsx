@@ -19,7 +19,7 @@ export default async function Signup({ params }: { params: { id: string } }) {
 
       <hr />
       <div>コメント</div>
-      <Comments />
+      <Comments postId={id} />
     </div>
   );
 }
