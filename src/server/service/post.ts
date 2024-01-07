@@ -1,9 +1,12 @@
-import { Failure, PostDetail, Result, Success } from '@/types/types';
+import { Failure, PostDetail, PostModel, Result, Success } from '@/types/types';
 import 'server-only';
 import { db } from '../db';
 import { uploadMusicFile } from '../repository/musicFile';
 import {
+  PostData,
   insertPost,
+  selectPostById,
+  selectPostDataByPostId,
   selectPosts,
   selectPostsByUserName,
 } from '../repository/post';
@@ -15,6 +18,16 @@ export async function getPostsByUserName(
   userName: string,
 ): Promise<Result<PostDetail[], Error>> {
   return await selectPostsByUserName(userName);
+}
+
+export async function getPostById(
+  postId: string,
+): Promise<Result<PostModel, Error>> {
+  const postsResult = await selectPostById(postId);
+
+  if (postsResult.isFailure()) return postsResult;
+
+  return new Success(postsResult.value);
 }
 
 export async function getPosts(): Promise<Result<PostDetail[], Error>> {
@@ -74,6 +87,31 @@ export async function createPost({
       // 新しい投稿のIDを返す
       return new Success(newPostIdResult.value);
     });
+  } catch (error) {
+    return new Failure(
+      error instanceof Error ? error : new Error('Unknown error'),
+    );
+  }
+}
+
+export async function getPostDetailByPostId(
+  postId: string,
+): Promise<Result<PostData[], Error>> {
+  /*
+    title
+    content
+    musicFileUrl
+    tags
+    userName
+    userIconUrl
+    を取得する
+  */
+  try {
+    const postDetailResult = await selectPostDataByPostId(postId);
+    if (postDetailResult.isFailure()) return postDetailResult;
+    console.log('getPostDetailByPostId: ', postDetailResult.value);
+
+    return new Success(postDetailResult.value);
   } catch (error) {
     return new Failure(
       error instanceof Error ? error : new Error('Unknown error'),
