@@ -69,64 +69,64 @@ export const createProfileService = (
     ): Promise<Result<Profile, Error>> => {
       return await profileRepository.selectProfileByUserName(userName);
     },
+
+    editProfile: async (
+      displayName: string,
+      overview: string,
+      avatarFile: File,
+    ): Promise<Result<string, Error>> => {
+      try {
+        const cookieStore = cookies();
+        const supabase = createClient(cookieStore);
+
+        // 現在ログインしているユーザーを取得する
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        // TODO ここのifの条件式はもっと綺麗に書けそう
+        if (!user?.id) throw new Error('Failed to get user');
+
+        const userResult = await getUserByUserId(user.id);
+        if (userResult.isFailure()) throw userResult;
+
+        let avatarUrl = '';
+        // avatarFileのsizeが0なら更新をしない
+        if (avatarFile.size === 0) {
+          // avatarUrlを取得する
+          const profileResult = await profileRepository.selectProfileByUserName(
+            userResult.value.userName,
+          );
+          // TODO throw profileResultで正しいのか検証する
+          if (profileResult.isFailure()) throw profileResult;
+          avatarUrl = profileResult.value.avatarUrl;
+        } else {
+          // avatarを更新する
+
+          // Storageにavatarをuploadする
+          const urlResult = await avatarRepository.uploadUserAvatar(
+            avatarFile,
+            userResult.value.userName,
+          );
+          if (urlResult.isFailure()) throw urlResult;
+
+          avatarUrl = urlResult.value;
+        }
+
+        // プロフィールを更新する
+        const updateProfileResult = await profileRepository.updateProfile({
+          id: user?.id,
+          displayName: displayName,
+          overview: overview,
+          avatarUrl,
+        });
+        if (updateProfileResult.isFailure()) throw updateProfileResult;
+
+        return new Success(updateProfileResult.value);
+      } catch (error) {
+        return new Failure(
+          error instanceof Error ? error : new Error('editProfile failed'),
+        );
+      }
+    },
   };
 };
-
-// type EditProfileReq = {
-//   displayName: string;
-//   overview: string;
-//   avatar: File;
-// };
-
-// export async function editProfile(
-//   editProfileReq: EditProfileReq,
-// ): Promise<Result<string, Error>> {
-//   try {
-//     const cookieStore = cookies();
-//     const supabase = createClient(cookieStore);
-
-//     const {
-//       data: { user },
-//     } = await supabase.auth.getUser();
-
-//     if (!user?.id) throw new Error('Failed to get user');
-
-//     const userResult = await getUserByUserId(user.id);
-//     if (userResult.isFailure()) throw userResult;
-
-//     let avatarUrl = '';
-//     if (editProfileReq.avatar.size === 0) {
-//       // avatarの更新をしない
-//       // avatarUrlを取得する
-//       const profileResult = await selectProfileByUserName(
-//         userResult.value.userName,
-//       );
-//       if (profileResult.isFailure()) throw profileResult;
-//       avatarUrl = profileResult.value.avatarUrl;
-//     } else {
-//       // avatarがない場合、ここの関数を呼ばない
-//       // Storageにavatarをuploadする
-//       const urlResult = await uploadUserAvatar(
-//         editProfileReq.avatar,
-//         userResult.value.userName,
-//       );
-//       if (urlResult.isFailure()) throw urlResult;
-
-//       avatarUrl = urlResult.value;
-//     }
-
-//     const updateProfileResult = await updateProfile({
-//       id: user?.id,
-//       displayName: editProfileReq.displayName,
-//       overview: editProfileReq.overview,
-//       avatarUrl,
-//     });
-//     if (updateProfileResult.isFailure()) throw updateProfileResult;
-
-//     return new Success(updateProfileResult.value);
-//   } catch (error) {
-//     return new Failure(
-//       error instanceof Error ? error : new Error('Failed to update profile'),
-//     );
-//   }
-// }
