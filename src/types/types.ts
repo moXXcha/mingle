@@ -64,6 +64,16 @@ export type TagModel = InferSelectModel<typeof tags>;
 export type UserModel = InferSelectModel<typeof users>;
 export type ProfileModel = InferSelectModel<typeof profiles>;
 
+export type PostData = {
+  id: string;
+  title: string;
+  content: string;
+  musicFileUrl: string;
+  createdAt: Date;
+  updatedAt: Date;
+  tags: string[];
+};
+
 export type PostDetail = {
   id: PostModel['id'];
   title: PostModel['title'];
