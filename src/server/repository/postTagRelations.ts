@@ -2,6 +2,7 @@ import { Failure, Result, Success, Transaction } from '@/types/types';
 import { postTagRelation } from 'drizzle/schema';
 import 'server-only';
 
+// TODO 本当に必要か？ 別の書き方があるのでは？
 export async function insertPostTagRelation(
   tx: Transaction,
   postId: string,
