@@ -19,6 +19,17 @@ export type ProfileRepository = {
     overview: string;
     avatarUrl: string;
   }) => Promise<Result<string, Error>>;
+  insertProfile: ({
+    id,
+    displayName,
+    overview,
+    avatarUrl,
+  }: {
+    id: string;
+    displayName: string;
+    overview: string;
+    avatarUrl: string;
+  }) => Promise<Result<string, Error>>;
 };
 
 export const createProfileRepository = () => {
@@ -85,35 +96,35 @@ export const createProfileRepository = () => {
         );
       }
     },
+
+    insertProfile: async ({
+      id,
+      displayName,
+      overview,
+      avatarUrl,
+    }: {
+      id: string;
+      displayName: string;
+      overview: string;
+      avatarUrl: string;
+    }): Promise<Result<string, Error>> => {
+      try {
+        const result = await db
+          .insert(profiles)
+          .values({
+            id,
+            displayName,
+            overview,
+            avatarUrl,
+          })
+          .returning({ id: profiles.id });
+
+        return new Success(result[0].id);
+      } catch (error) {
+        return new Failure(
+          error instanceof Error ? error : new Error('insertProfile failed'),
+        );
+      }
+    },
   };
 };
-
-export async function insertProfile({
-  id,
-  displayName,
-  overview,
-  avatarUrl,
-}: {
-  id: string;
-  displayName: string;
-  overview: string;
-  avatarUrl: string;
-}): Promise<Result<string, Error>> {
-  try {
-    const result = await db
-      .insert(profiles)
-      .values({
-        id,
-        displayName,
-        overview,
-        avatarUrl,
-      })
-      .returning({ id: profiles.id });
-
-    return new Success(result[0].id);
-  } catch (error) {
-    return new Failure(
-      error instanceof Error ? error : new Error('Unknown error'),
-    );
-  }
-}
