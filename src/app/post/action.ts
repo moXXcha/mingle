@@ -1,6 +1,12 @@
 'use server';
 
-import { createPost } from '@/server/service/post';
+import { createMusicFileRepository } from '@/server/repository/musicFile';
+import { createPostRepository } from '@/server/repository/post';
+import { createPostTagRelationRepository } from '@/server/repository/postTagRelations';
+import { createTagRepository } from '@/server/repository/tag';
+import { createUserRepository } from '@/server/repository/user';
+import { createPostService } from '@/server/service/post';
+import { createTagService } from '@/server/service/tag';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import 'server-only';
@@ -20,7 +26,15 @@ export async function createPostFormAction(formData: FormData) {
 
     // TODO validation
 
-    const postId = await createPost({
+    const postService = createPostService(
+      createPostRepository(),
+      createUserRepository(),
+      createMusicFileRepository(),
+      createTagService(createTagRepository()),
+      createPostTagRelationRepository(),
+    );
+
+    const postId = await postService.createPost({
       userId: user.id,
       title: formData.get('title') as string,
       content: formData.get('content') as string,
