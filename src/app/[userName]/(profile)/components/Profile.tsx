@@ -1,6 +1,9 @@
 'use server';
 
-import { getProfileByUserName } from '@/server/service/profile';
+import { createAvatarRepository } from '@/server/repository/avatar';
+import { createProfileRepository } from '@/server/repository/profile';
+import { createUserRepository } from '@/server/repository/user';
+import { createProfileService } from '@/server/service/profile';
 import Image from 'next/image';
 
 type Props = {
@@ -8,8 +11,15 @@ type Props = {
 };
 
 export const Profile = async (props: Props) => {
+  const profileService = createProfileService(
+    createAvatarRepository(),
+    createProfileRepository(),
+    createUserRepository(),
+  );
   // データ取得
-  const profileResult = await getProfileByUserName(props.userName);
+  const profileResult = await profileService.getProfileByUserName(
+    props.userName,
+  );
   if (profileResult.isFailure()) {
     return <div>プロフィールがありません</div>;
   }
