@@ -1,44 +1,51 @@
-import { Failure, Profile, Result, Success } from '@/types/types';
+import { Failure, Profile, Result, Success, Transaction } from '@/types/types';
 import { eq } from 'drizzle-orm';
 import { profiles, users } from 'drizzle/schema';
 import 'server-only';
-import { db } from '../db';
 
 export type ProfileRepository = {
   selectProfileByUserName: (
+    tx: Transaction,
     userName: string,
   ) => Promise<Result<Profile, Error>>;
-  updateProfile: ({
-    id,
-    displayName,
-    overview,
-    avatarUrl,
-  }: {
-    id: string;
-    displayName: string;
-    overview: string;
-    avatarUrl: string;
-  }) => Promise<Result<string, Error>>;
-  insertProfile: ({
-    id,
-    displayName,
-    overview,
-    avatarUrl,
-  }: {
-    id: string;
-    displayName: string;
-    overview: string;
-    avatarUrl: string;
-  }) => Promise<Result<string, Error>>;
+  updateProfile: (
+    tx: Transaction,
+    {
+      id,
+      displayName,
+      overview,
+      avatarUrl,
+    }: {
+      id: string;
+      displayName: string;
+      overview: string;
+      avatarUrl: string;
+    },
+  ) => Promise<Result<string, Error>>;
+  insertProfile: (
+    tx: Transaction,
+    {
+      id,
+      displayName,
+      overview,
+      avatarUrl,
+    }: {
+      id: string;
+      displayName: string;
+      overview: string;
+      avatarUrl: string;
+    },
+  ) => Promise<Result<string, Error>>;
 };
 
 export const createProfileRepository = () => {
   return {
     selectProfileByUserName: async (
+      tx: Transaction,
       userName: string,
     ): Promise<Result<Profile, Error>> => {
       try {
-        const result = await db
+        const result = await tx
           .select({
             displayName: profiles.displayName,
             overview: profiles.overview,
@@ -67,19 +74,22 @@ export const createProfileRepository = () => {
       }
     },
 
-    updateProfile: async ({
-      id,
-      displayName,
-      overview,
-      avatarUrl,
-    }: {
-      id: string;
-      displayName: string;
-      overview: string;
-      avatarUrl: string;
-    }): Promise<Result<string, Error>> => {
+    updateProfile: async (
+      tx: Transaction,
+      {
+        id,
+        displayName,
+        overview,
+        avatarUrl,
+      }: {
+        id: string;
+        displayName: string;
+        overview: string;
+        avatarUrl: string;
+      },
+    ): Promise<Result<string, Error>> => {
       try {
-        const result = await db
+        const result = await tx
           .update(profiles)
           .set({
             displayName,
@@ -97,19 +107,22 @@ export const createProfileRepository = () => {
       }
     },
 
-    insertProfile: async ({
-      id,
-      displayName,
-      overview,
-      avatarUrl,
-    }: {
-      id: string;
-      displayName: string;
-      overview: string;
-      avatarUrl: string;
-    }): Promise<Result<string, Error>> => {
+    insertProfile: async (
+      tx: Transaction,
+      {
+        id,
+        displayName,
+        overview,
+        avatarUrl,
+      }: {
+        id: string;
+        displayName: string;
+        overview: string;
+        avatarUrl: string;
+      },
+    ): Promise<Result<string, Error>> => {
       try {
-        const result = await db
+        const result = await tx
           .insert(profiles)
           .values({
             id,
