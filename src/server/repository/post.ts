@@ -17,6 +17,9 @@ export type PostRepository = {
   selectPostsByUserName: (
     userName: string,
   ) => Promise<Result<PostDetail[], Error>>;
+  selectPostDetailByPostId: (
+    postId: string,
+  ) => Promise<Result<PostDetail[], Error>>;
   selectPostById: (postId: string) => Promise<Result<PostModel, Error>>;
   selectPostDataByPostId: (
     postId: string,
@@ -130,6 +133,56 @@ export const createPostRepository = () => {
           error instanceof Error
             ? error
             : new Error('selectPostsByUserName failed'),
+        );
+      }
+    },
+
+    // postId に基づいて投稿の詳細を取得する関数
+    selectPostDetailByPostId: async (
+      postId: string,
+    ): Promise<Result<PostDetail[], Error>> => {
+      try {
+        // ユーザーとその投稿、タグ、プロフィールを取得
+        const result = await db.query.users.findMany({
+          with: {
+            posts: {
+              with: {
+                postTagRelations: {
+                  with: {
+                    tag: true,
+                  },
+                },
+              },
+              // 投稿を作成日時の昇順で取得（新しい投稿を先頭に）
+              orderBy: (posts, { asc }) => [asc(posts.createdAt)],
+              where: eq(posts.id, postId),
+            },
+            profile: true,
+          },
+          limit: 10,
+        });
+
+        // 取得したデータを整形
+        const data = result.flatMap((user) =>
+          user.posts.map((post) => ({
+            id: post.id,
+            title: post.title,
+            content: post.content,
+            createdAt: post.createdAt,
+            updatedAt: post.updatedAt,
+            tags: post.postTagRelations.map((relation) => relation.tag.name),
+            userName: user.userName,
+            displayName: user.profile.displayName,
+            avatarUrl: user.profile.avatarUrl,
+          })),
+        );
+
+        return new Success(data);
+      } catch (error) {
+        return new Failure(
+          error instanceof Error
+            ? error
+            : new Error('selectPostsByUserId failed'),
         );
       }
     },
