@@ -52,6 +52,7 @@ export const userService = (userRepository: UserRepository) => {
     },
 
     // ユーザーを取得する
+    // TODO いらなくね
     getUserByUserId: async (userId: string): Promise<Result<User, Error>> => {
       try {
         return await db.transaction(async (tx) => {
