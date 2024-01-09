@@ -18,6 +18,7 @@ export type PostService = {
   getPostsByUserName: (
     userName: string,
   ) => Promise<Result<PostDetail[], Error>>;
+  // TODO 関数名要修正
   getPostByPostId: (postId: string) => Promise<Result<PostModel, Error>>;
   getPostDataByPostId: (postId: string) => Promise<Result<PostData[], Error>>;
   getPostDetailByPostId: (postId: string) => Promise<Result<PostDetail, Error>>;
