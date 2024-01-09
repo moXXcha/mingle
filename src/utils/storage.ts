@@ -47,7 +47,7 @@ export const putImage = async (
     return new Success(`${process.env.IMAGE_HOST_URL}/${pathName}`);
   } catch (error) {
     return new Failure(
-      error instanceof Error ? error : new Error('Unknown error occurred'),
+      error instanceof Error ? error : new Error('putImage failed'),
     );
   }
 };
@@ -73,7 +73,7 @@ export const putAudio = async (
     return new Success(`${process.env.IMAGE_HOST_URL}/${pathName}`);
   } catch (error) {
     return new Failure(
-      error instanceof Error ? error : new Error('Unknown error occurred'),
+      error instanceof Error ? error : new Error('putAudio failed'),
     );
   }
 };
