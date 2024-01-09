@@ -1,6 +1,9 @@
 'use server';
 
-import { editProfile } from '@/server/service/profile';
+import { createAvatarRepository } from '@/server/repository/avatar';
+import { createProfileRepository } from '@/server/repository/profile';
+import { createUserRepository } from '@/server/repository/user';
+import { createProfileService } from '@/server/service/profile';
 import { redirect } from 'next/navigation';
 import 'server-only';
 
@@ -12,12 +15,18 @@ export async function updatePostFormAction(
   const overview = formData.get('overview') as string;
   const avatarFile = formData.get('avatarFile') as File;
 
+  const ProfileService = createProfileService(
+    createAvatarRepository(),
+    createProfileRepository(),
+    createUserRepository(),
+  );
+
   // TODO validation
-  const result = await editProfile({
+  const result = await ProfileService.editProfile(
     displayName,
     overview,
-    avatar: avatarFile,
-  });
+    avatarFile,
+  );
   if (result.isFailure()) {
     // TODO 失敗した場合はどうする？
     console.log('Failed to edit profile');

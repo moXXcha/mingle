@@ -1,6 +1,12 @@
 'use server';
 
-import { getPostsByUserName } from '@/server/service/post';
+import { createMusicFileRepository } from '@/server/repository/musicFile';
+import { createPostRepository } from '@/server/repository/post';
+import { createPostTagRelationRepository } from '@/server/repository/postTagRelations';
+import { createTagRepository } from '@/server/repository/tag';
+import { createUserRepository } from '@/server/repository/user';
+import { createPostService } from '@/server/service/post';
+import { createTagService } from '@/server/service/tag';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -9,11 +15,19 @@ export default async function Page({
 }: {
   params: { userName: string };
 }) {
+  const postService = createPostService(
+    createPostRepository(),
+    createUserRepository(),
+    createMusicFileRepository(),
+    createTagService(createTagRepository()),
+    createPostTagRelationRepository(),
+  );
+
   const { userName } = params;
   console.log('userName: ', userName);
 
   // 自分の投稿を取得
-  const postsResult = await getPostsByUserName(userName);
+  const postsResult = await postService.getPostsByUserName(userName);
   if (postsResult.isFailure()) {
     return <div>投稿がありません</div>;
   }

@@ -1,13 +1,16 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use server';
 
-import { getTags } from '@/server/service/tag';
+import { createTagRepository } from '@/server/repository/tag';
+import { createTagService } from '@/server/service/tag';
 import { createPostFormAction } from './action';
 
 export default async function Page() {
   // ! とりあえずタグの入力は一つのみ受け付ける
 
-  const tagsResult = await getTags();
+  const tagService = createTagService(createTagRepository());
+
+  const tagsResult = await tagService.getTags();
   if (tagsResult.isFailure()) {
     return <div>タグがありません</div>;
   }

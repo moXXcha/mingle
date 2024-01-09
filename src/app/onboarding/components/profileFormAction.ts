@@ -1,6 +1,9 @@
 'use server';
 
-import { createProfile } from '@/server/service/profile';
+import { createAvatarRepository } from '@/server/repository/avatar';
+import { createProfileRepository } from '@/server/repository/profile';
+import { createUserRepository } from '@/server/repository/user';
+import { createProfileService } from '@/server/service/profile';
 import { createAdminAuthClient } from '@/utils/supabase/adminAuthClient';
 import { cookies } from 'next/headers';
 import 'server-only';
@@ -26,8 +29,14 @@ export async function profileFormAction(
 
   // TODO validation
 
+  const profileService = createProfileService(
+    createAvatarRepository(),
+    createProfileRepository(),
+    createUserRepository(),
+  );
+
   try {
-    await createProfile(displayName, overview, avatar);
+    await profileService.createProfile(displayName, overview, avatar);
 
     // profileを作成したFlagをtrueにする
     const { error } = await supabase.auth.admin.updateUserById(

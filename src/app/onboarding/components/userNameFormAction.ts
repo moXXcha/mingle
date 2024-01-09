@@ -1,6 +1,7 @@
 'use server';
 
-import { createUser } from '@/server/service/user';
+import { createUserRepository } from '@/server/repository/user';
+import { createUserService } from '@/server/service/user';
 import { createAdminAuthClient } from '@/utils/supabase/adminAuthClient';
 import { cookies } from 'next/headers';
 import 'server-only';
@@ -19,6 +20,8 @@ export async function userNameFormAction(
   const cookieStore = cookies();
   const supabase = createAdminAuthClient(cookieStore);
 
+  const userService = createUserService(createUserRepository());
+
   try {
     const { data, error } = await supabase.auth.getSession();
 
@@ -30,11 +33,14 @@ export async function userNameFormAction(
       throw new Error('data is null');
     }
 
-    await createUser(
+    const createUserResult = await userService.createUser(
       data.session?.user.id as string,
       userName,
       data.session?.user.email as string,
     );
+    if (createUserResult.isFailure()) {
+      throw new Error(createUserResult.value.message);
+    }
 
     // useNameを作成したFlagをtrueにする
     const { error: userError } = await supabase.auth.admin.updateUserById(

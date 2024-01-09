@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use server';
 
-import { getProfileByUserName } from '@/server/service/profile';
+import { createAvatarRepository } from '@/server/repository/avatar';
+import { createProfileRepository } from '@/server/repository/profile';
+import { createUserRepository } from '@/server/repository/user';
+import { createProfileService } from '@/server/service/profile';
 import Link from 'next/link';
 import { updatePostFormAction } from './action';
 import { AvatarFileInput } from './components/AvatarFileInput';
@@ -13,10 +16,16 @@ export default async function Page({
 }: {
   params: { userName: string };
 }) {
+  const profileService = createProfileService(
+    createAvatarRepository(),
+    createProfileRepository(),
+    createUserRepository(),
+  );
+
   const { userName } = params;
 
   // TODO 自分のプロフィールを取得
-  const profileResult = await getProfileByUserName(userName);
+  const profileResult = await profileService.getProfileByUserName(userName);
   if (profileResult.isFailure()) {
     // エラー
     // TODO エラーページとかに飛ばす
