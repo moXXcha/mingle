@@ -1,4 +1,11 @@
-import { Failure, PostDetail, PostModel, Result, Success } from '@/types/types';
+import {
+  Failure,
+  PostData,
+  PostDetail,
+  PostModel,
+  Result,
+  Success,
+} from '@/types/types';
 import 'server-only';
 import { db } from '../db';
 import { MusicFileRepository } from '../repository/musicFile';
@@ -12,6 +19,8 @@ export type PostService = {
     userName: string,
   ) => Promise<Result<PostDetail[], Error>>;
   getPostByPostId: (postId: string) => Promise<Result<PostModel, Error>>;
+  getPostDataByPostId: (postId: string) => Promise<Result<PostData[], Error>>;
+  getPostDetailByPostId: (postId: string) => Promise<Result<PostDetail, Error>>;
   getPosts: () => Promise<Result<PostDetail[], Error>>;
   createPost: ({
     userId,
@@ -52,6 +61,23 @@ export const createPostService = (
       if (postsResult.isFailure()) return postsResult;
 
       return new Success(postsResult.value);
+    },
+
+    getPostDataByPostId: async (
+      postId: string,
+    ): Promise<Result<PostData[], Error>> => {
+      return await postRepository.selectPostDataByPostId(postId);
+    },
+
+    // postIdを元に投稿の詳細を取得
+    getPostDetailByPostId: async (
+      postId: string,
+    ): Promise<Result<PostDetail, Error>> => {
+      const postsResult = await postRepository.selectPostDetailByPostId(postId);
+
+      if (postsResult.isFailure()) return postsResult;
+
+      return new Success(postsResult.value[0]);
     },
 
     // 投稿の配列を取得
