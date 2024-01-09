@@ -12,7 +12,7 @@ export type UserService = {
   getUserByUserId: (userId: string) => Promise<Result<User, Error>>;
 };
 
-export const userService = (userRepository: UserRepository) => {
+export const createUserService = (userRepository: UserRepository) => {
   return {
     // ユーザーを作成
     createUser: async (
