@@ -11,7 +11,7 @@ export type PostTagRelationRepository = {
 };
 
 // ? 集約ができていない為に存在していると思うが、一旦実装する
-export const postTagRelationRepository = () => {
+export const createPostTagRelationRepository = () => {
   return {
     insertPostTagRelation: async (
       tx: Transaction,

@@ -22,7 +22,7 @@ export type UserRepository = {
   ) => Promise<Result<string, Error>>;
 };
 
-export const userRepository = () => {
+export const createUserRepository = () => {
   return {
     // IDに一致するユーザーが存在するかを確認
     doesUserExistById: async (

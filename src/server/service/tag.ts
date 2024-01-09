@@ -10,7 +10,7 @@ export type TagService = {
   ) => Promise<Result<string[], Error>>;
 };
 
-export const tagService = (tagRepository: TagRepository) => {
+export const createTagService = (tagRepository: TagRepository) => {
   return {
     // タグの配列を取得
     getTags: async (): Promise<Result<Tag[], Error>> => {

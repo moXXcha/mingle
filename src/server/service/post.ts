@@ -28,7 +28,7 @@ export type PostService = {
   }) => Promise<Result<string, Error>>;
 };
 
-export const postService = (
+export const createPostService = (
   postRepository: PostRepository,
   userRepository: UserRepository,
   musicFileRepository: MusicFileRepository,
