@@ -17,6 +17,7 @@ export type ProfileService = {
     overview: string,
     avatarFile: File,
   ) => Promise<Result<string, Error>>;
+  getProfileByUserName: (userName: string) => Promise<Result<Profile, Error>>;
 };
 
 export const createProfileService = (
@@ -149,6 +150,21 @@ export const createProfileService = (
           error instanceof Error ? error : new Error('editProfile failed'),
         );
       }
+    },
+
+    // ユーザー名を元にプロフィールを取得する
+    getProfileByUserName: async (
+      userName: string,
+    ): Promise<Result<Profile, Error>> => {
+      return await db.transaction(async (tx) => {
+        const result = await profileRepository.selectProfileByUserName(
+          tx,
+          userName,
+        );
+        if (result.isFailure()) throw result;
+
+        return new Success(result.value);
+      });
     },
   };
 };
