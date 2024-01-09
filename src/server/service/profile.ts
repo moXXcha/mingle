@@ -24,7 +24,7 @@ export const createProfileService = (
   avatarRepository: AvatarRepository,
   profileRepository: ProfileRepository,
   userRepository: UserRepository,
-) => {
+): ProfileService => {
   return {
     createProfile: async (
       displayName: string,
