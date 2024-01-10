@@ -102,3 +102,10 @@ export type User = {
   userName: string;
   email: string;
 };
+
+export type Comment = {
+  comment: string;
+  displayName: string;
+  avatarUrl: string;
+  userName: string;
+};
