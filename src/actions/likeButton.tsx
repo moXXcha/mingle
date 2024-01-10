@@ -4,13 +4,14 @@ import { db } from '@/server/db';
 import { createClient } from '@/utils/supabase/server';
 import { and, eq, sql } from 'drizzle-orm';
 import { likes } from 'drizzle/schema';
+import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
 export async function likePostAction(
   postId: string,
 ): Promise<{ liked: boolean; error: boolean }> {
   // TODO いいねをする
-  console.log('いいねをする', postId);
+  console.log('likePostAction START');
 
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
@@ -30,7 +31,7 @@ export async function likePostAction(
 
       console.log(AlreadyExists);
 
-      if (AlreadyExists.length > 0) {
+      if (AlreadyExists[0].count > 0) {
         // いいねを解除する
         console.log('いいねを解除する');
         await tx
@@ -38,6 +39,8 @@ export async function likePostAction(
           .where(
             and(eq(likes.postId, postId), eq(likes.userId, user?.id as string)),
           );
+
+        revalidatePath('/');
 
         return { liked: false, error: false };
       } else {
@@ -47,6 +50,8 @@ export async function likePostAction(
           postId,
           userId: user?.id as string,
         });
+
+        revalidatePath('/');
 
         return { liked: true, error: false };
       }
