@@ -102,3 +102,24 @@ export type User = {
   userName: string;
   email: string;
 };
+
+export type Comment = {
+  comment: string;
+  displayName: string;
+  avatarUrl: string;
+  userName: string;
+};
+
+export type formActionResult =
+  | {
+      success: true;
+      message: string;
+    }
+  | {
+      success: false;
+      error: string;
+    };
+
+export type State = {
+  message: string | null;
+};
