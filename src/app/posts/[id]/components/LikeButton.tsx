@@ -1,7 +1,7 @@
 'use client';
 
 import { likePostAction } from '@/actions/likeButton';
-import { useOptimistic } from 'react';
+import { useOptimistic, useTransition } from 'react';
 
 type Props = {
   postId: string;
@@ -9,9 +9,8 @@ type Props = {
 };
 
 export const LikeButton = (props: Props) => {
-  // 現在いいねしているかを取得する
+  const [isPending, startTransition] = useTransition();
 
-  // useOptimistic
   const [optimisticLikes, changeOptimisticLikes] = useOptimistic(
     props.isLiked,
     (prev) => !prev,
@@ -21,14 +20,16 @@ export const LikeButton = (props: Props) => {
     <div>
       <button
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onClick={async () => {
-          changeOptimisticLikes(props.isLiked);
-          await likePostAction(props.postId);
-        }}
+        onClick={() =>
+          startTransition(async () => {
+            changeOptimisticLikes(props.isLiked);
+            await likePostAction(props.postId);
+          })
+        }
       >
-        Like
+        {isPending ? 'loading...' : 'Like'}
       </button>
-      <div>いいね数: {optimisticLikes ? 1 : 0}</div>
+      <div>{optimisticLikes ? 'いいねした' : 'いいねする'}</div>
     </div>
   );
 };
