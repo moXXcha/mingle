@@ -28,7 +28,7 @@ export const Comments = async (props: Props) => {
 
   return (
     <div>
-      <CommentForm />
+      <CommentForm postId={props.postId} />
       <CommentList postId={props.postId} />
     </div>
   );
