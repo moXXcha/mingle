@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
+import { commentFormAction } from '../action';
 import { CommentForm } from './CommentForm';
 import { CommentList } from './CommentList';
 
@@ -26,9 +27,15 @@ export const Comments = async (props: Props) => {
   } = await supabase.auth.getUser();
   console.log('user: ', user);
 
+  const commentFormActionWithPostIdAndUserId = commentFormAction.bind(
+    null,
+    props.postId,
+    user?.id as string,
+  );
+
   return (
     <div>
-      <CommentForm postId={props.postId} />
+      <CommentForm formAction={commentFormActionWithPostIdAndUserId} />
       <CommentList postId={props.postId} />
     </div>
   );
