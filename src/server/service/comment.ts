@@ -1,5 +1,5 @@
 import { Comment, Failure, Result, Success } from '@/types/types';
-import { eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { comments, profiles, users } from 'drizzle/schema';
 import { db } from '../db';
 import { CommentRepository } from '../repository/comment';
@@ -75,7 +75,8 @@ export const createCommentService = (commentRepository: CommentRepository) => {
             .from(comments)
             .where(eq(comments.postId, postId))
             .innerJoin(users, eq(comments.userId, users.id))
-            .innerJoin(profiles, eq(users.id, profiles.id));
+            .innerJoin(profiles, eq(users.id, profiles.id))
+            .orderBy(desc(comments.createdAt));
 
           console.log(result);
           console.log('getCommentsByPostId END');
