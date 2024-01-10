@@ -7,6 +7,7 @@ import { createTagRepository } from '@/server/repository/tag';
 import { createUserRepository } from '@/server/repository/user';
 import { createPostService } from '@/server/service/post';
 import { createTagService } from '@/server/service/tag';
+import { LikeButton } from './LikeButton';
 
 type Props = {
   postId: string;
@@ -21,7 +22,6 @@ export const MusicPlayer = async (props: Props) => {
     createPostTagRelationRepository(),
   );
 
-  // TODO この関数を作る
   const postResult = await postService.getPostDataByPostId(props.postId);
   if (postResult.isFailure()) {
     return <div>投稿がありません</div>;
@@ -44,7 +44,7 @@ export const MusicPlayer = async (props: Props) => {
       <div>{post.content}</div>
       <div>icon</div>
       <div>userName</div>
-      <button>followButton</button>
+      <LikeButton postId={props.postId} />
     </div>
   );
 };
