@@ -1,46 +1,40 @@
-'use server';
+'use client';
 
-import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
-import { commentFormAction } from '../action';
+import { State } from '@/types/types';
+import { useRef } from 'react';
+import { useFormState } from 'react-dom';
 
 type Props = {
-  postId: string;
+  formAction: (prevState: State, formData: FormData) => Promise<State>;
 };
 
-export const CommentForm = async (props: Props) => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+const initialState: State = {
+  message: null,
+};
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export const CommentForm = (props: Props) => {
+  const [state, formAction] = useFormState(props.formAction, initialState);
 
-  console.log('user: ', user);
-
-  // bindでpostIdを渡す
-  const commentFormActionWithPostIdAndUserId = commentFormAction.bind(
-    null,
-    props.postId,
-    user?.id as string,
-  );
+  const ref = useRef<HTMLFormElement>(null);
 
   return (
     <div>
       <div>コメント入力フォーム</div>
 
-      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <form action={commentFormActionWithPostIdAndUserId}>
+      <form
+        ref={ref}
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        action={async (formData) => {
+          // eslint-disable-next-line @typescript-eslint/await-thenable
+          await formAction(formData);
+          ref.current?.reset();
+        }}
+      >
         <input className="border" type="text" name="comment" />
         <button type="submit">Send</button>
       </form>
+
+      <div>{state.message}</div>
     </div>
   );
 };
-
-/*
-ユーザーのアイコンを表示する
-どうやって取得する？
-
-
-*/
