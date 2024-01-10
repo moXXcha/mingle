@@ -60,6 +60,7 @@ export async function likePostAction(
     // console.log(result);
   } catch (error) {
     console.log(error);
+    revalidatePath('/');
     return { liked: false, error: true };
   }
 }
