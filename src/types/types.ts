@@ -109,3 +109,13 @@ export type Comment = {
   avatarUrl: string;
   userName: string;
 };
+
+export type formActionResult =
+  | {
+      success: true;
+      message: string;
+    }
+  | {
+      success: false;
+      error: string;
+    };
