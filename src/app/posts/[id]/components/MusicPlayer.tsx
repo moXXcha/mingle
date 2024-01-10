@@ -42,6 +42,7 @@ export const MusicPlayer = async (props: Props) => {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // TODO ここにORMを書かない
   const like = await db
     .select({ id: likes.id })
     .from(likes)
