@@ -119,3 +119,7 @@ export type formActionResult =
       success: false;
       error: string;
     };
+
+export type State = {
+  message: string | null;
+};
