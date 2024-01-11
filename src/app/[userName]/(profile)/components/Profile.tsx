@@ -5,6 +5,7 @@ import { Failure, Result, Success } from '@/types/types';
 import { eq } from 'drizzle-orm';
 import { profiles, users } from 'drizzle/schema';
 import Image from 'next/image';
+import Link from 'next/link';
 
 type Props = {
   userName: string;
@@ -25,7 +26,7 @@ export const Profile = async (props: Props) => {
   return (
     <div>
       <Image
-        className="rounded-full w-24 h-24 object-cover"
+        className="rounded-full w-28 h-28 object-cover"
         src={profileResult.value.avatarUrl}
         alt="icon"
         width={100}
@@ -34,6 +35,9 @@ export const Profile = async (props: Props) => {
       />
       <div className="font-bold">{profileResult.value.displayName}</div>
       <div>概要: {profileResult.value.overview}</div>
+      <Link className="border text-blue-500" href={`/${props.userName}/edit`}>
+        編集
+      </Link>
     </div>
   );
 };
