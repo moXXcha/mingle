@@ -19,14 +19,10 @@ export const CommentForm = (props: Props) => {
 
   return (
     <div>
-      <div>コメント入力フォーム</div>
-
       <form
         ref={ref}
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        action={async (formData) => {
-          // eslint-disable-next-line @typescript-eslint/await-thenable
-          await formAction(formData);
+        action={(formData) => {
+          formAction(formData);
           ref.current?.reset();
         }}
       >
@@ -34,7 +30,7 @@ export const CommentForm = (props: Props) => {
         <button type="submit">Send</button>
       </form>
 
-      <div>{state.message}</div>
+      <div className="text-green-500">{state.message}</div>
     </div>
   );
 };

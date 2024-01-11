@@ -6,10 +6,14 @@ type Props = {
 
 export const ProfileTab = (props: Props) => {
   return (
-    <div>
-      <Link href={`/${props.userName}`}>Posts</Link>
+    <div className="w-1/2 flex">
+      <Link href={`/${props.userName}`} className="mx-8">
+        Posts
+      </Link>
       <br />
-      <Link href={`/${props.userName}/likes`}>Likes</Link>
+      <Link href={`/${props.userName}/likes`} className="mx-8">
+        Likes
+      </Link>
     </div>
   );
 };

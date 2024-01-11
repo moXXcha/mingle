@@ -22,16 +22,16 @@ export async function likePostAction(
   try {
     return await db.transaction(async (tx) => {
       // すでにいいねをしているかどうかを確認する
-      const AlreadyExists = await tx
+      const alreadyExists = await tx
         .select({ count: sql<number>`cast(count(${likes.id}) as int)` })
         .from(likes)
         .where(
           and(eq(likes.postId, postId), eq(likes.userId, user?.id as string)),
         );
 
-      console.log(AlreadyExists);
+      console.log(alreadyExists);
 
-      if (AlreadyExists[0].count > 0) {
+      if (alreadyExists[0].count > 0) {
         // いいねを解除する
         console.log('いいねを解除する');
         await tx

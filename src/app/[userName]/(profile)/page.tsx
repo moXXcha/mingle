@@ -1,62 +1,100 @@
 'use server';
 
-import { createMusicFileRepository } from '@/server/repository/musicFile';
-import { createPostRepository } from '@/server/repository/post';
-import { createPostTagRelationRepository } from '@/server/repository/postTagRelations';
-import { createTagRepository } from '@/server/repository/tag';
-import { createUserRepository } from '@/server/repository/user';
-import { createPostService } from '@/server/service/post';
-import { createTagService } from '@/server/service/tag';
+import { db } from '@/server/db';
+import { Failure, PostDetail, Result, Success } from '@/types/types';
+import { eq } from 'drizzle-orm';
+import { users } from 'drizzle/schema';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default async function Page({
   params,
 }: {
   params: { userName: string };
 }) {
-  const postService = createPostService(
-    createPostRepository(),
-    createUserRepository(),
-    createMusicFileRepository(),
-    createTagService(createTagRepository()),
-    createPostTagRelationRepository(),
-  );
-
   const { userName } = params;
-  console.log('userName: ', userName);
 
   // 自分の投稿を取得
-  const postsResult = await postService.getPostsByUserName(userName);
+  const postsResult = await getPostsByUserName(userName);
   if (postsResult.isFailure()) {
     return <div>投稿がありません</div>;
   }
 
   return (
-    <div>
-      <Link className="border text-blue-500" href={`/${userName}/edit`}>
-        編集
-      </Link>
+    <div className="border w-1/2">
       {postsResult.value.map((post) => (
-        <div key={post.id}>
-          <div>タイトル:{post.title}</div>
-          <div>概要:{post.content}</div>
-          <div>投稿者名:{post.displayName}</div>
+        <div key={post.id} className="m-5 border">
+          <div className="flex">
+            <div>
+              <div className="font-bold text-xl">{post.title}</div>
+              <div className="font-bold ">{post.author.displayName}</div>
+              <div>{post.content}</div>
 
-          <div>タグ:</div>
-          {post.tags.map((tag) => (
-            <div key={tag}>{tag}</div>
-          ))}
-          <Image
-            src={post.avatarUrl}
-            alt="Picture of the author"
-            width={500}
-            height={500}
-            priority={true}
-          />
-          <hr />
+              <div className="flex">
+                {post.tags.map((tag) => (
+                  <div key={tag} className="mr-5">
+                    #{tag}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <Image
+              className="rounded-full w-24 h-24 object-cover"
+              src={post.author.avatarUrl}
+              alt="icon"
+              width={100}
+              height={100}
+              priority={true}
+            />
+          </div>
         </div>
       ))}
     </div>
   );
 }
+
+const getPostsByUserName = async (
+  userName: string,
+): Promise<Result<PostDetail[], Error>> => {
+  try {
+    // ユーザーとその投稿、タグ、プロフィールを取得
+    const result = await db.query.users.findMany({
+      with: {
+        posts: {
+          with: {
+            postTagRelations: {
+              with: {
+                tag: true,
+              },
+            },
+          },
+          // 投稿を作成日時の昇順で取得（新しい投稿を先頭に）
+          orderBy: (posts, { asc }) => [asc(posts.createdAt)],
+        },
+        profile: true,
+      },
+      where: eq(users.userName, userName),
+      limit: 10,
+    });
+
+    // 取得したデータを整形
+    const data = result.flatMap((user) =>
+      user.posts.map((post) => ({
+        id: post.id,
+        title: post.title,
+        content: post.content,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        tags: post.postTagRelations.map((relation) => relation.tag.name),
+        author: {
+          userName: user.userName,
+          displayName: user.profile.displayName,
+          avatarUrl: user.profile.avatarUrl,
+        },
+      })),
+    );
+
+    return new Success(data);
+  } catch (error) {
+    return new Failure(error as Error);
+  }
+};
