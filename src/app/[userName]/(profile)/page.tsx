@@ -8,7 +8,6 @@ import { createUserRepository } from '@/server/repository/user';
 import { createPostService } from '@/server/service/post';
 import { createTagService } from '@/server/service/tag';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default async function Page({
   params,
@@ -32,28 +31,32 @@ export default async function Page({
   }
 
   return (
-    <div>
-      <Link className="border text-blue-500" href={`/${userName}/edit`}>
-        編集
-      </Link>
+    <div className="border w-1/2">
       {postsResult.value.map((post) => (
-        <div key={post.id}>
-          <div>タイトル:{post.title}</div>
-          <div>概要:{post.content}</div>
-          <div>投稿者名:{post.displayName}</div>
+        <div key={post.id} className="m-5 border">
+          <div className="flex">
+            <div>
+              <div className="font-bold text-xl">{post.title}</div>
+              <div className="font-bold ">{post.displayName}</div>
+              <div>{post.content}</div>
 
-          <div>タグ:</div>
-          {post.tags.map((tag) => (
-            <div key={tag}>{tag}</div>
-          ))}
-          <Image
-            src={post.avatarUrl}
-            alt="Picture of the author"
-            width={500}
-            height={500}
-            priority={true}
-          />
-          <hr />
+              <div className="flex">
+                {post.tags.map((tag) => (
+                  <div key={tag} className="mr-5">
+                    #{tag}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <Image
+              className="rounded-full w-24 h-24 object-cover"
+              src={post.avatarUrl}
+              alt="icon"
+              width={100}
+              height={100}
+              priority={true}
+            />
+          </div>
         </div>
       ))}
     </div>
