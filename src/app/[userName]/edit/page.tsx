@@ -32,8 +32,6 @@ export default async function Page({
     return <div>プロフィールがありません</div>;
   }
 
-  console.log('profileResult: ', profileResult.value);
-
   const updatePostFormActionWithUserName = updatePostFormAction.bind(
     null,
     userName,
