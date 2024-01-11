@@ -1,12 +1,9 @@
 'use server';
 
-import { createMusicFileRepository } from '@/server/repository/musicFile';
-import { createPostRepository } from '@/server/repository/post';
-import { createPostTagRelationRepository } from '@/server/repository/postTagRelations';
-import { createTagRepository } from '@/server/repository/tag';
-import { createUserRepository } from '@/server/repository/user';
-import { createPostService } from '@/server/service/post';
-import { createTagService } from '@/server/service/tag';
+import { db } from '@/server/db';
+import { Failure, PostDetail, Result, Success } from '@/types/types';
+import { eq } from 'drizzle-orm';
+import { users } from 'drizzle/schema';
 import Image from 'next/image';
 
 export default async function Page({
@@ -14,18 +11,10 @@ export default async function Page({
 }: {
   params: { userName: string };
 }) {
-  const postService = createPostService(
-    createPostRepository(),
-    createUserRepository(),
-    createMusicFileRepository(),
-    createTagService(createTagRepository()),
-    createPostTagRelationRepository(),
-  );
-
   const { userName } = params;
 
   // 自分の投稿を取得
-  const postsResult = await postService.getPostsByUserName(userName);
+  const postsResult = await getPostsByUserName(userName);
   if (postsResult.isFailure()) {
     return <div>投稿がありません</div>;
   }
@@ -62,3 +51,48 @@ export default async function Page({
     </div>
   );
 }
+
+const getPostsByUserName = async (
+  userName: string,
+): Promise<Result<PostDetail[], Error>> => {
+  try {
+    // ユーザーとその投稿、タグ、プロフィールを取得
+    const result = await db.query.users.findMany({
+      with: {
+        posts: {
+          with: {
+            postTagRelations: {
+              with: {
+                tag: true,
+              },
+            },
+          },
+          // 投稿を作成日時の昇順で取得（新しい投稿を先頭に）
+          orderBy: (posts, { asc }) => [asc(posts.createdAt)],
+        },
+        profile: true,
+      },
+      where: eq(users.userName, userName),
+      limit: 10,
+    });
+
+    // 取得したデータを整形
+    const data = result.flatMap((user) =>
+      user.posts.map((post) => ({
+        id: post.id,
+        title: post.title,
+        content: post.content,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        tags: post.postTagRelations.map((relation) => relation.tag.name),
+        userName: user.userName,
+        displayName: user.profile.displayName,
+        avatarUrl: user.profile.avatarUrl,
+      })),
+    );
+
+    return new Success(data);
+  } catch (error) {
+    return new Failure(error as Error);
+  }
+};
