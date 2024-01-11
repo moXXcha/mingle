@@ -26,7 +26,7 @@ export default async function Page({
           <div className="flex">
             <div>
               <div className="font-bold text-xl">{post.title}</div>
-              <div className="font-bold ">{post.displayName}</div>
+              <div className="font-bold ">{post.author.displayName}</div>
               <div>{post.content}</div>
 
               <div className="flex">
@@ -39,7 +39,7 @@ export default async function Page({
             </div>
             <Image
               className="rounded-full w-24 h-24 object-cover"
-              src={post.avatarUrl}
+              src={post.author.avatarUrl}
               alt="icon"
               width={100}
               height={100}
@@ -85,9 +85,11 @@ const getPostsByUserName = async (
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
         tags: post.postTagRelations.map((relation) => relation.tag.name),
-        userName: user.userName,
-        displayName: user.profile.displayName,
-        avatarUrl: user.profile.avatarUrl,
+        author: {
+          userName: user.userName,
+          displayName: user.profile.displayName,
+          avatarUrl: user.profile.avatarUrl,
+        },
       })),
     );
 
