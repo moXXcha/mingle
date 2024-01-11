@@ -32,7 +32,7 @@ export const CommentForm = (props: Props) => {
         <button type="submit">Send</button>
       </form>
 
-      <div>{state.message}</div>
+      <div className="text-green-500">{state.message}</div>
     </div>
   );
 };

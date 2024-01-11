@@ -35,6 +35,8 @@ export const Comments = async (props: Props) => {
 
   return (
     <div>
+      <div className="font-bold">Comment</div>
+
       <CommentForm formAction={commentFormActionWithPostIdAndUserId} />
       <CommentList postId={props.postId} />
     </div>

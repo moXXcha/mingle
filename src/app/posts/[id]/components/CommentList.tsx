@@ -3,6 +3,7 @@
 import { createCommentRepository } from '@/server/repository/comment';
 import { createCommentService } from '@/server/service/comment';
 import Image from 'next/image';
+import Link from 'next/link';
 
 type Props = {
   postId: string;
@@ -18,21 +19,22 @@ export const CommentList = async (props: Props) => {
 
   return (
     <div>
-      <div>コメント一覧</div>
-      <div>{props.postId}</div>
-
       {comments.value.map((comment, index) => (
-        <div key={index}>
-          <div>{comment.comment}</div>
-          <div>{comment.userName}</div>
-          <div>{comment.displayName}</div>
+        <div key={index} className="flex my-5">
           <Image
+            className="rounded-full w-14 h-14 object-cover"
             src={comment.avatarUrl}
             alt="icon"
-            width={200}
-            height={200}
+            width={100}
+            height={100}
             priority={true}
           />
+          <div>
+            <Link href={`/${comment.userName}`} className="font-bold">
+              {comment.displayName}
+            </Link>
+            <div className="border">{comment.comment}</div>
+          </div>
         </div>
       ))}
     </div>
