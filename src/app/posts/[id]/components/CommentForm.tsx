@@ -19,8 +19,6 @@ export const CommentForm = (props: Props) => {
 
   return (
     <div>
-      <div>コメント入力フォーム</div>
-
       <form
         ref={ref}
         action={(formData) => {
