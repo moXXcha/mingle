@@ -81,9 +81,11 @@ export type PostDetail = {
   createdAt: PostModel['createdAt'];
   updatedAt: PostModel['updatedAt'];
   tags: TagModel['name'][];
-  userName: UserModel['userName'];
-  displayName: ProfileModel['displayName'];
-  avatarUrl: ProfileModel['avatarUrl'];
+  author: {
+    userName: UserModel['userName'];
+    displayName: ProfileModel['displayName'];
+    avatarUrl: ProfileModel['avatarUrl'];
+  };
 };
 
 export type Tag = {
