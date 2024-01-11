@@ -5,8 +5,14 @@ import { Tag } from '@/component/ui/Tag'
 import React from 'react'
 
 const page = () => {
+  const tagsTest = [
+    {
+      text: "tag",
+      url: "/test"
+    }
+  ]
   return (
-    <Header />
+    <MusicCard musicName='RatPark' userName='moCha' musicDescription='概要概要概要概要概要概要概要概要概要概要' tags={tagsTest}/>
   )
 }
 
