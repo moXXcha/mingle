@@ -19,7 +19,6 @@ export const LikeButton = (props: Props) => {
   return (
     <div>
       <button
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onClick={() =>
           startTransition(async () => {
             changeOptimisticLikes(props.isLiked);
