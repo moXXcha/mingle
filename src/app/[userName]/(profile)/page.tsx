@@ -24,7 +24,6 @@ export default async function Page({
   );
 
   const { userName } = params;
-  console.log('userName: ', userName);
 
   // 自分の投稿を取得
   const postsResult = await postService.getPostsByUserName(userName);
