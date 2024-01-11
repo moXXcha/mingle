@@ -23,10 +23,8 @@ export const CommentForm = (props: Props) => {
 
       <form
         ref={ref}
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        action={async (formData) => {
-          // eslint-disable-next-line @typescript-eslint/await-thenable
-          await formAction(formData);
+        action={(formData) => {
+          formAction(formData);
           ref.current?.reset();
         }}
       >
