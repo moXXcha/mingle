@@ -16,6 +16,8 @@ export const FollowButton = (props: Props) => {
     (prev) => !prev,
   );
 
+  // TODO フォロー済みだった場合、buttonにカーソルを合わせたら、buttonのテキストが「フォロー解除」になると良いかも
+
   return (
     <div>
       <button
@@ -26,9 +28,8 @@ export const FollowButton = (props: Props) => {
           })
         }
       >
-        {isPending ? 'loading...' : 'followed'}
+        {isPending ? 'loading...' : optimisticLikes ? 'following' : 'follow'}
       </button>
-      <div>{optimisticLikes ? 'followed' : 'follow'}</div>
     </div>
   );
 };
