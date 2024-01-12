@@ -10,7 +10,6 @@ import { cookies } from 'next/headers';
 export async function followButtonAction(
   userName: string,
 ): Promise<{ followed: boolean; error: boolean }> {
-  // TODO フォローする
   console.log('followButtonAction START');
 
   const cookieStore = cookies();
