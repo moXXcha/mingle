@@ -29,7 +29,7 @@ export const createTagRepository = () => {
         return new Success(
           result.map((tag) => ({
             id: tag.id,
-            name: tag.name as string,
+            name: tag.name,
           })),
         );
       } catch (error) {
