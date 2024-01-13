@@ -8,7 +8,6 @@ export default async function Page() {
   // ! とりあえずタグの入力は一つのみ受け付ける
 
   const { tags, error } = await getTags();
-  console.log(tags);
   const tagError = error;
 
   return (
