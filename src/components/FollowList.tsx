@@ -11,8 +11,6 @@ import Image from 'next/image';
 /*
 TODO
 フォロー解除をしたら、revalidatePathが実行されるため、フォロー解除したユーザーが表示されなくなる
-FollowListの場合は、消えないでフォロー解除したことがわかるようにした方がUXが良いと思う
-間違えて押した時に、フォローし直すのが大変。「フォロー解除しますか？」というダイアログを出すのもありかも
 */
 
 export const FollowList = async () => {
