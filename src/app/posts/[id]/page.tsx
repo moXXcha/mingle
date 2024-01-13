@@ -7,6 +7,7 @@ import { createTagRepository } from '@/server/repository/tag';
 import { createUserRepository } from '@/server/repository/user';
 import { createPostService } from '@/server/service/post';
 import { createTagService } from '@/server/service/tag';
+import { Suspense } from 'react';
 import { Comments } from './components/Comments';
 import { MusicPlayer } from './components/MusicPlayer';
 
@@ -30,10 +31,14 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <div>
-      <MusicPlayer postId={id} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <MusicPlayer postId={id} />
+      </Suspense>
 
       <hr />
-      <Comments postId={id} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Comments postId={id} />
+      </Suspense>
     </div>
   );
 }
