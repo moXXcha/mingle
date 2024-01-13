@@ -2,7 +2,7 @@
 
 import { db } from '@/server/db';
 import { tags } from 'drizzle/schema';
-import { createPostFormAction } from './action';
+import { CreatePostForm } from './components/CreatePostForm';
 
 export default async function Page() {
   // ! とりあえずタグの入力は一つのみ受け付ける
@@ -25,52 +25,8 @@ export default async function Page() {
         )}
       </div>
       <div>新規投稿</div>
-      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <form action={createPostFormAction}>
-        <label htmlFor="title">
-          タイトル
-          <input
-            className="border"
-            type="text"
-            id="title"
-            name="title"
-            required
-          />
-        </label>
-        <label htmlFor="musicFile">
-          音声ファイル
-          <input
-            type="file"
-            accept=".mp3"
-            id="musicFile"
-            name="musicFile"
-            required
-          />
-        </label>
-        <label htmlFor="tags">
-          タグ
-          <input
-            className="border"
-            type="text"
-            id="tags"
-            name="tags"
-            required
-          />
-        </label>
-        <label htmlFor="content">
-          概要
-          <textarea
-            className="border"
-            name="content"
-            id="content"
-            cols={30}
-            rows={10}
-            required
-          ></textarea>
-        </label>
 
-        <button type="submit">submit</button>
-      </form>
+      <CreatePostForm />
     </div>
   );
 }
