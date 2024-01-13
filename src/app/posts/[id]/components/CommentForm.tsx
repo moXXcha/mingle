@@ -1,5 +1,6 @@
 'use client';
 
+import { SubmitButton } from '@/components/SubmitButton';
 import { State } from '@/types/types';
 import { useRef } from 'react';
 import { useFormState } from 'react-dom';
@@ -26,8 +27,8 @@ export const CommentForm = (props: Props) => {
           ref.current?.reset();
         }}
       >
-        <input className="border" type="text" name="comment" />
-        <button type="submit">Send</button>
+        <input className="border" type="text" name="comment" required />
+        <SubmitButton />
       </form>
 
       <div className="text-green-500">{state.message}</div>

@@ -40,7 +40,7 @@ export const createCommentService = (commentRepository: CommentRepository) => {
             userId,
             comment,
           });
-          console.log(result);
+          // console.log(result);
           console.log('createComment END');
           return result;
         });
