@@ -72,7 +72,7 @@ export const profilesRelations = relations(profiles, ({ one }) => ({
 
 export const tags = pgTable('tags', {
   id: uuid('id').notNull().primaryKey().defaultRandom(),
-  name: text('name').unique(),
+  name: text('name').notNull().unique(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });

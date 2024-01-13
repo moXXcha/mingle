@@ -7,11 +7,20 @@ import { createTagRepository } from '@/server/repository/tag';
 import { createUserRepository } from '@/server/repository/user';
 import { createPostService } from '@/server/service/post';
 import { createTagService } from '@/server/service/tag';
+import { State } from '@/types/types';
 import { createClient } from '@/utils/supabase/server';
+import { revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import 'server-only';
 
-export async function createPostFormAction(formData: FormData) {
+export async function createPostFormAction(
+  prevState: State,
+  formData: FormData,
+): Promise<State> {
+  // リダイレクト先のurl
+  let redirectUrl = '';
+
   try {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
@@ -20,6 +29,7 @@ export async function createPostFormAction(formData: FormData) {
       data: { user },
     } = await supabase.auth.getUser();
 
+    // これはいらないよね
     if (!user) {
       throw new Error('ログインしてください');
     }
@@ -44,10 +54,16 @@ export async function createPostFormAction(formData: FormData) {
 
     console.log('postId: ', postId);
 
-    return { message: '投稿を作成しました' };
+    if (postId.isFailure()) {
+      throw new Error(postId.value.message);
+    }
+
+    redirectUrl = `/posts/${postId.value}`;
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : '不明なエラーが発生しました';
-    console.log('errorMessage: ', errorMessage);
+    console.log(error);
+    return { message: '投稿できませんでした ' };
   }
+
+  revalidateTag('post');
+  redirect(redirectUrl);
 }
