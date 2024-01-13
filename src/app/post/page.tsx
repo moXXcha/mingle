@@ -1,30 +1,32 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 'use server';
 
-import { createTagRepository } from '@/server/repository/tag';
-import { createTagService } from '@/server/service/tag';
+import { db } from '@/server/db';
+import { tags } from 'drizzle/schema';
 import { createPostFormAction } from './action';
 
 export default async function Page() {
   // ! とりあえずタグの入力は一つのみ受け付ける
 
-  const tagService = createTagService(createTagRepository());
+  const { tags, error } = await getTags();
+  console.log(tags);
+  const tagError = error;
 
-  const tagsResult = await tagService.getTags();
-  if (tagsResult.isFailure()) {
-    return <div>タグがありません</div>;
-  }
   return (
     <div>
+      <div>タグ</div>
       <div>
-        <div>タグ</div>
-        {tagsResult.value.map((tag) => (
-          <div key={tag.id}>
-            <div>{tag.name}</div>
-          </div>
-        ))}
+        {tagError ? (
+          <div>{tagError}</div>
+        ) : (
+          tags.map((tag) => (
+            <div key={tag.id}>
+              <div>{tag.name}</div>
+            </div>
+          ))
+        )}
       </div>
       <div>新規投稿</div>
+      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <form action={createPostFormAction}>
         <label htmlFor="title">
           タイトル
@@ -73,3 +75,24 @@ export default async function Page() {
     </div>
   );
 }
+
+type Tag = {
+  id: string;
+  name: string;
+};
+
+// tagを取得する
+const getTags = async (): Promise<{ tags: Tag[]; error: string }> => {
+  try {
+    const result = await db
+      .select({
+        id: tags.id,
+        name: tags.name,
+      })
+      .from(tags);
+    return { tags: result, error: '' };
+  } catch (error) {
+    console.log(error);
+    return { tags: [], error: 'タグの取得に失敗しました' };
+  }
+};
