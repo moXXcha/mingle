@@ -33,6 +33,11 @@ export async function middleware(req: NextRequest) {
   //   return NextResponse.redirect(new URL('/login', req.url));
   // }
 
+  // ログインしていないユーザーは/onboardingにアクセスできないようにする
+  if (!data.session && req.nextUrl.pathname === '/onboarding') {
+    return NextResponse.redirect(new URL('/', req.url));
+  }
+
   // ---オンボーディングの処理---
 
   const {
