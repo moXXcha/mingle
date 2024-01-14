@@ -3,8 +3,6 @@ import { NextResponse } from 'next/server';
 import 'server-only';
 import { createClient } from './utils/supabase/middleware';
 
-// TODO ログインしていないユーザーは/onboardingにアクセスできないようにする
-
 export async function middleware(req: NextRequest) {
   console.log('middleware');
   const res = NextResponse.next();
