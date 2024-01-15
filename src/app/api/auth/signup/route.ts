@@ -6,13 +6,18 @@ import 'server-only';
 import { ZodError } from 'zod';
 
 export async function POST(req: NextRequest) {
+  console.log('signup START');
   const requestUrl = new URL(req.url);
   const formData = await req.formData();
+  console.log('formData: ', formData);
 
   try {
     // validation
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
+
+    console.log('email: ', email);
+    console.log('password: ', password);
 
     AuthSchema.parse({
       email,
@@ -32,10 +37,34 @@ export async function POST(req: NextRequest) {
     });
 
     if (error) {
+      console.log('supabase.auth.signUpのエラー: ', error.message);
       throw new Error(error.message);
     }
 
-    // TODO オンボーディングにリダイレクトする
+    // sessionを取得
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    console.log('user: ', user?.id);
+
+    // user_metadataにonboarding開始のフラグを立てる
+    const { error: updateUserByIdError } =
+      await supabase.auth.admin.updateUserById(user?.id as string, {
+        user_metadata: {
+          onboardingStart: true,
+        },
+      });
+
+    if (updateUserByIdError) {
+      console.log(
+        'supabase.auth.admin.updateUserByIdのエラー: ',
+        updateUserByIdError.message,
+      );
+      throw new Error(updateUserByIdError.message);
+    }
+
+    // オンボーディングにリダイレクトする
     return NextResponse.redirect(requestUrl.origin, {
       status: 301,
     });

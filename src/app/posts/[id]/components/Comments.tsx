@@ -22,7 +22,6 @@ export const Comments = async (props: Props) => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  console.log('user: ', user);
 
   const commentFormActionWithPostIdAndUserId = commentFormAction.bind(
     null,
