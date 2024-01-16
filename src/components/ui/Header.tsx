@@ -47,8 +47,8 @@ export const Header = () => {
               <g
                 xmlns="http://www.w3.org/2000/svg"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeWidth="2"
               >
                 <path d="M6 18L18 6M18 18L6 6" />
               </g>
@@ -94,9 +94,9 @@ export const Header = () => {
             <path
               xmlns="http://www.w3.org/2000/svg"
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
               d="M20 12h-9.5m7.5 3l3-3-3-3m-5-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2h5a2 2 0 002-2v-1"
             />
           </svg>
@@ -120,9 +120,9 @@ export const Header = () => {
             <path
               xmlns="http://www.w3.org/2000/svg"
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
               d="M4 6h16M4 12h16M4 18h16"
             />
           </svg>
