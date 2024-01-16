@@ -13,7 +13,7 @@ const page = () => {
     <>
       <Header />
       {/* musicCardの数だけMusicCardを表示する */}
-      <div className='w-4/5 space-y-4 m-auto'>
+      <div className='space-y-4 m-auto'>
         {[...Array(10)].map((_, i) => {
           return (
             <MusicCard
