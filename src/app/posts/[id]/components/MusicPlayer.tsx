@@ -16,20 +16,23 @@ type Props = {
 export const MusicPlayer = async (props: Props) => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
+  // ログイン中のユーザー情報を取得する
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // TODO ここにORMを書かない
-  // 良いねをしているかどうかを確認する
-  const like = await db
-    .select({ id: likes.id })
-    .from(likes)
-    .where(
-      and(eq(likes.postId, props.postId), eq(likes.userId, user?.id as string)),
-    );
-  const isLiked = like.length > 0;
-  console.log('isLiked: ', isLiked);
+  // ログインしている場合は、良いねをしているか確認する
+  let isLiked = false;
+  if (user) {
+    // TODO ここにORMを書かない
+    // 良いねをしているかどうかを確認する
+    const like = await db
+      .select({ id: likes.id })
+      .from(likes)
+      .where(and(eq(likes.postId, props.postId), eq(likes.userId, user.id)));
+    isLiked = like.length > 0;
+    console.log('isLiked: ', isLiked);
+  }
 
   // 投稿データを取得する
   const post = await getPostData(props.postId);
@@ -55,7 +58,8 @@ export const MusicPlayer = async (props: Props) => {
         priority={true}
       />
       <Link href={`/${post.user.userName}`}>{post.user.displayName}</Link>
-      <LikeButton postId={props.postId} isLiked={isLiked} />
+      {/* userが存在すればLikeButtonを表示する */}
+      {user && <LikeButton postId={props.postId} isLiked={isLiked} />}
     </div>
   );
 };
