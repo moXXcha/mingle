@@ -1,6 +1,4 @@
-import React from 'react';
-
-export const Camela = () => {
+export const Camera = () => {
   return (
     <svg
       width="30"
