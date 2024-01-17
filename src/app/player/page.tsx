@@ -34,7 +34,7 @@ export default function ContinuousSlider() {
               </button>
               <textarea
                 placeholder="コメントを書き込む"
-                className="w-full h-44 rounded-lg border border-[#6E96A5] py-3 px-2 placeholder:text-xs"
+                className="w-full h-44 rounded-lg border border-[#6E96A5] py-3 px-2 placeholder:text-xs focus:outline-none text-[#646767] text-xs"
               />
             </div>
           </div>
