@@ -4,61 +4,91 @@ import { State } from '@/types/types';
 import { useFormState } from 'react-dom';
 import { SubmitButton } from '../../../components/SubmitButton';
 import { createPostFormAction } from '../action';
+import { useEffect, useState } from 'react';
 
 const initialState: State = {
   message: null,
 };
 
 export const CreatePostForm = () => {
+  const [fileName, setFileName] = useState<string>("")
   const [state, formAction] = useFormState(createPostFormAction, initialState);
 
-  return (
-    <div>
-      <div className="text-green-500">{state.message}</div>
-      <form action={formAction}>
-        <label htmlFor="title">
-          タイトル
-          <input
-            className="border"
-            type="text"
-            id="title"
-            name="title"
-            required
-          />
-        </label>
-        <label htmlFor="musicFile">
-          音声ファイル
-          <input
-            type="file"
-            accept=".mp3"
-            id="musicFile"
-            name="musicFile"
-            required
-          />
-        </label>
-        <label htmlFor="tags">
-          タグ
-          <input
-            className="border"
-            type="text"
-            id="tags"
-            name="tags"
-            required
-          />
-        </label>
-        <label htmlFor="content">
-          概要
-          <textarea
-            className="border"
-            name="content"
-            id="content"
-            cols={30}
-            rows={10}
-            required
-          ></textarea>
-        </label>
+  useEffect(() => {
+    if(fileName !== null) {
+      console.log(fileName)
+    }
+  }, [fileName])
 
-        <SubmitButton />
+  return (
+    <div className="flex flex-col items-center mt-7">
+      <div className="text-green-500">{state.message}</div>
+      <form
+        action={formAction}
+        className="flex flex-col bg-[#E3DEDA] w-11/12 items-center rounded-xl"
+      >
+        <div className="w-5/6 mt-6 mb-8">
+          <div className="mb-6">
+            <p className="text-[#646767] opacity-50 text-xs">題名</p>
+            <input
+              className="border border-[#6E96A5] bg-transparent w-full rounded-md h-10"
+              type="text"
+              id="title"
+              name="title"
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <p className="text-[#646767] opacity-50 text-xs">音声ファイル</p>
+            <label
+              htmlFor="musicFile"
+              className=" w-full h-10 border border-[#6E96A5] rounded-md flex items-center justify-center"
+            >
+              {fileName === "" ? (
+                <p className="text-[#646767] opacity-50 text-xs">＋ファイルを投稿してください</p>
+              ) : (
+                <p className="text-[#646767] text-xs">{fileName}</p>
+              )}
+            </label>
+            <input
+              type="file"
+              className="hidden"
+              accept=".mp3"
+              id="musicFile"
+              name="musicFile"
+              onChange={(e) => {
+                if(e.target.files !== null) {
+
+                  setFileName(e.target.files[0].name)}
+                }
+              }
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <p className="text-[#646767] opacity-50 text-xs">タグ</p>
+            <input
+              className="border border-[#6E96A5] bg-transparent w-full h-10 rounded-md"
+              type="text"
+              id="tags"
+              name="tags"
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <p className="text-[#646767] opacity-50 text-xs">概要</p>
+            <textarea
+              className="border border-[#6E96A5] bg-transparent w-full h-24 rounded-md"
+              name="content"
+              id="content"
+              cols={30}
+              rows={10}
+              required
+            ></textarea>
+          </div>
+
+          <SubmitButton />
+        </div>
       </form>
     </div>
   );
