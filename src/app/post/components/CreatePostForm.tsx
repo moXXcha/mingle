@@ -31,7 +31,7 @@ export const CreatePostForm = () => {
           <div className="mb-6">
             <p className="text-[#646767] opacity-50 text-xs">題名</p>
             <input
-              className="border border-[#6E96A5] bg-transparent w-full rounded-md h-10"
+              className="border border-[#6E96A5] bg-transparent w-full rounded-md h-10 text-[#646767] text-xs focus:outline-none px-2"
               type="text"
               id="title"
               name="title"
@@ -68,7 +68,7 @@ export const CreatePostForm = () => {
           <div className="mb-6">
             <p className="text-[#646767] opacity-50 text-xs">タグ</p>
             <input
-              className="border border-[#6E96A5] bg-transparent w-full h-10 rounded-md"
+              className="border border-[#6E96A5] bg-transparent w-full h-10 rounded-md  text-[#646767] text-xs focus:outline-none px-2"
               type="text"
               id="tags"
               name="tags"
@@ -78,7 +78,7 @@ export const CreatePostForm = () => {
           <div className="mb-6">
             <p className="text-[#646767] opacity-50 text-xs">概要</p>
             <textarea
-              className="border border-[#6E96A5] bg-transparent w-full h-24 rounded-md"
+              className="border border-[#6E96A5] bg-transparent w-full h-24 rounded-md  text-[#646767] text-xs focus:outline-none px-2 py-1"
               name="content"
               id="content"
               cols={30}
