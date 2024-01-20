@@ -16,7 +16,7 @@ type Props = {
 
 export const MusicCard = (props: Props) => {
   return (
-    <div className="bg-[#E3DEDA] w-11/12 h-44 rounded-xl pl-6 pt-5">
+    <div className="bg-[#E3DEDA] w-full h-44 rounded-xl pl-6 pt-5">
       <div className="flex">
         <div className="w-56">
           <p className="text-xl font-bold text-[#646767]">{props.musicName}</p>
