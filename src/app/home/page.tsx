@@ -1,6 +1,7 @@
 import React from 'react';
 import { Header } from '@/components/ui/Header';
 import { MusicCard } from '@/components/ui/MusicCard';
+import { Search } from '@/components/ui/Search';
 
 const page = () => {
   const tagsTest = [
@@ -10,10 +11,11 @@ const page = () => {
     },
   ];
   return (
-    <>
-      <Header />
-      {/* musicCardの数だけMusicCardを表示する */}
-      <div className='space-y-4 m-auto'>
+    <div className="w-11/12 mx-auto">
+      <div className="w-fit ml-auto my-6">
+        <Search />
+      </div>
+      <div className="space-y-4 mx-auto">
         {[...Array(10)].map((_, i) => {
           return (
             <MusicCard
@@ -26,7 +28,7 @@ const page = () => {
           );
         })}
       </div>
-    </>
+    </div>
   );
 };
 
