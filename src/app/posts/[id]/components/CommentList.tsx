@@ -1,7 +1,8 @@
 'use server';
 
-import { createCommentRepository } from '@/server/repository/comment';
-import { createCommentService } from '@/server/service/comment';
+import { db } from '@/server/db';
+import { desc, eq } from 'drizzle-orm';
+import { comments, profiles, users } from 'drizzle/schema';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -10,16 +11,16 @@ type Props = {
 };
 
 export const CommentList = async (props: Props) => {
-  const commentService = createCommentService(createCommentRepository());
-  // TODO: postIdを使って、コメント一覧を取得する
-  const comments = await commentService.getCommentsByPostId(props.postId);
-  if (comments.isFailure()) {
+  console.log('CommentList START');
+
+  const comments = await getCommentsByPostId(props.postId);
+  if (!comments) {
     return <div>コメントがありません</div>;
   }
 
   return (
     <div>
-      {comments.value.map((comment, index) => (
+      {comments.map((comment, index) => (
         <div key={index} className="flex my-5">
           <Image
             className="rounded-full w-14 h-14 object-cover"
@@ -39,4 +40,26 @@ export const CommentList = async (props: Props) => {
       ))}
     </div>
   );
+};
+
+const getCommentsByPostId = async (postId: string) => {
+  try {
+    const result = await db
+      .select({
+        comment: comments.comment,
+        displayName: profiles.displayName,
+        avatarUrl: profiles.avatarUrl,
+        userName: users.userName,
+      })
+      .from(comments)
+      .where(eq(comments.postId, postId))
+      .innerJoin(users, eq(comments.userId, users.id))
+      .innerJoin(profiles, eq(users.id, profiles.id))
+      .orderBy(desc(comments.createdAt));
+
+    return result;
+  } catch (error) {
+    console.log('ERROR !!!!!!!!!!!');
+    console.log(error);
+  }
 };

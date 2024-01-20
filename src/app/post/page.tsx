@@ -12,7 +12,7 @@ export default async function Page() {
 
   return (
     <div>
-      <div>タグ</div>
+      {/* <div>タグ</div>
       <div>
         {tagError ? (
           <div>{tagError}</div>
@@ -24,7 +24,7 @@ export default async function Page() {
           ))
         )}
       </div>
-      <div>新規投稿</div>
+      <div>新規投稿</div> */}
 
       <CreatePostForm />
     </div>
