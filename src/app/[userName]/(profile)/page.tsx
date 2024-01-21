@@ -4,7 +4,14 @@ import { db } from '@/server/db';
 import { Failure, PostDetail, Result, Success } from '@/types/types';
 import { eq } from 'drizzle-orm';
 import { users } from 'drizzle/schema';
+import Link from 'next/link';
+import { Tag } from '@/components/ui/Tag';
 import Image from 'next/image';
+
+type Tag = {
+  url: string;
+  text: string;
+};
 
 export default async function Page({
   params,
@@ -20,33 +27,34 @@ export default async function Page({
   }
 
   return (
-    <div className="border w-1/2">
+    <div className="w-11/12 mx-auto">
       {postsResult.value.map((post) => (
-        <div key={post.id} className="m-5 border">
-          <div className="flex">
-            <div>
-              <div className="font-bold text-xl">{post.title}</div>
-              <div className="font-bold ">{post.author.displayName}</div>
-              <div>{post.content}</div>
-
-              <div className="flex">
-                {post.tags.map((tag) => (
-                  <div key={tag} className="mr-5">
-                    #{tag}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <Image
-              className="rounded-full w-24 h-24 object-cover"
+        <div className="block bg-[#E3DEDA] w-full h-44 rounded-xl pl-6 pt-5 mb-5 relative z-10">
+        <Link href={`/posts/${post.id}`} className="bg-slate-800 w-full h-full block absolute top-0 left-0 rounded-xl opacity-0 z-20" />
+        <div className="flex">
+          <div className="w-56">
+            <p className="text-xl font-bold text-[#646767]">
+              {post.title}
+            </p>
+            <p className="text-base font-bold text-[#646767] mb-3">
+              {post.author.displayName}
+            </p>
+            <p className="text-xs text-[#646767]">{post.content}</p>
+          </div>
+          <div>
+            <Link href={`/${post.author.userName}`} className="bg-red-400 block w-20 h-20 rounded-full absolute ml-4 opacity-0 z-30" />
+            <img
               src={post.author.avatarUrl}
-              alt="icon"
-              width={100}
-              height={100}
-              priority={true}
+              className="block w-20 h-20 rounded-full ml-4"
             />
           </div>
         </div>
+        <div className="absolute bottom-5 space-x-3 z-30">
+          {post.tags.map((tag: Tag) => (
+            <Tag href={`/home`} text={`${tag}`} />
+          ))}
+        </div>
+      </div>
       ))}
     </div>
   );

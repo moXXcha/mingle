@@ -26,7 +26,7 @@ const page = () => {
               src={profileImage.src}
               className="block w-20 h-20 rounded-full"
             />
-            <div className=" flex items-center">
+            <div className="flex items-center">
               <button
                 className="text-[#DDBFAE] bg-[#646767] w-16 h-8 rounded-md font-bold text-[12px]"
                 onClick={() => {
