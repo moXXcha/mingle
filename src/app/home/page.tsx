@@ -1,3 +1,4 @@
+'use server';
 import React from 'react';
 import { Header } from '@/components/ui/Header';
 import { MusicCard } from '@/components/ui/MusicCard';
@@ -16,17 +17,12 @@ const page = () => {
         <Search />
       </div>
       <div className="space-y-4 mx-auto">
-        {[...Array(10)].map((_, i) => {
-          return (
-            <MusicCard
-              key={i}
-              musicName="aaa"
-              userName="aaaa"
-              musicDescription="aaaa"
-              tags={tagsTest}
-            />
-          );
-        })}
+        <MusicCard
+          musicName="aaa"
+          userName="aaaa"
+          musicDescription="aaaa"
+          tags={tagsTest}
+        />
       </div>
     </div>
   );

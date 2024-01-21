@@ -29,7 +29,7 @@ export const Header = () => {
         className={`bg-[#0000002d] w-full h-[100vh] ${menuBgStyle}`}
       ></label>
       <nav
-        className={`fixed w-2/3 h-[100vh] bg-[#E3DEDA] ${menuStyle}  transition-all z-30 fixed`}
+        className={`fixed w-2/3 h-[100vh] bg-[#E3DEDA] ${menuStyle}  transition-all z-50 fixed`}
         id="menu-nav"
       >
         <div className="w-full h-12 flex items-center">
@@ -102,7 +102,7 @@ export const Header = () => {
           </svg>
         </button>
       </nav>
-      <header className="w-full h-12 bg-[#B3D0CF] flex items-center fixed top-0">
+      <header className="w-full h-12 bg-[#B3D0CF] flex items-center fixed top-0 z-40">
         <input
           type="checkbox"
           id="menu"
