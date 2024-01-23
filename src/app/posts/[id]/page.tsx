@@ -1,5 +1,6 @@
 'use server';
 
+import { Search } from '@/components/ui/Search';
 import { createMusicFileRepository } from '@/server/repository/musicFile';
 import { createPostRepository } from '@/server/repository/post';
 import { createPostTagRelationRepository } from '@/server/repository/postTagRelations';
@@ -9,7 +10,7 @@ import { createPostService } from '@/server/service/post';
 import { createTagService } from '@/server/service/tag';
 import { Suspense } from 'react';
 import { Comments } from './components/Comments';
-import { MusicPlayer } from './components/MusicPlayer';
+import { MusicPlayerSection } from './components/MusicPlayerSection';
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export default async function Page({ params }: { params: { id: string } }) {
@@ -30,15 +31,20 @@ export default async function Page({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <MusicPlayer postId={id} />
-      </Suspense>
+    <div className="w-11/12 mx-auto">
+      <div className="my-6 ml-auto w-fit">
+        <Search />
+      </div>
+      <div>
+        <Suspense fallback={<div>Loading...</div>}>
+          <MusicPlayerSection postId={id} />
+        </Suspense>
 
-      <hr />
-      <Suspense fallback={<div>Loading...</div>}>
-        <Comments postId={id} />
-      </Suspense>
+        <hr />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Comments postId={id} />
+        </Suspense>
+      </div>
     </div>
   );
 }
