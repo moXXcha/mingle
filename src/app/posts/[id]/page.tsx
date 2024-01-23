@@ -12,7 +12,6 @@ import { Suspense } from 'react';
 import { Comments } from './components/Comments';
 import { MusicPlayerSection } from './components/MusicPlayerSection';
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params;
 

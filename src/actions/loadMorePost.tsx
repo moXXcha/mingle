@@ -17,6 +17,7 @@ export const loadMorePost = async (offset: number = 0) => {
   const nextOffset =
     posts.value.length >= PAGE_SIZE ? offset + PAGE_SIZE : null;
 
+  // todo componentに分ける
   return [
     posts.value.map((post: PostDetail) => (
       <div key={post.id} className="flex border my-5 w-1/2">
