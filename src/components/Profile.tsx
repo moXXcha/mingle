@@ -21,7 +21,6 @@ type TProfile = {
 };
 
 export const Profile = async (props: Props) => {
-  //a
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
