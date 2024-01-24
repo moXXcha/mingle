@@ -1,4 +1,7 @@
+'use server';
+
 import { PostDetail } from '@/types/types';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Tag } from './Tag';

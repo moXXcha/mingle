@@ -1,10 +1,12 @@
 'use server';
 
+import { Tag } from '@/components/ui/Tag';
 import { db } from '@/server/db';
 import { PostDetail } from '@/types/types';
 import { eq } from 'drizzle-orm';
 import { users } from 'drizzle/schema';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default async function Page({
   params,
@@ -22,31 +24,40 @@ export default async function Page({
   console.log('posts.length: ', posts.length);
 
   return (
-    <div className="border w-1/2">
-      {posts.map((post) => (
-        <div key={post.id} className="m-5 border">
+    <div className="w-11/12 mx-auto">
+      {posts.map((post: PostDetail, index) => (
+        <div
+          className="block bg-[#E3DEDA] w-full h-44 rounded-xl pl-6 pt-5 mb-5 relative z-10"
+          key={index}
+        >
+          <Link
+            href={`/posts/${post.id}`}
+            className="bg-slate-800 w-full h-full block absolute top-0 left-0 rounded-xl opacity-0 z-20"
+          />
           <div className="flex">
-            <div>
-              <div className="font-bold text-xl">{post.title}</div>
-              <div className="font-bold ">{post.author.displayName}</div>
-              <div>{post.content}</div>
-
-              <div className="flex">
-                {post.tags.map((tag) => (
-                  <div key={tag} className="mr-5">
-                    #{tag}
-                  </div>
-                ))}
-              </div>
+            <div className="w-56">
+              <p className="text-xl font-bold text-[#646767]">{post.title}</p>
+              <p className="text-base font-bold text-[#646767] mb-3">
+                {post.author.displayName}
+              </p>
+              <p className="text-xs text-[#646767]">{post.content}</p>
             </div>
-            <Image
-              className="rounded-full w-24 h-24 object-cover"
-              src={post.author.avatarUrl}
-              alt="icon"
-              width={100}
-              height={100}
-              priority={true}
-            />
+            <div>
+              <Link
+                href={`/${post.author.userName}`}
+                className="bg-red-400 block w-20 h-20 rounded-full absolute ml-4 opacity-0 z-30"
+              />
+              <Image
+                src={post.author.avatarUrl}
+                className="block w-20 h-20 rounded-full ml-4"
+                alt="Picture of the author"
+              />
+            </div>
+          </div>
+          <div className="absolute bottom-5 space-x-3 z-30">
+            {post.tags.map((tag, index) => (
+              <Tag text={`${tag}`} key={index} />
+            ))}
           </div>
         </div>
       ))}
