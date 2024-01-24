@@ -1,4 +1,4 @@
-import { Header } from '@/components/ui/Header';
+import { HeaderSection } from '@/components/HeaderSection';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header />
+        <HeaderSection />
         <div className="pt-12">{children}</div>
       </body>
     </html>
