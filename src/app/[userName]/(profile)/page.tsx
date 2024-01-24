@@ -51,6 +51,8 @@ export default async function Page({
                 src={post.author.avatarUrl}
                 className="block w-20 h-20 rounded-full ml-4"
                 alt="Picture of the author"
+                width={500}
+                height={500}
               />
             </div>
           </div>
