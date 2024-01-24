@@ -8,7 +8,7 @@ import { profiles } from 'drizzle/schema';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import { Suspense } from 'react';
-import { commentFormAction } from '../action';
+import { commentFormAction } from '../actions/commentFormAction';
 import { CommentForm } from './CommentForm';
 import { CommentList } from './CommentList';
 

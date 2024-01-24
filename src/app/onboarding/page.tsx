@@ -3,8 +3,8 @@
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
-import ProfileForm from './components/ProfileForm';
-import UserNameForm from './components/UserNameForm';
+import ProfileForm from '../../components/ProfileForm';
+import UserNameForm from '../../components/UserNameForm';
 
 export default async function Page() {
   const cookieStore = cookies();

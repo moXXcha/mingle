@@ -2,13 +2,14 @@
 
 import { db } from '@/server/db';
 import { tags } from 'drizzle/schema';
-import { CreatePostForm } from './components/CreatePostForm';
+import { CreatePostForm } from '../../components/CreatePostForm';
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export default async function Page() {
   // ! とりあえずタグの入力は一つのみ受け付ける
 
-  const { tags, error } = await getTags();
-  const tagError = error;
+  // const { tags, error } = await getTags();
+  // const tagError = error;
 
   return (
     <div>
@@ -37,6 +38,7 @@ type Tag = {
 };
 
 // tagを取得する
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getTags = async (): Promise<{ tags: Tag[]; error: string }> => {
   try {
     const result = await db

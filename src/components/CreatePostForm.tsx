@@ -3,8 +3,8 @@
 import { State } from '@/types/types';
 import { useEffect, useState } from 'react';
 import { useFormState } from 'react-dom';
-import { SubmitButton } from '../../../components/SubmitButton';
-import { createPostFormAction } from '../action';
+import { createPostFormAction } from '../actions/createPostFormAction';
+import { SubmitButton } from './SubmitButton';
 
 const initialState: State = {
   message: null,
@@ -59,7 +59,10 @@ export const CreatePostForm = () => {
               id="musicFile"
               name="musicFile"
               onChange={(e) => {
-                if (e.target.files !== null) {
+                if (
+                  e.target.files !== null &&
+                  e.target.files[0] !== undefined
+                ) {
                   setFileName(e.target.files[0].name);
                 }
               }}

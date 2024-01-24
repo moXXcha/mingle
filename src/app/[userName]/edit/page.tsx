@@ -6,10 +6,10 @@ import { createProfileRepository } from '@/server/repository/profile';
 import { createUserRepository } from '@/server/repository/user';
 import { createProfileService } from '@/server/service/profile';
 import Link from 'next/link';
-import { updatePostFormAction } from './action';
-import { AvatarFileInput } from './components/AvatarFileInput';
-import { DisplayNameInput } from './components/DisplayNameInput';
-import { OverviewInput } from './components/OverviewInput';
+import { updatePostFormAction } from '../../../actions/updatePostFormAction';
+import { AvatarFileInput } from '../../../components/AvatarFileInput';
+import { DisplayNameInput } from '../../../components/DisplayNameInput';
+import { OverviewInput } from '../../../components/OverviewInput';
 
 export default async function Page({
   params,

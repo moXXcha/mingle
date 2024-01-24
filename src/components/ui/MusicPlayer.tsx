@@ -1,11 +1,9 @@
-import React from 'react';
 import { Tag } from '@/components/ui/Tag';
-import { Liked } from '@public/liked';
-import { Like } from '@public/like';
 import Slider from '@mui/material/Slider';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Like } from '@public/like';
 import { PlayButton } from '@public/playButton';
 import { StopButton } from '@public/stopButton';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import profileImage from '../../../public/profImage.png';
 
