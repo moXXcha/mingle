@@ -9,7 +9,7 @@ export default function RootLayout({
   params: { userName: string };
 }) {
   return (
-    <div>
+    <div className="mt-6">
       <Profile userName={params.userName} />
       <ProfileTab userName={params.userName} />
       <div>{children}</div>
