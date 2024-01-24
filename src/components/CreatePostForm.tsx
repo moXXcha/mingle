@@ -1,24 +1,24 @@
 'use client';
 
+import { createPostFormAction } from '@/actions/createPostFormAction';
 import { State } from '@/types/types';
-import { useFormState } from 'react-dom';
-import { SubmitButton } from '../../../components/SubmitButton';
-import { createPostFormAction } from '../action';
 import { useEffect, useState } from 'react';
+import { useFormState } from 'react-dom';
+import { SubmitButton } from './SubmitButton';
 
 const initialState: State = {
   message: null,
 };
 
 export const CreatePostForm = () => {
-  const [fileName, setFileName] = useState<string>("")
+  const [fileName, setFileName] = useState<string>('');
   const [state, formAction] = useFormState(createPostFormAction, initialState);
 
   useEffect(() => {
-    if(fileName !== null) {
-      console.log(fileName)
+    if (fileName !== null) {
+      console.log(fileName);
     }
-  }, [fileName])
+  }, [fileName]);
 
   return (
     <div className="flex flex-col items-center mt-7">
@@ -44,8 +44,10 @@ export const CreatePostForm = () => {
               htmlFor="musicFile"
               className=" w-full h-10 border border-[#6E96A5] rounded-md flex items-center justify-center"
             >
-              {fileName === "" ? (
-                <p className="text-[#646767] opacity-50 text-xs">＋ファイルを投稿してください</p>
+              {fileName === '' ? (
+                <p className="text-[#646767] opacity-50 text-xs">
+                  ＋ファイルを投稿してください
+                </p>
               ) : (
                 <p className="text-[#646767] text-xs">{fileName}</p>
               )}
@@ -57,11 +59,13 @@ export const CreatePostForm = () => {
               id="musicFile"
               name="musicFile"
               onChange={(e) => {
-                if(e.target.files !== null) {
-
-                  setFileName(e.target.files[0].name)}
+                if (
+                  e.target.files !== null &&
+                  e.target.files[0] !== undefined
+                ) {
+                  setFileName(e.target.files[0].name);
                 }
-              }
+              }}
               required
             />
           </div>

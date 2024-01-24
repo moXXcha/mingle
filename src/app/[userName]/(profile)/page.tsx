@@ -1,7 +1,7 @@
 'use server';
 
 import { db } from '@/server/db';
-import { Failure, PostDetail, Result, Success } from '@/types/types';
+import { PostDetail } from '@/types/types';
 import { eq } from 'drizzle-orm';
 import { users } from 'drizzle/schema';
 import Link from 'next/link';
@@ -21,10 +21,12 @@ export default async function Page({
   const { userName } = params;
 
   // 自分の投稿を取得
-  const postsResult = await getPostsByUserName(userName);
-  if (postsResult.isFailure()) {
+  const posts = await getPostsByUserName(userName);
+
+  if (posts.length === 0) {
     return <div>投稿がありません</div>;
   }
+  console.log('posts.length: ', posts.length);
 
   return (
     <div className="w-11/12 mx-auto">
@@ -60,9 +62,8 @@ export default async function Page({
   );
 }
 
-const getPostsByUserName = async (
-  userName: string,
-): Promise<Result<PostDetail[], Error>> => {
+const getPostsByUserName = async (userName: string): Promise<PostDetail[]> => {
+  // todo 一旦limitを10にしているが、後に無限スクロールにする
   try {
     // ユーザーとその投稿、タグ、プロフィールを取得
     const result = await db.query.users.findMany({
@@ -77,11 +78,11 @@ const getPostsByUserName = async (
           },
           // 投稿を作成日時の昇順で取得（新しい投稿を先頭に）
           orderBy: (posts, { asc }) => [asc(posts.createdAt)],
+          limit: 10,
         },
         profile: true,
       },
       where: eq(users.userName, userName),
-      limit: 10,
     });
 
     // 取得したデータを整形
@@ -101,8 +102,10 @@ const getPostsByUserName = async (
       })),
     );
 
-    return new Success(data);
+    return data;
   } catch (error) {
-    return new Failure(error as Error);
+    console.log(error);
+    // todo エラー処理
+    return [];
   }
 };

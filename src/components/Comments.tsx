@@ -1,5 +1,6 @@
 'use server';
 
+import { commentFormAction } from '@/actions/commentFormAction';
 import { db } from '@/server/db';
 import { Failure, Result, Success } from '@/types/types';
 import { createClient } from '@/utils/supabase/server';
@@ -8,7 +9,6 @@ import { profiles } from 'drizzle/schema';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import { Suspense } from 'react';
-import { commentFormAction } from '../action';
 import { CommentForm } from './CommentForm';
 import { CommentList } from './CommentList';
 
