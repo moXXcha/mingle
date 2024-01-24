@@ -60,7 +60,7 @@ export const MusicPlayerSection = async (props: Props) => {
           <div className="flex w-full justify-between mb-3">
             {/* todo */}
             {post.tags?.map((tag, index) => {
-              return <Tag key={index} text={tag} href="/player" />;
+              return <Tag key={index} text={tag} />;
             })}
             {/* tagsの要素がない場合、<Like/>の位置がズレる */}
             <button className="">
