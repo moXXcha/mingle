@@ -1,31 +1,21 @@
 'use server';
 
+import { Comments } from '@/components/Comments';
+import { MusicPlayerSection } from '@/components/MusicPlayerSection';
 import { Search } from '@/components/ui/Search';
-import { createMusicFileRepository } from '@/server/repository/musicFile';
-import { createPostRepository } from '@/server/repository/post';
-import { createPostTagRelationRepository } from '@/server/repository/postTagRelations';
-import { createTagRepository } from '@/server/repository/tag';
-import { createUserRepository } from '@/server/repository/user';
-import { createPostService } from '@/server/service/post';
-import { createTagService } from '@/server/service/tag';
+import { db } from '@/server/db';
+import { eq } from 'drizzle-orm';
+import { posts } from 'drizzle/schema';
 import { Suspense } from 'react';
-import { Comments } from '../../../components/Comments';
-import { MusicPlayerSection } from '../../../components/MusicPlayerSection';
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params;
 
-  const postService = createPostService(
-    createPostRepository(),
-    createUserRepository(),
-    createMusicFileRepository(),
-    createTagService(createTagRepository()),
-    createPostTagRelationRepository(),
-  );
-
   // postIdを使って、データ取得する
-  const post = await postService.getPostByPostId(id);
-  if (post.isFailure()) {
+  const post = await getPostByPostId(id);
+
+  if (post === null) {
+    // TODO エラーページとかに飛ばす
     return <div>投稿がありません</div>;
   }
 
@@ -47,3 +37,16 @@ export default async function Page({ params }: { params: { id: string } }) {
     </div>
   );
 }
+
+// postIdを使って、データ取得する
+// todo 返り値の型を定義する
+const getPostByPostId = async (postId: string) => {
+  try {
+    const result = await db.select().from(posts).where(eq(posts.id, postId));
+
+    return result[0];
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};

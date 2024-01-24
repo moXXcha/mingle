@@ -1,8 +1,8 @@
 'use server';
 
+import { MusicCardList } from '@/components/MusicCardList';
 import { Search } from '@/components/ui/Search';
 import { Suspense } from 'react';
-import { MusicCardList } from './components/MusicCardList';
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export default async function Page() {

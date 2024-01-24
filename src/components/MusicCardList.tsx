@@ -22,7 +22,15 @@ export const MusicCardList = async () => {
           >
             <div className="flex">
               <div className="w-56">
-                <p className="text-xl font-bold text-[#646767]">{post.title}</p>
+                <div>
+                  <Link
+                    href={`/posts/${post.id}`}
+                    className="text-xl font-bold text-[#646767]"
+                  >
+                    {post.title}
+                  </Link>
+                </div>
+
                 <Link
                   href={`/${post.author.userName}`}
                   className="text-base font-bold text-[#646767] mb-3"

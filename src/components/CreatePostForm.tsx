@@ -1,9 +1,9 @@
 'use client';
 
+import { createPostFormAction } from '@/actions/createPostFormAction';
 import { State } from '@/types/types';
 import { useEffect, useState } from 'react';
 import { useFormState } from 'react-dom';
-import { createPostFormAction } from '../actions/createPostFormAction';
 import { SubmitButton } from './SubmitButton';
 
 const initialState: State = {
