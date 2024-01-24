@@ -9,8 +9,8 @@ import { createUserRepository } from '@/server/repository/user';
 import { createPostService } from '@/server/service/post';
 import { createTagService } from '@/server/service/tag';
 import { Suspense } from 'react';
-import { Comments } from './components/Comments';
-import { MusicPlayerSection } from './components/MusicPlayerSection';
+import { Comments } from '../../../components/Comments';
+import { MusicPlayerSection } from '../../../components/MusicPlayerSection';
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params;

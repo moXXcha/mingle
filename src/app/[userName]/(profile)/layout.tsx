@@ -1,5 +1,5 @@
-import { Profile } from './components/Profile';
-import { ProfileTab } from './components/ProfileTab';
+import { Profile } from '../../../components/Profile';
+import { ProfileTab } from '../../../components/ProfileTab';
 
 export default function RootLayout({
   children,

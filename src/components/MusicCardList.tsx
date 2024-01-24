@@ -1,7 +1,7 @@
 'use server';
 
-import { getPosts, loadMorePost } from '@/actions/loadMorePost';
 import { LoadMore } from '@/components/LoadMore';
+import { getPosts, loadMorePost } from '@/components/loadMorePost';
 import Image from 'next/image';
 import Link from 'next/link';
 

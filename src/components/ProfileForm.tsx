@@ -1,7 +1,7 @@
 'use client';
 
 import { useFormState } from 'react-dom';
-import { profileFormAction } from './profileFormAction';
+import { profileFormAction } from '../actions/profileFormAction';
 
 const initialState = {
   message: '',
