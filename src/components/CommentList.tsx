@@ -1,8 +1,4 @@
-'use server';
-
-import { db } from '@/server/db';
-import { desc, eq } from 'drizzle-orm';
-import { comments, profiles, users } from 'drizzle/schema';
+import { getCommentsByPostId } from '@/server/comment';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -11,8 +7,6 @@ type Props = {
 };
 
 export const CommentList = async (props: Props) => {
-  console.log('CommentList START');
-
   const comments = await getCommentsByPostId(props.postId);
   if (!comments) {
     return <div>コメントがありません</div>;
@@ -54,26 +48,4 @@ export const CommentList = async (props: Props) => {
       ))}
     </div>
   );
-};
-
-const getCommentsByPostId = async (postId: string) => {
-  try {
-    const result = await db
-      .select({
-        comment: comments.comment,
-        displayName: profiles.displayName,
-        avatarUrl: profiles.avatarUrl,
-        userName: users.userName,
-      })
-      .from(comments)
-      .where(eq(comments.postId, postId))
-      .innerJoin(users, eq(comments.userId, users.id))
-      .innerJoin(profiles, eq(users.id, profiles.id))
-      .orderBy(desc(comments.createdAt));
-
-    return result;
-  } catch (error) {
-    console.log('ERROR !!!!!!!!!!!');
-    console.log(error);
-  }
 };
