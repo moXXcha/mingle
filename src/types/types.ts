@@ -110,6 +110,7 @@ export type Comment = {
   displayName: string;
   avatarUrl: string;
   userName: string;
+  createdAt: Date;
 };
 
 export type formActionResult =
