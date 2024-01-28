@@ -20,7 +20,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="w-11/12 mx-auto">
+    <div className="mx-auto w-11/12">
       <div className="my-6 ml-auto w-fit">
         <Search />
       </div>

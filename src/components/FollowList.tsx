@@ -29,7 +29,7 @@ export const FollowList = async () => {
         <div key={index} className="flex">
           <div>{follow.displayName}</div>
           <Image
-            className="rounded-full w-14 h-14 object-cover"
+            className="h-14 w-14 rounded-full object-cover"
             src={follow.avatarUrl}
             alt="icon"
             width={100}

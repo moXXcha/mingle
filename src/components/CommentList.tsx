@@ -21,9 +21,9 @@ export const CommentList = async (props: Props) => {
   return (
     <div>
       {comments.map((comment, index) => (
-        <div key={index} className="flex my-5">
+        <div key={index} className="my-5 flex">
           <Image
-            className="block w-11 h-11 rounded-full mr-2"
+            className="mr-2 block h-11 w-11 rounded-full"
             src={comment.avatarUrl}
             alt="icon"
             width={100}
@@ -40,12 +40,12 @@ export const CommentList = async (props: Props) => {
           <div className="w-full">
             <Link
               href={`/${comment.userName}`}
-              className="mb-1 text-[#646767] font-bold"
+              className="mb-1 font-bold text-[#646767]"
             >
               {comment.displayName}
             </Link>
-            <div className="border border-[#6E96A5] w-full min-h-14 rounded-md">
-              <p className="w-11/12 mx-auto text-[#646767] text-xs my-3">
+            <div className="min-h-14 w-full rounded-md border border-[#6E96A5]">
+              <p className="mx-auto my-3 w-11/12 text-xs text-[#646767]">
                 {comment.comment}
               </p>
             </div>

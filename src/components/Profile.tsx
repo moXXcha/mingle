@@ -42,10 +42,10 @@ export const Profile = async (props: Props) => {
   const loggedUserName = await getUserNameByUserId(user?.id as string);
 
   return (
-    <div className="w-11/12 mx-auto">
-      <div className="flex justify-between mb-5">
+    <div className="mx-auto w-11/12">
+      <div className="mb-5 flex justify-between">
         <Image
-          className="rounded-full w-20 h-20 object-cover block"
+          className="block h-20 w-20 rounded-full object-cover"
           src={profileResult.value.avatarUrl}
           alt="icon"
           width={100}
@@ -61,10 +61,10 @@ export const Profile = async (props: Props) => {
           )}
         </div>
       </div>
-      <p className="text-xl font-bold text-[#646767] mb-5">
+      <p className="mb-5 text-xl font-bold text-[#646767]">
         {profileResult.value.displayName}
       </p>
-      <p className="text-xs text-[#646767] mb-7">
+      <p className="mb-7 text-xs text-[#646767]">
         {profileResult.value.overview}
       </p>
 
