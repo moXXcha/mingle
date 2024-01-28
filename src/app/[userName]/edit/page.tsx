@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-'use server';
 
 import { updatePostFormAction } from '@/actions/updatePostFormAction';
 import { AvatarFileInput } from '@/components/AvatarFileInput';
@@ -15,7 +14,7 @@ export default async function Page({
 }) {
   const { userName } = params;
 
-  // プロフィールを取得
+  // 自分のプロフィールを取得
   const profile = await getProfileByUserName(userName);
   // TODO エラーを投げられたらエラーページに飛ばす
 
