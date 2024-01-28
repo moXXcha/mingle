@@ -1,12 +1,9 @@
-'use server';
-
 import { Comments } from '@/components/Comments';
 import { MusicPlayerSection } from '@/components/MusicPlayerSection';
 import { Search } from '@/components/ui/Search';
 import { Suspense } from 'react';
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export default async function Page({ params }: { params: { id: string } }) {
+export default function Page({ params }: { params: { id: string } }) {
   const { id } = params;
 
   return (
