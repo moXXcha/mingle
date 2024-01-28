@@ -1,14 +1,12 @@
-'use server';
-
 import { MusicCardList } from '@/components/MusicCardList';
 import { Search } from '@/components/ui/Search';
 import { Suspense } from 'react';
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export default async function Page() {
+export default function Page() {
+  console.log('TOPページのpage.tsx');
   return (
-    <div className="w-11/12 mx-auto">
-      <div className="w-fit ml-auto my-6">
+    <div className="mx-auto w-11/12">
+      <div className="my-6 ml-auto w-fit">
         <Search />
       </div>
 
