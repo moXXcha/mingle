@@ -39,3 +39,26 @@ export const getProfileByUserName = async (
 
   return profile;
 };
+
+// userIdを元にavatarUrlを取得する
+export const getAvatarUrlByUserId = async (userId: string): Promise<string> => {
+  let avatarUrl = '';
+
+  try {
+    const result = await db
+      .select({
+        avatarUrl: profiles.avatarUrl,
+      })
+      .from(profiles)
+      .where(eq(profiles.id, userId));
+
+    avatarUrl = result[0].avatarUrl;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error);
+      throw new Error('アバターを取得できませんでした。');
+    }
+  }
+
+  return avatarUrl;
+};
