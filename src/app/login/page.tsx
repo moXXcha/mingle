@@ -1,7 +1,4 @@
-'use server';
-
-// eslint-disable-next-line @typescript-eslint/require-await
-export default async function Login() {
+export default function Login() {
   return (
     <div className="relative mx-auto mt-40 h-[405px] w-11/12 rounded-xl bg-[#E3DEDA] ">
       <form
