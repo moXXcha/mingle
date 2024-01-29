@@ -1,8 +1,8 @@
+import { Profile } from '@/types/types';
+import { eq } from 'drizzle-orm';
+import { profiles, users } from 'drizzle/schema';
 import 'server-only';
 import { db } from './db';
-import { profiles, users } from 'drizzle/schema';
-import { eq } from 'drizzle-orm';
-import { Profile } from '@/types/types';
 
 // userNameを元にプロフィールを取得する
 export const getProfileByUserName = async (
