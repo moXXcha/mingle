@@ -23,7 +23,7 @@ export const Header = (props: Props) => {
   useEffect(() => {
     if (isCheck === true) {
       setMenuStyle('left-0');
-      setMenuBgStyle('fixed z-20');
+      setMenuBgStyle('fixed z-30');
       setHamburgerStyle('hidden');
       setCloseStyle('');
     } else {

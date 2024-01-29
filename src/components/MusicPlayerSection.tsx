@@ -44,7 +44,6 @@ export const MusicPlayerSection = async (props: Props) => {
     return <div>投稿がありません</div>;
   }
 
-
   return (
     <div className="w-full rounded-xl bg-[#E3DEDA] mb-7">
       <div className="flex flex-col items-center">
@@ -54,9 +53,7 @@ export const MusicPlayerSection = async (props: Props) => {
           </p>
           <label className="w-full h-7 bg-[#B3D0CF] block absolute top-3 rounded-xl"></label>
         </div>
-        <div>
-
-        </div>
+        <div></div>
         <PlayerPlaySlider musicFileUrl={post.musicFileUrl} />
         <div className="w-5/6">
           <div className="flex w-full justify-between mb-3">
@@ -72,24 +69,20 @@ export const MusicPlayerSection = async (props: Props) => {
           <p className="text-xs text-[#646767] mb-6">{post.content}</p>
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center">
-              <Image
-                src={post.avatarUrl as string}
-                alt="Picture of the author"
-                width={500}
-                height={500}
-                priority={true}
-                className="block w-11 h-11 rounded-full"
-              />
+              <Link href={`/${post.user.userName}`}>
+                <Image
+                  src={post.avatarUrl as string}
+                  alt="Picture of the author"
+                  width={500}
+                  height={500}
+                  priority={true}
+                  className="block w-11 h-11 rounded-full"
+                />
+              </Link>
 
               <p className="text-[#646767] font-bold ml-3">
                 {post.user.displayName}
               </p>
-              {/* TODO cssが適応されていない */}
-              <Link href={`/${post.user.userName}`}>
-                <p className='className="text-[#646767] ml-3'>
-                  {post.user.displayName}
-                </p>
-              </Link>
             </div>
             {/* todo */}
             <button className="w-16 h-8 bg-[#646767] text-[#DDBFAE] rounded-md">
