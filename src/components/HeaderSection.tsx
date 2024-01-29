@@ -1,4 +1,4 @@
-import { getLoggedInUserName } from '@/server/user';
+import { getUserNameByUserId } from '@/server/user';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { Header } from './ui/Header';
@@ -13,7 +13,7 @@ export const HeaderSection = async () => {
   } = await supabase.auth.getUser();
 
   // ログイン中のユーザーのuserNameを取得
-  const userName = await getLoggedInUserName(user?.id as string);
+  const userName = await getUserNameByUserId(user?.id as string);
 
   return <Header userName={userName} />;
 };
