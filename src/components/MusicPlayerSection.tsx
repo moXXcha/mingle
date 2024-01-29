@@ -44,20 +44,20 @@ export const MusicPlayerSection = async (props: Props) => {
   }
 
   return (
-    <div className="w-full rounded-xl bg-[#E3DEDA] mb-7">
+    <div className="mb-7 w-full rounded-xl bg-[#E3DEDA]">
       <div className="flex flex-col items-center">
-        <div className="relative h-10 w-fit flex flex-col items-center mt-8">
-          <p className="text-2xl font-bold text-[#646767] z-20 relative">
+        <div className="relative mt-8 flex h-10 w-fit flex-col items-center">
+          <p className="relative z-20 text-2xl font-bold text-[#646767]">
             {post.title}
           </p>
-          <label className="w-full h-7 bg-[#B3D0CF] block absolute top-3 rounded-xl"></label>
+          <label className="absolute top-3 block h-7 w-full rounded-xl bg-[#B3D0CF]"></label>
         </div>
         <MusicPlayButton />
         <div className="w-3/4">
           <MusicSlider />
         </div>
         <div className="w-5/6">
-          <div className="flex w-full justify-between mb-3">
+          <div className="mb-3 flex w-full justify-between">
             {/* todo */}
             {post.tags?.map((tag, index) => {
               return <Tag key={index} text={tag} />;
@@ -67,8 +67,8 @@ export const MusicPlayerSection = async (props: Props) => {
               <Like />
             </button>
           </div>
-          <p className="text-xs text-[#646767] mb-6">{post.content}</p>
-          <div className="flex justify-between items-center mb-4">
+          <p className="mb-6 text-xs text-[#646767]">{post.content}</p>
+          <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center">
               <Image
                 src={post.avatarUrl as string}
@@ -76,10 +76,10 @@ export const MusicPlayerSection = async (props: Props) => {
                 width={500}
                 height={500}
                 priority={true}
-                className="block w-11 h-11 rounded-full"
+                className="block h-11 w-11 rounded-full"
               />
 
-              <p className="text-[#646767] font-bold ml-3">
+              <p className="ml-3 font-bold text-[#646767]">
                 {post.user.displayName}
               </p>
               {/* TODO cssが適応されていない */}
@@ -90,7 +90,7 @@ export const MusicPlayerSection = async (props: Props) => {
               </Link>
             </div>
             {/* todo */}
-            <button className="w-16 h-8 bg-[#646767] text-[#DDBFAE] rounded-md">
+            <button className="h-8 w-16 rounded-md bg-[#646767] text-[#DDBFAE]">
               follow
             </button>
           </div>
