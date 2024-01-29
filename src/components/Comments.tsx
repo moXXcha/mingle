@@ -44,9 +44,6 @@ export const Comments = async (props: Props) => {
     );
   }
 
-  // 以下、ログイン中のユーザーがいる場合の処理
-  console.log('hogehoge');
-
   const commentFormActionWithPostIdAndUserId = commentFormAction.bind(
     null,
     props.postId,
