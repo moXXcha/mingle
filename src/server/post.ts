@@ -1,8 +1,8 @@
+import { PostDetail } from '@/types/types';
+import { eq } from 'drizzle-orm';
+import { posts, users } from 'drizzle/schema';
 import 'server-only';
 import { db } from './db';
-import { eq } from 'drizzle-orm';
-import { users } from 'drizzle/schema';
-import { PostDetail } from '@/types/types';
 
 // userNameを元に投稿一覧を取得する
 export const getPostsByUserName = async (
@@ -54,4 +54,87 @@ export const getPostsByUserName = async (
   }
 
   return posts;
+};
+
+// postIdを元に投稿を取得する
+export const getPostById = async (postId: string): Promise<PostDetail> => {
+  let post: PostDetail = {
+    id: '',
+    title: '',
+    content: '',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    tags: [],
+    author: {
+      userName: '',
+      displayName: '',
+      avatarUrl: '',
+    },
+  };
+
+  try {
+    const result = await db.query.posts.findFirst({
+      where: eq(posts.id, postId),
+      columns: {
+        id: true,
+        title: true,
+        musicFileUrl: true,
+        content: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      with: {
+        postTagRelations: {
+          columns: {},
+          with: {
+            tag: {
+              columns: {
+                name: true,
+              },
+            },
+          },
+        },
+        user: {
+          columns: {
+            userName: true,
+          },
+          with: {
+            profile: {
+              columns: {
+                displayName: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!result) {
+      throw new Error('投稿が見つかりませんでした。');
+    }
+
+    post = {
+      id: result.id,
+      title: result.title,
+      content: result.content,
+      createdAt: result.createdAt,
+      updatedAt: result.updatedAt,
+      tags: result.postTagRelations.map((postTagRelation) => {
+        return postTagRelation.tag.name;
+      }),
+      author: {
+        userName: result.user.userName,
+        displayName: result.user.profile.displayName,
+        avatarUrl: result.user.profile.avatarUrl,
+      },
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error);
+      throw new Error('投稿を取得できませんでした。');
+    }
+  }
+
+  return post;
 };
