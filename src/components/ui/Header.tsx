@@ -35,8 +35,8 @@ export const Header = (props: Props) => {
   }, [isCheck]);
 
   useEffect(() => {
-    const url = `${pathname}`;
-    console.log(url);
+    // const url = `${pathname}`;
+    // console.log(url);
     setIsCheck(false);
   }, [pathname]);
 

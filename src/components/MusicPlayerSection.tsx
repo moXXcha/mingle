@@ -11,6 +11,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MusicPlayButton } from './MusicPlayButton';
 import { MusicSlider } from './MusicSlider';
+import { PlayerPlaySlider } from './PlayerPlaySlider';
 
 type Props = {
   postId: string;
@@ -43,6 +44,7 @@ export const MusicPlayerSection = async (props: Props) => {
     return <div>投稿がありません</div>;
   }
 
+
   return (
     <div className="w-full rounded-xl bg-[#E3DEDA] mb-7">
       <div className="flex flex-col items-center">
@@ -52,10 +54,10 @@ export const MusicPlayerSection = async (props: Props) => {
           </p>
           <label className="w-full h-7 bg-[#B3D0CF] block absolute top-3 rounded-xl"></label>
         </div>
-        <MusicPlayButton />
-        <div className="w-3/4">
-          <MusicSlider />
+        <div>
+
         </div>
+        <PlayerPlaySlider musicFileUrl={post.musicFileUrl} />
         <div className="w-5/6">
           <div className="flex w-full justify-between mb-3">
             {/* todo */}
@@ -63,7 +65,7 @@ export const MusicPlayerSection = async (props: Props) => {
               return <Tag key={index} text={tag} />;
             })}
             {/* tagsの要素がない場合、<Like/>の位置がズレる */}
-            <button className="">
+            <button className="ml-auto">
               <Like />
             </button>
           </div>
