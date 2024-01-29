@@ -2,10 +2,11 @@
 
 import { Tag } from '@/components/ui/Tag';
 import { db } from '@/server/db';
+import { getPostById } from '@/server/post';
 import { createClient } from '@/utils/supabase/server';
 import { Like } from '@public/like';
 import { and, eq } from 'drizzle-orm';
-import { likes, posts } from 'drizzle/schema';
+import { likes } from 'drizzle/schema';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -38,10 +39,8 @@ export const MusicPlayerSection = async (props: Props) => {
   }
 
   // 投稿データを取得する
-  const post = await getPostData(props.postId);
-  if (!post) {
-    return <div>投稿がありません</div>;
-  }
+  const post = await getPostById(props.postId);
+  // TODO エラー処理
 
   return (
     <div className="mb-7 w-full rounded-xl bg-[#E3DEDA]">
@@ -71,7 +70,7 @@ export const MusicPlayerSection = async (props: Props) => {
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center">
               <Image
-                src={post.avatarUrl as string}
+                src={post.author.avatarUrl}
                 alt="Picture of the author"
                 width={500}
                 height={500}
@@ -80,12 +79,12 @@ export const MusicPlayerSection = async (props: Props) => {
               />
 
               <p className="ml-3 font-bold text-[#646767]">
-                {post.user.displayName}
+                {post.author.displayName}
               </p>
               {/* TODO cssが適応されていない */}
-              <Link href={`/${post.user.userName}`}>
+              <Link href={`/${post.author.userName}`}>
                 <p className='className="text-[#646767] ml-3'>
-                  {post.user.displayName}
+                  {post.author.displayName}
                 </p>
               </Link>
             </div>
@@ -98,64 +97,4 @@ export const MusicPlayerSection = async (props: Props) => {
       </div>
     </div>
   );
-};
-
-const getPostData = async (postId: string) => {
-  try {
-    const result = await db.query.posts.findFirst({
-      where: eq(posts.id, postId),
-      columns: {
-        id: true,
-        title: true,
-        musicFileUrl: true,
-        content: true,
-      },
-      with: {
-        postTagRelations: {
-          columns: {},
-          with: {
-            tag: {
-              columns: {
-                name: true,
-              },
-            },
-          },
-        },
-        user: {
-          columns: {
-            userName: true,
-          },
-          with: {
-            profile: {
-              columns: {
-                displayName: true,
-                avatarUrl: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    // データ整形
-    const post = {
-      id: result?.id,
-      title: result?.title,
-      musicFileUrl: result?.musicFileUrl,
-      tags: result?.postTagRelations.map((postTagRelation) => {
-        return postTagRelation.tag.name;
-      }),
-      content: result?.content,
-      avatarUrl: result?.user.profile.avatarUrl,
-      user: {
-        userName: result?.user.userName,
-        displayName: result?.user.profile.displayName,
-      },
-    };
-
-    return post;
-  } catch (error) {
-    console.log('投稿データの取得に失敗しました');
-    console.log(error);
-  }
 };
