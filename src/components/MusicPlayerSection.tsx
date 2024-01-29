@@ -1,5 +1,3 @@
-'use server';
-
 import { Tag } from '@/components/ui/Tag';
 import { db } from '@/server/db';
 import { getPostById } from '@/server/post';
