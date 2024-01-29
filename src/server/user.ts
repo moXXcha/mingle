@@ -3,8 +3,8 @@ import { users } from 'drizzle/schema';
 import 'server-only';
 import { db } from './db';
 
-// ログイン中のユーザー名を取得する
-export const getLoggedInUserName = async (userId: string): Promise<string> => {
+// userIdを元にユーザー名を取得する
+export const getUserNameByUserId = async (userId: string): Promise<string> => {
   let userName = '';
 
   try {
