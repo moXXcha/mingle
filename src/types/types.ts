@@ -42,10 +42,8 @@ export type Auth = z.infer<typeof AuthSchema>;
 
 export type Transaction = PgTransaction<
   PostgresJsQueryResultHKT,
-  typeof import('/Users/kou12345/workspace/mingle-web/drizzle/schema'),
-  ExtractTablesWithRelations<
-    typeof import('/Users/kou12345/workspace/mingle-web/drizzle/schema')
-  >
+  typeof import('../../drizzle/schema'),
+  ExtractTablesWithRelations<typeof import('../../drizzle/schema')>
 >;
 
 // 音声ファイルのvalidation
