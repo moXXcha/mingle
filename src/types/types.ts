@@ -74,6 +74,11 @@ export const createPostSchema = z.object({
   tags: z.array(z.string().min(1).max(20)),
 });
 
+// commentFormActionのvalidation
+export const commentSchema = z.object({
+  comment: z.string().min(1).max(100),
+});
+
 export type PostModel = InferSelectModel<typeof posts>;
 export type TagModel = InferSelectModel<typeof tags>;
 export type UserModel = InferSelectModel<typeof users>;
