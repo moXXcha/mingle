@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { follows, profiles, users } from 'drizzle/schema';
 import 'server-only';
 import { db } from './db';
@@ -11,13 +11,13 @@ type FollowUser = {
   followedAt: Date;
 };
 
-// UserIDを元にfollow一覧を取得する
+// UserIdを元にfollow一覧を取得する
 export const getFollowListByUserId = async (
   userId: string,
 ): Promise<FollowUser[]> => {
   let followUsers: FollowUser[] = [];
   try {
-    // TOOD 無限スクロール 引数にoffsetとlimitを追加する
+    // TODO 無限スクロール 引数にoffsetとlimitを追加する
     // 一旦、limitで10件取得する
     followUsers = await db
       .select({
@@ -41,4 +41,46 @@ export const getFollowListByUserId = async (
   }
 
   return followUsers;
+};
+
+// 特定のユーザーがフォローしているかどうかを取得する
+export const getIsFollowing = async ({
+  followerId,
+  targetUserName,
+}: {
+  followerId: string;
+  targetUserName: string;
+}): Promise<boolean> => {
+  let isFollowing = false;
+  try {
+    await db.transaction(async (tx) => {
+      const targetUserId = await tx
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.userName, targetUserName));
+
+      const result = await tx
+        .select({ id: follows.id })
+        .from(follows)
+        .where(
+          and(
+            eq(follows.userId, followerId),
+            eq(follows.followingUserId, targetUserId[0].id),
+          ),
+        );
+
+      if (result.length > 0) {
+        isFollowing = true;
+      }
+    });
+  } catch (error) {
+    // TOD0 エラーハンドリング
+    if (error instanceof Error) {
+      console.log(error);
+      // TODO エラーメッセージを考える
+      throw new Error('エラーが発生しました。');
+    }
+  }
+
+  return isFollowing;
 };

@@ -48,16 +48,31 @@ export type Transaction = PgTransaction<
   >
 >;
 
-// ユーザーを作成
-export const CreatePostSchema = z.object({
-  userId: z.string().uuid(),
-  title: z.string(),
-  content: z.string(),
-  musicFileUrl: z.string().url(),
-  tags: z.array(z.string()),
+// 音声ファイルのvalidation
+const musicFileSchema = z.custom<File>((file) => {
+  if (!(file instanceof File)) {
+    throw new Error('ファイルを選択してください');
+  }
+
+  if (file.type !== 'audio/mpeg') {
+    throw new Error('mp3ファイルを選択してください');
+  }
+
+  const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+  if (file.size > MAX_SIZE) {
+    throw new Error('ファイルサイズは10MB以下にしてください');
+  }
+
+  return file;
 });
 
-export type CreatePost = z.infer<typeof CreatePostSchema>;
+// createPostFormActionのvalidation
+export const createPostSchema = z.object({
+  title: z.string().min(1).max(100),
+  content: z.string().min(1).max(300),
+  musicFile: musicFileSchema,
+  tags: z.array(z.string().min(1).max(20)),
+});
 
 export type PostModel = InferSelectModel<typeof posts>;
 export type TagModel = InferSelectModel<typeof tags>;
@@ -110,6 +125,7 @@ export type Comment = {
   displayName: string;
   avatarUrl: string;
   userName: string;
+  createdAt: Date;
 };
 
 export type formActionResult =
@@ -119,7 +135,7 @@ export type formActionResult =
     }
   | {
       success: false;
-      error: string;
+      message: string;
     };
 
 export type State = {
