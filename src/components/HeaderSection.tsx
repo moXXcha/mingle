@@ -13,7 +13,7 @@ export const HeaderSection = async () => {
   } = await supabase.auth.getUser();
 
   // ログイン中のユーザーのuserNameを取得
-  const userName = await getUserNameByUserId(user?.id as string);
+  const userName = await getUserNameByUserId({ userId: user?.id as string });
 
   return <Header userName={userName} />;
 };
