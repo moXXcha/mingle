@@ -27,7 +27,9 @@ export const Profile = async (props: Props) => {
     targetUserName: props.userName,
   });
 
-  const loggedUserName = await getUserNameByUserId(user?.id as string);
+  const loggedUserName = await getUserNameByUserId({
+    userId: user?.id as string,
+  });
 
   return (
     <div className="mx-auto w-11/12">
