@@ -10,8 +10,6 @@ import { cookies } from 'next/headers';
 export async function followButtonAction(
   userName: string,
 ): Promise<{ followed: boolean; error: boolean }> {
-  console.log('followButtonAction START');
-
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
   const {
