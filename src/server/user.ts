@@ -4,7 +4,7 @@ import { users } from 'drizzle/schema';
 import 'server-only';
 import { db } from './db';
 
-// userIdを元にユーザー名を取得する
+// userIdを元にuserNameを取得する
 export const getUserNameByUserId = async ({
   tx,
   userId,
@@ -15,7 +15,6 @@ export const getUserNameByUserId = async ({
   let userName = '';
 
   try {
-    // トランザクションが存在する場合はtxを使用し、そうでなければdbを使用
     const query = (tx || db)
       .select({ userName: users.userName })
       .from(users)
@@ -34,4 +33,29 @@ export const getUserNameByUserId = async ({
   }
 
   return userName;
+};
+
+// userNameを元にuserIdを取得する
+export const getUserIdByUserName = async ({
+  tx,
+  userName,
+}: {
+  tx?: Transaction;
+  userName: string;
+}): Promise<string> => {
+  try {
+    const result = await (tx || db)
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.userName, userName));
+
+    if (result.length < 0) {
+      throw new Error('ERROR: ユーザーが見つかりませんでした。');
+    }
+
+    return result[0].id;
+  } catch (error) {
+    console.log(error);
+    throw new Error('ERROR: ユーザーIDを取得できませんでした。');
+  }
 };
