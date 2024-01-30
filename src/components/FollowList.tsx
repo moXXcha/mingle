@@ -1,5 +1,3 @@
-'use server';
-
 import { FollowButton } from '@/components/FollowButton';
 import { db } from '@/server/db';
 import { createClient } from '@/utils/supabase/server';
