@@ -1,28 +1,27 @@
 'use client';
 
 import { createPostFormAction } from '@/actions/createPostFormAction';
-import { State } from '@/types/types';
-import { useEffect, useState } from 'react';
+import { formActionResult } from '@/types/types';
+import { useState } from 'react';
 import { useFormState } from 'react-dom';
 import { SubmitButton } from './SubmitButton';
 
-const initialState: State = {
-  message: null,
+const initialState: formActionResult = {
+  success: false,
+  message: '',
 };
 
 export const CreatePostForm = () => {
   const [fileName, setFileName] = useState<string>('');
   const [state, formAction] = useFormState(createPostFormAction, initialState);
 
-  useEffect(() => {
-    if (fileName !== null) {
-      console.log(fileName);
-    }
-  }, [fileName]);
-
   return (
     <div className="mt-7 flex flex-col items-center">
-      <div className="text-green-500">{state.message}</div>
+      {state.success ? (
+        <div className="text-green-500">投稿に成功しました</div>
+      ) : (
+        <div className="text-red-500">{state.message}</div>
+      )}
       <form
         action={formAction}
         className="flex w-11/12 flex-col items-center rounded-xl bg-[#E3DEDA]"
