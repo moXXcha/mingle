@@ -1,8 +1,11 @@
 import { PostDetail } from '@/types/types';
 import { eq } from 'drizzle-orm';
-import { posts, users } from 'drizzle/schema';
+import { postTagRelation, posts, users } from 'drizzle/schema';
 import 'server-only';
 import { db } from './db';
+import { uploadMusicFile } from './musicFile';
+import { createOrGetTags } from './tag';
+import { getUserNameByUserId } from './user';
 
 // userNameを元に投稿一覧を取得する
 export const getPostsByUserName = async (
@@ -137,4 +140,67 @@ export const getPostById = async (postId: string): Promise<PostDetail> => {
   }
 
   return post;
+};
+
+// 投稿を作成する
+export const createPost = async ({
+  userId,
+  title,
+  content,
+  musicFile,
+  tagNames,
+}: {
+  userId: string;
+  title: string;
+  content: string;
+  musicFile: File;
+  tagNames: string[];
+}): Promise<string> => {
+  try {
+    // トランザクション開始
+    return await db.transaction(async (tx) => {
+      // userIdを元にユーザーを取得
+      const userName = await getUserNameByUserId({ tx, userId });
+      if (!userName) {
+        throw new Error('ERROR: ユーザーが見つかりませんでした。');
+      }
+
+      // タグの作成, または既存のタグの取得
+      const tags = await createOrGetTags({
+        tx,
+        tagNames,
+      });
+
+      // 音声ファイルのアップロード
+      const musicFileUrl = await uploadMusicFile({
+        musicFile,
+        title,
+        userName,
+      });
+
+      // 投稿の作成
+      const post = await tx
+        .insert(posts)
+        .values({
+          userId,
+          title,
+          content,
+          musicFileUrl,
+        })
+        .returning({ id: posts.id });
+
+      // 投稿とタグの紐付け;
+      await tx.insert(postTagRelation).values(
+        tags.map((tag) => ({
+          postId: post[0].id,
+          tagId: tag.id,
+        })),
+      );
+
+      return post[0].id;
+    });
+  } catch (error) {
+    console.log(error);
+    throw new Error('ERROR: 投稿を作成できませんでした。');
+  }
 };
