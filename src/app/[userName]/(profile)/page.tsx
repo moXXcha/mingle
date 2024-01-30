@@ -1,5 +1,3 @@
-'use server';
-
 import { Tag } from '@/components/ui/Tag';
 import { getPostsByUserName } from '@/server/post';
 import { PostDetail } from '@/types/types';
@@ -20,7 +18,6 @@ export default async function Page({
   if (posts.length === 0) {
     return <div>投稿がありません</div>;
   }
-  console.log('posts.length: ', posts.length);
 
   return (
     <div className="mx-auto w-11/12">

@@ -1,10 +1,9 @@
-'use server';
-
 import { LoadMore } from '@/components/LoadMore';
 import { getPosts, loadMorePost } from '@/components/loadMorePost';
 import { MusicCard } from './ui/MusicCard';
 
 export const MusicCardList = async () => {
+  console.log('MusicCardList');
   const postsResult = await getPosts(0);
   if (postsResult.isFailure()) {
     return <div>投稿がありません</div>;

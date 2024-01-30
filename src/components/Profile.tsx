@@ -1,10 +1,7 @@
-'use server';
-
-import { db } from '@/server/db';
-import { Failure, Result, Success } from '@/types/types';
+import { getIsFollowing } from '@/server/follow';
+import { getProfileByUserName } from '@/server/profile';
+import { getUserNameByUserId } from '@/server/user';
 import { createClient } from '@/utils/supabase/server';
-import { and, eq } from 'drizzle-orm';
-import { follows, profiles, users } from 'drizzle/schema';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,12 +9,6 @@ import { FollowButton } from './FollowButton';
 
 type Props = {
   userName: string;
-};
-
-type TProfile = {
-  displayName: string;
-  overview: string;
-  avatarUrl: string;
 };
 
 export const Profile = async (props: Props) => {
@@ -28,25 +19,24 @@ export const Profile = async (props: Props) => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const profileResult = await getProfileByUserName(props.userName);
-
-  if (profileResult.isFailure()) {
-    return <div>プロフィールがありません</div>;
-  }
+  const profile = await getProfileByUserName(props.userName);
+  // TODO エラー処理
 
   const isFollowing = await getIsFollowing({
-    loggedUserId: user?.id as string,
+    followerId: user?.id as string,
     targetUserName: props.userName,
   });
 
-  const loggedUserName = await getUserNameByUserId(user?.id as string);
+  const loggedUserName = await getUserNameByUserId({
+    userId: user?.id as string,
+  });
 
   return (
     <div className="mx-auto w-11/12">
       <div className="mb-5 flex justify-between">
         <Image
           className="block h-20 w-20 rounded-full object-cover"
-          src={profileResult.value.avatarUrl}
+          src={profile.avatarUrl}
           alt="icon"
           width={100}
           height={100}
@@ -62,11 +52,9 @@ export const Profile = async (props: Props) => {
         </div>
       </div>
       <p className="mb-5 text-xl font-bold text-[#646767]">
-        {profileResult.value.displayName}
+        {profile.displayName}
       </p>
-      <p className="mb-7 text-xs text-[#646767]">
-        {profileResult.value.overview}
-      </p>
+      <p className="mb-7 text-xs text-[#646767]">{profile.overview}</p>
 
       {/* 自分のProfileなら編集ボタンを表示する */}
       {loggedUserName === props.userName ? (
@@ -78,76 +66,4 @@ export const Profile = async (props: Props) => {
       )}
     </div>
   );
-};
-
-const getProfileByUserName = async (
-  userName: string,
-): Promise<Result<TProfile, Error>> => {
-  try {
-    const result = await db
-      .select({
-        displayName: profiles.displayName,
-        overview: profiles.overview,
-        avatarUrl: profiles.avatarUrl,
-      })
-      .from(users)
-      .innerJoin(profiles, eq(users.id, profiles.id))
-      .where(eq(users.userName, userName))
-      .limit(1);
-
-    return new Success({
-      displayName: result[0].displayName,
-      overview: result[0].overview,
-      avatarUrl: result[0].avatarUrl,
-    });
-  } catch (error) {
-    console.log(error);
-    return new Failure(error as Error);
-  }
-};
-
-const getIsFollowing = async ({
-  loggedUserId,
-  targetUserName,
-}: {
-  loggedUserId: string;
-  targetUserName: string;
-}): Promise<boolean> => {
-  try {
-    const targetUserId = await db
-      .select({ id: users.id })
-      .from(users)
-      .where(eq(users.userName, targetUserName));
-    const result = await db
-      .select({ id: follows.id })
-      .from(follows)
-      .where(
-        and(
-          eq(follows.userId, loggedUserId),
-          eq(follows.followingUserId, targetUserId[0].id),
-        ),
-      );
-
-    console.log('result: ', result);
-    return result.length > 0;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-};
-
-// userIdを元にuserNameを取得する
-const getUserNameByUserId = async (userId: string): Promise<string> => {
-  try {
-    const result = await db
-      .select({ userName: users.userName })
-      .from(users)
-      .where(eq(users.id, userId))
-      .limit(1);
-
-    return result[0].userName;
-  } catch (error) {
-    console.log(error);
-    return '';
-  }
 };

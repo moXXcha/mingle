@@ -54,7 +54,7 @@ export const putImage = async (
 export const putAudio = async (
   file: File,
   pathName: string,
-): Promise<Result<string, Error>> => {
+): Promise<string> => {
   try {
     const buffer = await fileToBuffer(file);
 
@@ -68,10 +68,9 @@ export const putAudio = async (
 
     await client.send(new PutObjectCommand(uploadParams));
 
-    return new Success(`${process.env.IMAGE_HOST_URL}/${pathName}`);
+    return `${process.env.IMAGE_HOST_URL}/${pathName}`;
   } catch (error) {
-    return new Failure(
-      error instanceof Error ? error : new Error('putAudio failed'),
-    );
+    console.log(error);
+    throw new Error('putAudio failed');
   }
 };
