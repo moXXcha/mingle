@@ -4,37 +4,37 @@ import Image from 'next/image';
 
 const page = () => {
   return (
-    <div className="w-11/12 mx-auto">
-      <p className="mb-8 text-[#646767] font-bold mt-5">create user</p>
+    <div className="mx-auto w-11/12">
+      <p className="mb-8 mt-5 font-bold text-[#646767]">create user</p>
       <div className="">
-        <div className="flex justify-between mb-8">
-          <label className="bg-[#646767] opacity-60 w-20 h-20 rounded-full absolute flex items-center justify-center">
+        <div className="mb-8 flex justify-between">
+          <label className="absolute flex h-20 w-20 items-center justify-center rounded-full bg-[#646767] opacity-60">
             <Camera />
           </label>
           <Image
             width={80}
             height={80}
             src={profileImage.src}
-            className="block w-20 h-20 rounded-full"
+            className="block h-20 w-20 rounded-full"
             alt="icon"
             priority={true}
           />
-          <button className="w-20 h-8 bg-[#646767] text-[#DDBFAE] rounded-lg">
+          <button className="h-8 w-20 rounded-lg bg-[#646767] text-[#DDBFAE]">
             create
           </button>
         </div>
-        <p className="text-xs text-[#646767] opacity-50 font-bold">Name</p>
+        <p className="text-xs font-bold text-[#646767] opacity-50">Name</p>
         <input
           type="text"
           placeholder="Name"
-          className="border border-[#6E96A5] rounded-md w-full h-9 mb-12"
+          className="mb-12 h-9 w-full rounded-md border border-[#6E96A5]"
         />
-        <p className="text-xs text-[#646767] opacity-50 font-bold">
+        <p className="text-xs font-bold text-[#646767] opacity-50">
           Description
         </p>
         <textarea
           placeholder="Description"
-          className="border border-[#6E96A5] rounded-md w-full h-32"
+          className="h-32 w-full rounded-md border border-[#6E96A5]"
         />
       </div>
     </div>
