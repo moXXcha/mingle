@@ -64,6 +64,24 @@ const musicFileSchema = z.custom<File>((file) => {
   return file;
 });
 
+// アバター画像のvalidation
+const avatarFileSchema = z.custom<File>((file) => {
+  if (!(file instanceof File)) {
+    throw new Error('ファイルを選択してください');
+  }
+
+  if (!file.type.startsWith('image/')) {
+    throw new Error('画像ファイルを選択してください');
+  }
+
+  const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+  if (file.size > MAX_SIZE) {
+    throw new Error('ファイルサイズは5MB以下にしてください');
+  }
+
+  return file;
+});
+
 // createPostFormActionのvalidation
 export const createPostSchema = z.object({
   title: z.string().min(1).max(100),
@@ -75,6 +93,13 @@ export const createPostSchema = z.object({
 // commentFormActionのvalidation
 export const commentSchema = z.object({
   comment: z.string().min(1).max(100),
+});
+
+// profileFormActionのvalidation
+export const profileSchema = z.object({
+  displayName: z.string().min(1).max(20),
+  overview: z.string().min(1).max(200),
+  avatarFile: avatarFileSchema,
 });
 
 export type PostModel = InferSelectModel<typeof posts>;
