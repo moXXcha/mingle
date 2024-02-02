@@ -13,9 +13,9 @@ export const DisplayNameInput = (props: Props) => {
   return (
     <div>
       <label htmlFor="displayName">
-        名前
+        <p className="text-xs text-[#646767] opacity-50">Name</p>
         <input
-          className="border"
+          className="border border-[#6E96A5] rounded-md h-9 w-full px-2 py-2"
           type="text"
           name="displayName"
           id="displayName"

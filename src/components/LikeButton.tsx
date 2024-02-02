@@ -2,6 +2,7 @@
 
 import { likePostAction } from '@/actions/likeButton';
 import { Like } from '@public/like';
+import { Liked } from '@public/liked';
 import { useOptimistic, useTransition } from 'react';
 
 type Props = {
@@ -27,9 +28,9 @@ export const LikeButton = (props: Props) => {
           })
         }
       >
-        {isPending ? 'loading...' : <Like />}
+        {optimisticLikes ? <Liked /> : <Like />}
       </button>
-      <div>{optimisticLikes ? 'いいねした' : 'いいねする'}</div>
+      {/* <div>{optimisticLikes ? <Liked /> : <Like />}</div> */}
     </div>
   );
 };

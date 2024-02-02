@@ -1,5 +1,6 @@
 'use client';
 
+import { Camera } from '@public/camera';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -15,27 +16,28 @@ export const AvatarFileInput = (props: Props) => {
   // TODO 既存の画像を保持しておく
   return (
     <div>
-      <div>アイコン</div>
+      <label htmlFor="avatarFile" className="flex items-center justify-center fixed w-20 h-20 rounded-full bg-[#646767] opacity-60">
+        <Camera />
+      </label>
       <Image
         src={props.avatarUrl}
         alt="Current Avatar"
         width="100"
         height="100"
+        className="h-20 w-20 rounded-full"
       />
-      <label htmlFor="avatarFile">
-        アイコン
-        <input
-          type="file"
-          name="avatarFile"
-          id="avatarFile"
-          accept="image/*"
-          onChange={(e) => {
-            if (e.target.files) {
-              setAvatarFile(e.target.files[0]);
-            }
-          }}
-        />
-      </label>
+      <input
+        className="hidden"
+        type="file"
+        name="avatarFile"
+        id="avatarFile"
+        accept="image/*"
+        onChange={(e) => {
+          if (e.target.files) {
+            setAvatarFile(e.target.files[0]);
+          }
+        }}
+      />
     </div>
   );
 };

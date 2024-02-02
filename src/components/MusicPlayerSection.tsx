@@ -6,8 +6,6 @@ import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { LikeButton } from './LikeButton';
-import { MusicPlayButton } from './MusicPlayButton';
-import { MusicSlider } from './MusicSlider';
 import { PlayerPlaySlider } from './PlayerPlaySlider';
 
 type Props = {
@@ -59,19 +57,21 @@ export const MusicPlayerSection = async (props: Props) => {
             {/* <button className=""> */}
             {/* <Like /> */}
             {/* </button> */}
-            <LikeButton postId={props.postId} isLiked={isLiked} />
+            <div className="ml-auto">
+              <LikeButton postId={props.postId} isLiked={isLiked} />
+            </div>
           </div>
           <p className="mb-6 text-xs text-[#646767]">{post.content}</p>
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center">
-              <Link href={`/${post.user.userName}`}>
+              <Link href={`/${post.author.userName}`}>
                 <Image
-                  src={post.avatarUrl as string}
+                  src={post.author.avatarUrl as string}
                   alt="Picture of the author"
                   width={500}
                   height={500}
                   priority={true}
-                  className="block w-11 h-11 rounded-full"
+                  className="block h-11 w-11 rounded-full"
                 />
               </Link>
 
@@ -80,7 +80,7 @@ export const MusicPlayerSection = async (props: Props) => {
               </p>
             </div>
             {/* todo */}
-            <button className="h-8 w-16 rounded-md bg-[#646767] text-[#DDBFAE]">
+            <button className="h-8 w-20 rounded-md bg-[#646767] text-[#DDBFAE]">
               follow
             </button>
           </div>

@@ -24,17 +24,27 @@ export default async function Page({
   );
 
   return (
-    <div>
-      <div>プロフィール編集</div>
+    <div className="mx-auto w-11/12">
+      <p className="mb-8 mt-5 font-bold text-[#646767]">edit user</p>
 
       <form action={updatePostFormActionWithUserName}>
-        <DisplayNameInput userName={profile.displayName} />
-        <OverviewInput overview={profile.overview} />
-        <AvatarFileInput avatarUrl={profile.avatarUrl} />
-
-        <button type="submit">更新</button>
+        <div className="mb-9 flex justify-between">
+          <AvatarFileInput avatarUrl={profile.avatarUrl} />
+          <button
+            type="submit"
+            className="block h-8 w-16 items-center justify-center rounded-md bg-[#646767] text-[12px] font-bold text-[#DDBFAE]"
+          >
+            Save
+          </button>
+        </div>
+        <div className="mb-9">
+          <DisplayNameInput userName={profile.displayName} />
+        </div>
+        <div>
+          <OverviewInput overview={profile.overview} />
+        </div>
       </form>
-      <Link href={`/${userName}`}>戻る</Link>
+      {/* <Link href={`/${userName}`}>戻る</Link> */}
     </div>
   );
 }

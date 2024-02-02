@@ -23,7 +23,7 @@ export const Comments = async (props: Props) => {
   if (!user) {
     return (
       <div>
-        <div className="font-bold">Comment</div>
+        <div className="font-bold text-[#646767] text-xl">Comment</div>
 
         {/* 別のUIを出したい */}
         {/* <div className="flex">
@@ -55,12 +55,12 @@ export const Comments = async (props: Props) => {
 
   return (
     <div>
-      <div className="font-bold">Comment</div>
+      <div className="font-bold text-[#646767] text-xl">Comment</div>
 
-      <div className="flex">
+      <div className="flex h-14 border border-[#6E96A5] rounded-lg justify-center items-center px-2">
         {/* TODO avatarUrlが''なら、別の画像？UIを表示する */}
         <Image
-          className="h-14 w-14 rounded-full object-cover"
+          className="h-11 w-11 rounded-full object-cover"
           src={avatarUrl}
           alt="icon"
           width={100}

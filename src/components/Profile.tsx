@@ -54,7 +54,12 @@ export const Profile = async (props: Props) => {
           {loggedUserName !== props.userName ? (
             <FollowButton userName={props.userName} isFollowing={isFollowing} />
           ) : (
-            ''
+            <Link
+              className="flex h-8 w-16 items-center justify-center rounded-md bg-[#646767] text-[12px] font-bold text-[#DDBFAE]"
+              href={`/${props.userName}/edit`}
+            >
+              Edit
+            </Link>
           )}
         </div>
       </div>
@@ -62,15 +67,6 @@ export const Profile = async (props: Props) => {
         {profile.displayName}
       </p>
       <p className="mb-7 text-xs text-[#646767]">{profile.overview}</p>
-
-      {/* 自分のProfileなら編集ボタンを表示する */}
-      {loggedUserName === props.userName ? (
-        <Link className="border text-blue-500" href={`/${props.userName}/edit`}>
-          編集
-        </Link>
-      ) : (
-        ''
-      )}
     </div>
   );
 };

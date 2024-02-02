@@ -11,9 +11,9 @@ export const OverviewInput = (props: Props) => {
 
   return (
     <label htmlFor="overview">
-      自己紹介
+      <p className="text-xs text-[#646767] opacity-50">Description</p>
       <textarea
-        className="border"
+        className="border border-[#6E96A5] rounded-md h-32 w-full px-2 py-2"
         name="overview"
         id="overview"
         required

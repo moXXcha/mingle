@@ -4,6 +4,7 @@ import { SubmitButton } from '@/components/SubmitButton';
 import { formActionResult } from '@/types/types';
 import { useRef } from 'react';
 import { useFormState } from 'react-dom';
+import { CommentSubmitButton } from './CommentSubmitButton';
 
 type Props = {
   formAction: (
@@ -31,8 +32,8 @@ export const CommentForm = (props: Props) => {
           ref.current?.reset();
         }}
       >
-        <input className="border" type="text" name="comment" required />
-        <SubmitButton />
+        <input className="w-56 h-12 border-none px-2" placeholder='コメントを書き込む' type="text" name="comment" required />
+        <CommentSubmitButton />
       </form>
 
       {state.success ? (
