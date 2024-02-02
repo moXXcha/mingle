@@ -9,7 +9,7 @@ import { redirect } from 'next/navigation';
 import 'server-only';
 
 export async function createPostFormAction(
-  prevState: formActionResult,
+  _prevState: formActionResult,
   formData: FormData,
 ): Promise<formActionResult> {
   let postId = '';
@@ -28,10 +28,10 @@ export async function createPostFormAction(
 
     // validation
     const validation = createPostSchema.safeParse({
-      title: formData.get('title') as string,
-      content: formData.get('content') as string,
-      musicFile: formData.get('musicFile') as File,
-      tags: formData.getAll('tags') as string[],
+      title: formData.get('title'),
+      content: formData.get('content'),
+      musicFile: formData.get('musicFile'),
+      tags: formData.getAll('tags'),
     });
 
     if (!validation.success) {
@@ -41,14 +41,13 @@ export async function createPostFormAction(
       };
     }
 
-    const { title, content, musicFile, tags } = validation.data;
     // 投稿を作成
     postId = await createPost({
       userId: user.id,
-      title,
-      content,
-      musicFile,
-      tagNames: tags,
+      title: validation.data.title,
+      content: validation.data.content,
+      musicFile: validation.data.musicFile,
+      tagNames: validation.data.tags,
     });
   } catch (error) {
     console.log(error);

@@ -17,7 +17,11 @@ export default async function Page() {
   }
 
   if (user?.user_metadata.hasUserName && !user?.user_metadata.hasProfile) {
-    return <ProfileForm formAction={createProfileFormAction} />;
+    const createProfileFormActionByUserId = createProfileFormAction.bind(
+      null,
+      user.id,
+    );
+    return <ProfileForm formAction={createProfileFormActionByUserId} />;
   }
 
   // オンボーディングが完了したら、ホーム画面にリダイレクトする

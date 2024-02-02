@@ -97,6 +97,7 @@ export const commentSchema = z.object({
 
 // profileFormActionのvalidation
 export const profileSchema = z.object({
+  userId: z.string().uuid(),
   displayName: z.string().min(1).max(20),
   overview: z.string().min(1).max(200),
   avatarFile: avatarFileSchema,
@@ -121,6 +122,7 @@ export type PostDetail = {
   id: PostModel['id'];
   title: PostModel['title'];
   content: PostModel['content'];
+  musicFileUrl: PostModel['musicFileUrl'];
   createdAt: PostModel['createdAt'];
   updatedAt: PostModel['updatedAt'];
   tags: TagModel['name'][];
