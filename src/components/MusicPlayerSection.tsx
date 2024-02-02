@@ -1,13 +1,11 @@
 import { Tag } from '@/components/ui/Tag';
-import { db } from '@/server/db';
+import { checkPostLikedByUser } from '@/server/like';
 import { getPostById } from '@/server/post';
 import { createClient } from '@/utils/supabase/server';
-import { Like } from '@public/like';
-import { and, eq } from 'drizzle-orm';
-import { likes } from 'drizzle/schema';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
+import { LikeButton } from './LikeButton';
 import { MusicPlayButton } from './MusicPlayButton';
 import { MusicSlider } from './MusicSlider';
 
@@ -26,14 +24,13 @@ export const MusicPlayerSection = async (props: Props) => {
   // ログインしている場合は、良いねをしているか確認する
   let isLiked = false;
   if (user) {
-    // TODO ここにORMを書かない
-    // 良いねをしているかどうかを確認する
-    const like = await db
-      .select({ id: likes.id })
-      .from(likes)
-      .where(and(eq(likes.postId, props.postId), eq(likes.userId, user.id)));
-    isLiked = like.length > 0;
+    // すでにいいねしているか確認する
+    isLiked = await checkPostLikedByUser({
+      postId: props.postId,
+      userId: user.id,
+    });
     console.log('isLiked: ', isLiked);
+    console.log(new Date());
   }
 
   // 投稿データを取得する
@@ -60,9 +57,10 @@ export const MusicPlayerSection = async (props: Props) => {
               return <Tag key={index} text={tag} />;
             })}
             {/* tagsの要素がない場合、<Like/>の位置がズレる */}
-            <button className="">
-              <Like />
-            </button>
+            {/* <button className=""> */}
+            {/* <Like /> */}
+            {/* </button> */}
+            <LikeButton postId={props.postId} isLiked={isLiked} />
           </div>
           <p className="mb-6 text-xs text-[#646767]">{post.content}</p>
           <div className="mb-4 flex items-center justify-between">
