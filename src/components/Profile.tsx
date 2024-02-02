@@ -15,21 +15,28 @@ export const Profile = async (props: Props) => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
+  const profile = await getProfileByUserName(props.userName);
+  // TODO エラー処理
+
+  // ログインしているユーザーの情報を取得
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const profile = await getProfileByUserName(props.userName);
-  // TODO エラー処理
+  let isFollowing = false;
+  let loggedUserName = '';
+  if (user) {
+    // フォロー済みか取得
+    isFollowing = await getIsFollowing({
+      followerId: user.id,
+      targetUserName: props.userName,
+    });
 
-  const isFollowing = await getIsFollowing({
-    followerId: user?.id as string,
-    targetUserName: props.userName,
-  });
-
-  const loggedUserName = await getUserNameByUserId({
-    userId: user?.id as string,
-  });
+    // ログインしているユーザーの名前を取得
+    loggedUserName = await getUserNameByUserId({
+      userId: user.id,
+    });
+  }
 
   return (
     <div className="mx-auto w-11/12">

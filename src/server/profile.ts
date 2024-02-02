@@ -52,11 +52,14 @@ export const getAvatarUrlByUserId = async (userId: string): Promise<string> => {
       .from(profiles)
       .where(eq(profiles.id, userId));
 
-    avatarUrl = result[0].avatarUrl;
+    if (result.length > 0) {
+      avatarUrl = result[0].avatarUrl;
+    }
   } catch (error) {
     if (error instanceof Error) {
       console.log(error);
-      throw new Error('アバターを取得できませんでした。');
+      // TODO エラーメッセージが適切ではない。
+      throw new Error('ERROR: avatarUrlを取得できませんでした。');
     }
   }
 

@@ -22,6 +22,7 @@ const client = new S3Client({
 });
 
 // 画像をアップロードする関数
+// TODO 画像のContentTypeを明示的に指定する
 export const putImage = async (
   file: File,
   pathName: string,

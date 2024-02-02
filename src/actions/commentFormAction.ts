@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache';
 export async function commentFormAction(
   postId: string,
   userId: string,
-  prevState: formActionResult,
+  _prevState: formActionResult,
   formData: FormData,
 ): Promise<formActionResult> {
   console.log('commentFormActionが実行された時間: ', new Date());

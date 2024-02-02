@@ -1,14 +1,24 @@
 'use client';
 
-import { profileFormAction } from '@/actions/profileFormAction';
+import { formActionResult } from '@/types/types';
 import { useFormState } from 'react-dom';
 
-const initialState = {
+type Props = {
+  formAction: (
+    _prevState: {
+      message: string;
+    },
+    formData: FormData,
+  ) => Promise<formActionResult>;
+};
+
+const initialState: formActionResult = {
+  success: false,
   message: '',
 };
 
-export default function ProfileForm() {
-  const [state, formAction] = useFormState(profileFormAction, initialState);
+export function ProfileForm(props: Props) {
+  const [state, formAction] = useFormState(props.formAction, initialState);
 
   return (
     <div>
@@ -32,7 +42,11 @@ export default function ProfileForm() {
         </label>
         <button type="submit">submit</button>
       </form>
-      <p>{state?.message}</p>
+      {state.success ? (
+        <div className="text-green-500">投稿に成功しました</div>
+      ) : (
+        <div className="text-red-500">{state.message}</div>
+      )}
     </div>
   );
 }
