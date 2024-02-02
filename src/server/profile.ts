@@ -1,8 +1,10 @@
 import { Profile } from '@/types/types';
+import { putImage } from '@/utils/storage';
 import { eq } from 'drizzle-orm';
 import { profiles, users } from 'drizzle/schema';
 import 'server-only';
 import { db } from './db';
+import { getUserNameByUserId } from './user';
 
 // userNameを元にプロフィールを取得する
 export const getProfileByUserName = async (
@@ -64,4 +66,42 @@ export const getAvatarUrlByUserId = async (userId: string): Promise<string> => {
   }
 
   return avatarUrl;
+};
+
+// プロフィールを新規作成する
+export const createProfile = async ({
+  userId,
+  displayName,
+  overview,
+  avatarFile,
+}: {
+  userId: string;
+  displayName: string;
+  overview: string;
+  avatarFile: File;
+}): Promise<void> => {
+  try {
+    await db.transaction(async (tx) => {
+      // userNameを取得する
+      const userName = await getUserNameByUserId({
+        tx,
+        userId,
+      });
+
+      // avatarFileをアップロードする
+      const avatarUrl = await putImage(avatarFile, `avatar/${userName}`);
+
+      // profileを作成する
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      await tx.insert(profiles).values({
+        id: userId,
+        displayName,
+        overview,
+        avatarUrl,
+      });
+    });
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : error);
+    throw new Error('ERROR: プロフィールを作成できませんでした。');
+  }
 };
