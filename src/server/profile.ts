@@ -105,3 +105,50 @@ export const createProfile = async ({
     throw new Error('ERROR: プロフィールを作成できませんでした。');
   }
 };
+
+// プロフィールを更新する
+export const updateProfile = async ({
+  userName,
+  displayName,
+  overview,
+  avatarFile,
+}: {
+  userName: string;
+  displayName: string;
+  overview: string;
+  avatarFile: File;
+}): Promise<void> => {
+  try {
+    await db.transaction(async (tx) => {
+      // userNameが存在するか確認する
+      const user = await tx
+        .select({
+          id: users.id,
+          userName: users.userName,
+        })
+        .from(users)
+        .where(eq(users.userName, userName));
+
+      if (user.length === 0) {
+        throw new Error('ERROR: userNameが存在しません。');
+      }
+
+      // avatarFileの保存
+      const avatarUrl = await putImage(avatarFile, `avatar/${userName}`);
+      // TODO 古いavatarFileを削除する
+
+      // profileを更新する
+      await tx
+        .update(profiles)
+        .set({
+          displayName,
+          overview,
+          avatarUrl,
+        })
+        .where(eq(profiles.id, user[0].id));
+    });
+  } catch (error) {
+    console.log(error instanceof Error ? error.message : error);
+    throw new Error('ERROR: プロフィールを更新できませんでした。');
+  }
+};
