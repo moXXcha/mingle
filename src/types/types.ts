@@ -82,9 +82,20 @@ const avatarFileSchema = z.custom<File>((file) => {
   return file;
 });
 
+// 英数字のみのvalidation
+export const alphanumericSchema = z.string().regex(/^[a-zA-Z0-9]+$/, {
+  message: 'Must contain only alphanumeric characters',
+});
+
 const displayName = z.string().min(1).max(20);
 const overview = z.string().min(1).max(200);
-const userName = z.string().min(1).max(20);
+export const userNameSchema = alphanumericSchema
+  .min(1, {
+    message: 'Username must be at least 1 character long',
+  })
+  .max(20, {
+    message: 'Username must be at most 20 characters long',
+  });
 
 // createPostFormActionのvalidation
 export const createPostSchema = z.object({
@@ -109,7 +120,7 @@ export const profileSchema = z.object({
 
 // updateProfileFormActionのvalidation
 export const updateProfileSchema = z.object({
-  userName: userName,
+  userName: userNameSchema,
   displayName: displayName,
   overview: overview,
   avatarFile: avatarFileSchema,
