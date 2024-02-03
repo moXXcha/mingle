@@ -2,12 +2,7 @@ import { ExtractTablesWithRelations, InferSelectModel } from 'drizzle-orm';
 import { PgTransaction } from 'drizzle-orm/pg-core';
 import { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js';
 import { z } from 'zod';
-import {
-  posts,
-  profiles,
-  tags,
-  users,
-} from '/Users/kou12345/workspace/mingle-web/drizzle/schema';
+import { posts, profiles, tags, users } from '../../drizzle/schema';
 
 export type Result<T, E> = Success<T, E> | Failure<T, E>;
 
