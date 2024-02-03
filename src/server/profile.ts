@@ -107,6 +107,8 @@ export const createProfile = async ({
 };
 
 // プロフィールを更新する
+// TODO displayName, overview, avatarUrlをOptionalにする
+// 引数にない場合、既存の値を使う
 export const updateProfile = async ({
   userName,
   displayName,
