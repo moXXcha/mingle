@@ -1,3 +1,4 @@
+import { Transaction } from '@/types/types';
 import { and, eq } from 'drizzle-orm';
 import { follows, profiles, users } from 'drizzle/schema';
 import 'server-only';
@@ -45,42 +46,87 @@ export const getFollowListByUserId = async (
 
 // 特定のユーザーがフォローしているかどうかを取得する
 export const getIsFollowing = async ({
+  tx,
   followerId,
   targetUserName,
 }: {
+  tx?: Transaction;
   followerId: string;
   targetUserName: string;
 }): Promise<boolean> => {
   let isFollowing = false;
   try {
-    await db.transaction(async (tx) => {
-      const targetUserId = await tx
-        .select({ id: users.id })
-        .from(users)
-        .where(eq(users.userName, targetUserName));
+    // フォロー対象のユーザーIDを取得する
+    const targetUserId = await (db || tx)
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.userName, targetUserName));
 
-      const result = await tx
-        .select({ id: follows.id })
-        .from(follows)
-        .where(
-          and(
-            eq(follows.userId, followerId),
-            eq(follows.followingUserId, targetUserId[0].id),
-          ),
-        );
+    // フォローしているかどうかを取得する
+    const result = await (db || tx)
+      .select({ id: follows.id })
+      .from(follows)
+      .where(
+        and(
+          eq(follows.userId, followerId),
+          eq(follows.followingUserId, targetUserId[0].id),
+        ),
+      );
 
-      if (result.length > 0) {
-        isFollowing = true;
-      }
-    });
-  } catch (error) {
-    // TOD0 エラーハンドリング
-    if (error instanceof Error) {
-      console.log(error);
-      // TODO エラーメッセージを考える
-      throw new Error('エラーが発生しました。');
+    // resultが存在する場合はフォローしている
+    if (result.length > 0) {
+      isFollowing = true;
     }
+  } catch (error) {
+    console.log(error);
+    throw new Error('ERROR: フォロー情報を取得できませんでした。');
   }
 
   return isFollowing;
+};
+
+// フォローする
+export const follow = async ({
+  tx,
+  followerId,
+  targetUserId,
+}: {
+  tx?: Transaction;
+  followerId: string;
+  targetUserId: string;
+}) => {
+  try {
+    await (db || tx).insert(follows).values({
+      userId: followerId,
+      followingUserId: targetUserId,
+    });
+  } catch (error) {
+    console.log(error);
+    throw new Error('ERROR: フォローできませんでした。');
+  }
+};
+
+// フォローを解除する
+export const unFollow = async ({
+  tx,
+  followerId,
+  targetUserId,
+}: {
+  tx?: Transaction;
+  followerId: string;
+  targetUserId: string;
+}): Promise<void> => {
+  try {
+    await (db || tx)
+      .delete(follows)
+      .where(
+        and(
+          eq(follows.userId, followerId),
+          eq(follows.followingUserId, targetUserId),
+        ),
+      );
+  } catch (error) {
+    console.log(error);
+    throw new Error('ERROR: フォローを解除できませんでした。');
+  }
 };

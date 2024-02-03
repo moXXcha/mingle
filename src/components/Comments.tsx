@@ -1,11 +1,11 @@
 import { commentFormAction } from '@/actions/commentFormAction';
+import { getAvatarUrlByUserId } from '@/server/profile';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import { Suspense } from 'react';
 import { CommentForm } from './CommentForm';
 import { CommentList } from './CommentList';
-import { getAvatarUrlByUserId } from '@/server/profile';
 
 type Props = {
   postId: string;
@@ -47,11 +47,10 @@ export const Comments = async (props: Props) => {
   const commentFormActionWithPostIdAndUserId = commentFormAction.bind(
     null,
     props.postId,
-    user?.id,
+    user.id,
   );
 
-  const avatarUrl = await getAvatarUrlByUserId(user?.id);
-  // TODO 要修正
+  const avatarUrl = await getAvatarUrlByUserId(user.id);
   // avatarUrlが取得できなかった場合には,iconの表示画像をデフォルトのものにするのが良さげ？
 
   return (
@@ -59,6 +58,7 @@ export const Comments = async (props: Props) => {
       <div className="font-bold">Comment</div>
 
       <div className="flex">
+        {/* TODO avatarUrlが''なら、別の画像？UIを表示する */}
         <Image
           className="h-14 w-14 rounded-full object-cover"
           src={avatarUrl}

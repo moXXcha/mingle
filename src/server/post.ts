@@ -39,6 +39,7 @@ export const getPostsByUserName = async (
         id: post.id,
         title: post.title,
         content: post.content,
+        musicFileUrl: post.musicFileUrl,
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
         tags: post.postTagRelations.map((relation) => relation.tag.name),
@@ -65,6 +66,7 @@ export const getPostById = async (postId: string): Promise<PostDetail> => {
     id: '',
     title: '',
     content: '',
+    musicFileUrl: '',
     createdAt: new Date(),
     updatedAt: new Date(),
     tags: [],
@@ -121,6 +123,7 @@ export const getPostById = async (postId: string): Promise<PostDetail> => {
       id: result.id,
       title: result.title,
       content: result.content,
+      musicFileUrl: result.musicFileUrl,
       createdAt: result.createdAt,
       updatedAt: result.updatedAt,
       tags: result.postTagRelations.map((postTagRelation) => {

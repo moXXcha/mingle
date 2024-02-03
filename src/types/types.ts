@@ -42,10 +42,8 @@ export type Auth = z.infer<typeof AuthSchema>;
 
 export type Transaction = PgTransaction<
   PostgresJsQueryResultHKT,
-  typeof import('/Users/kou12345/workspace/mingle-web/drizzle/schema'),
-  ExtractTablesWithRelations<
-    typeof import('/Users/kou12345/workspace/mingle-web/drizzle/schema')
-  >
+  typeof import('../../drizzle/schema'),
+  ExtractTablesWithRelations<typeof import('../../drizzle/schema')>
 >;
 
 // 音声ファイルのvalidation
@@ -66,12 +64,55 @@ const musicFileSchema = z.custom<File>((file) => {
   return file;
 });
 
+// アバター画像のvalidation
+const avatarFileSchema = z.custom<File>((file) => {
+  if (!(file instanceof File)) {
+    throw new Error('ファイルを選択してください');
+  }
+
+  if (!file.type.startsWith('image/')) {
+    throw new Error('画像ファイルを選択してください');
+  }
+
+  const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+  if (file.size > MAX_SIZE) {
+    throw new Error('ファイルサイズは5MB以下にしてください');
+  }
+
+  return file;
+});
+
+const displayName = z.string().min(1).max(20);
+const overview = z.string().min(1).max(200);
+const userName = z.string().min(1).max(20);
+
 // createPostFormActionのvalidation
 export const createPostSchema = z.object({
   title: z.string().min(1).max(100),
   content: z.string().min(1).max(300),
   musicFile: musicFileSchema,
   tags: z.array(z.string().min(1).max(20)),
+});
+
+// commentFormActionのvalidation
+export const commentSchema = z.object({
+  comment: z.string().min(1).max(100),
+});
+
+// profileFormActionのvalidation
+export const profileSchema = z.object({
+  userId: z.string().uuid(),
+  displayName: displayName,
+  overview: overview,
+  avatarFile: avatarFileSchema,
+});
+
+// updateProfileFormActionのvalidation
+export const updateProfileSchema = z.object({
+  userName: userName,
+  displayName: displayName,
+  overview: overview,
+  avatarFile: avatarFileSchema,
 });
 
 export type PostModel = InferSelectModel<typeof posts>;
@@ -93,6 +134,7 @@ export type PostDetail = {
   id: PostModel['id'];
   title: PostModel['title'];
   content: PostModel['content'];
+  musicFileUrl: PostModel['musicFileUrl'];
   createdAt: PostModel['createdAt'];
   updatedAt: PostModel['updatedAt'];
   tags: TagModel['name'][];

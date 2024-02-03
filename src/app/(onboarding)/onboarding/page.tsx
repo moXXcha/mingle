@@ -1,4 +1,5 @@
-import ProfileForm from '@/components/ProfileForm';
+import { createProfileFormAction } from '@/actions/profileFormAction';
+import { ProfileForm } from '@/components/ProfileForm';
 import UserNameForm from '@/components/UserNameForm';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
@@ -10,14 +11,22 @@ export default async function Page() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  console.log('user: ', user);
 
   if (!user?.user_metadata.hasUserName) {
     return <UserNameForm />;
   }
 
   if (user?.user_metadata.hasUserName && !user?.user_metadata.hasProfile) {
-    return <ProfileForm />;
+    const createProfileFormActionByUserId = createProfileFormAction.bind(
+      null,
+      user.id,
+    );
+    return (
+      <ProfileForm
+        formAction={createProfileFormActionByUserId}
+        actionType="create"
+      />
+    );
   }
 
   // オンボーディングが完了したら、ホーム画面にリダイレクトする
