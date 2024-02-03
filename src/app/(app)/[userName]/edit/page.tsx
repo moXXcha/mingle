@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
-import { updatePostFormAction } from '@/actions/updatePostFormAction';
-import { AvatarFileInput } from '@/components/AvatarFileInput';
-import { DisplayNameInput } from '@/components/DisplayNameInput';
-import { OverviewInput } from '@/components/OverviewInput';
+import { updateProfileFormAction } from '@/actions/updateProfileFormAction';
+import { ProfileForm } from '@/components/ProfileForm';
 import { getProfileByUserName } from '@/server/profile';
 import Link from 'next/link';
 
@@ -18,7 +16,7 @@ export default async function Page({
   const profile = await getProfileByUserName(userName);
   // TODO エラーを投げられたらエラーページに飛ばす
 
-  const updatePostFormActionWithUserName = updatePostFormAction.bind(
+  const updateProfileFormActionWithUserName = updateProfileFormAction.bind(
     null,
     userName,
   );
@@ -26,14 +24,16 @@ export default async function Page({
   return (
     <div>
       <div>プロフィール編集</div>
+      <ProfileForm
+        formAction={updateProfileFormActionWithUserName}
+        actionType="update"
+        existingData={{
+          displayName: profile.displayName,
+          overview: profile.overview,
+          avatarUrl: profile.avatarUrl,
+        }}
+      />
 
-      <form action={updatePostFormActionWithUserName}>
-        <DisplayNameInput userName={profile.displayName} />
-        <OverviewInput overview={profile.overview} />
-        <AvatarFileInput avatarUrl={profile.avatarUrl} />
-
-        <button type="submit">更新</button>
-      </form>
       <Link href={`/${userName}`}>戻る</Link>
     </div>
   );
