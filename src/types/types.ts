@@ -82,6 +82,10 @@ const avatarFileSchema = z.custom<File>((file) => {
   return file;
 });
 
+const displayName = z.string().min(1).max(20);
+const overview = z.string().min(1).max(200);
+const userName = z.string().min(1).max(20);
+
 // createPostFormActionのvalidation
 export const createPostSchema = z.object({
   title: z.string().min(1).max(100),
@@ -98,8 +102,16 @@ export const commentSchema = z.object({
 // profileFormActionのvalidation
 export const profileSchema = z.object({
   userId: z.string().uuid(),
-  displayName: z.string().min(1).max(20),
-  overview: z.string().min(1).max(200),
+  displayName: displayName,
+  overview: overview,
+  avatarFile: avatarFileSchema,
+});
+
+// updateProfileFormActionのvalidation
+export const updateProfileSchema = z.object({
+  userName: userName,
+  displayName: displayName,
+  overview: overview,
   avatarFile: avatarFileSchema,
 });
 

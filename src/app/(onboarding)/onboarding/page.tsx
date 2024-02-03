@@ -21,7 +21,12 @@ export default async function Page() {
       null,
       user.id,
     );
-    return <ProfileForm formAction={createProfileFormActionByUserId} />;
+    return (
+      <ProfileForm
+        formAction={createProfileFormActionByUserId}
+        actionType="create"
+      />
+    );
   }
 
   // オンボーディングが完了したら、ホーム画面にリダイレクトする
