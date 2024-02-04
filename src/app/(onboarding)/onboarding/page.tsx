@@ -1,4 +1,4 @@
-import { createProfileFormAction } from '@/actions/profileFormAction';
+import { createProfileFormAction } from '@/actions/createProfileFormAction';
 import { ProfileForm } from '@/components/ProfileForm';
 import UserNameForm from '@/components/UserNameForm';
 import { createClient } from '@/utils/supabase/server';

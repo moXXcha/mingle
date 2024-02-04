@@ -8,12 +8,15 @@ export async function updateProfileFormAction(
   _prevState: formActionResult,
   formData: FormData,
 ): Promise<formActionResult> {
+  const avatarFile = formData.get('avatarFile') as File;
+  const avatarFileSize = avatarFile.size;
   // validation
   const validation = updateProfileSchema.safeParse({
     userName: userName,
     displayName: formData.get('displayName'),
     overview: formData.get('overview'),
-    avatarFile: formData.get('avatarFile'),
+    // avatarFileがない場合、undefinedを渡す
+    avatarFile: avatarFileSize === 0 ? undefined : avatarFile,
   });
 
   if (!validation.success) {
@@ -29,7 +32,8 @@ export async function updateProfileFormAction(
     userName: validation.data.userName,
     displayName: validation.data.displayName,
     overview: validation.data.overview,
-    avatarFile: validation.data.avatarFile,
+    // avatarFileがない場合、undefinedを渡す
+    avatarFile: avatarFileSize === 0 ? undefined : validation.data.avatarFile,
   });
 
   return {

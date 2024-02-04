@@ -27,6 +27,8 @@ export const getProfileByUserName = async (
       .leftJoin(profiles, eq(users.id, profiles.id))
       .where(eq(users.userName, userName));
 
+    // TODO selectでデータを取れなかった場合の処理を追加する
+
     profile = {
       displayName: result[0].displayName as string,
       overview: result[0].overview as string,
@@ -116,7 +118,7 @@ export const updateProfile = async ({
   userName: string;
   displayName: string;
   overview: string;
-  avatarFile: File;
+  avatarFile?: File;
 }): Promise<void> => {
   try {
     await db.transaction(async (tx) => {
@@ -133,9 +135,15 @@ export const updateProfile = async ({
         throw new Error('ERROR: userNameが存在しません。');
       }
 
-      // avatarFileの保存
-      const avatarUrl = await putImage(avatarFile, `avatar/${userName}`);
-      // TODO 古いavatarFileを削除する
+      let avatarUrl = '';
+      if (avatarFile) {
+        // avatarFileの保存
+        avatarUrl = await putImage(avatarFile, `avatar/${userName}`);
+        // TODO 古いavatarFileを削除する
+      } else {
+        // avatarFileがない場合、既存のavatarUrlを取得する
+        avatarUrl = await getAvatarUrlByUserId(user[0].id);
+      }
 
       // profileを更新する
       await tx
