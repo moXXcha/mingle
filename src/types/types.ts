@@ -118,7 +118,7 @@ export const updateProfileSchema = z.object({
   userName: userNameSchema,
   displayName: displayName,
   overview: overview,
-  avatarFile: avatarFileSchema,
+  avatarFile: avatarFileSchema.optional(),
 });
 
 export type PostModel = InferSelectModel<typeof posts>;
