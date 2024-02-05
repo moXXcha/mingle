@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Suspense } from 'react';
 import { CommentForm } from './CommentForm';
 import { CommentList } from './CommentList';
+import Loader from './ui/Loader';
 
 type Props = {
   postId: string;
@@ -23,7 +24,7 @@ export const Comments = async (props: Props) => {
   if (!user) {
     return (
       <div>
-        <div className="font-bold text-[#646767] text-xl">Comment</div>
+        <div className="text-xl font-bold text-[#646767]">Comment</div>
 
         {/* 別のUIを出したい */}
         {/* <div className="flex">
@@ -37,7 +38,7 @@ export const Comments = async (props: Props) => {
         />
         <CommentForm formAction={commentFormActionWithPostIdAndUserId} />
       </div> */}
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loader />}>
           <CommentList postId={props.postId} />
         </Suspense>
       </div>
@@ -55,9 +56,9 @@ export const Comments = async (props: Props) => {
 
   return (
     <div>
-      <div className="font-bold text-[#646767] text-xl">Comment</div>
+      <div className="text-xl font-bold text-[#646767]">Comment</div>
 
-      <div className="flex h-14 border border-[#6E96A5] rounded-lg justify-center items-center px-2">
+      <div className="flex h-14 items-center justify-center rounded-lg border border-[#6E96A5] px-2">
         {/* TODO avatarUrlが''なら、別の画像？UIを表示する */}
         <Image
           className="h-11 w-11 rounded-full object-cover"

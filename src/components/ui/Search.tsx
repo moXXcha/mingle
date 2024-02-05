@@ -3,7 +3,7 @@ import React from 'react';
 export const Search = () => {
   return (
     <div className="flex border border-[#646767] w-44 rounded">
-      <input type="text" className="w-5/6 rounded focus:outline-none" />
+      <input type="text" className="w-5/6 rounded focus:outline-none text-[#646767] px-2" />
       <button>
         <svg
           xmlns="http://www.w3.org/2000/svg"

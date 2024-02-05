@@ -27,14 +27,14 @@ const page = () => {
         <input
           type="text"
           placeholder="Name"
-          className="border border-[#6E96A5] rounded-md w-full h-9 mb-12"
+          className="border border-[#6E96A5] rounded-md w-full h-9 mb-12 px-2"
         />
         <p className="text-xs text-[#646767] opacity-50 font-bold">
           Description
         </p>
         <textarea
           placeholder="Description"
-          className="border border-[#6E96A5] rounded-md w-full h-32"
+          className="border border-[#6E96A5] rounded-md w-full h-32 px-2 py-2"
         />
       </div>
     </div>

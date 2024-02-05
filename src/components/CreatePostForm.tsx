@@ -81,7 +81,7 @@ export const CreatePostForm = () => {
           <div className="mb-6">
             <p className="text-xs text-[#646767] opacity-50">概要</p>
             <textarea
-              className="h-24 w-full rounded-md border border-[#6E96A5] bg-transparent  px-2 py-1 text-xs text-[#646767] focus:outline-none"
+              className="h-24 w-full rounded-md border border-[#6E96A5] bg-transparent  px-2 py-2 text-xs text-[#646767] focus:outline-none"
               name="content"
               id="content"
               cols={30}

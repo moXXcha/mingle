@@ -1,6 +1,7 @@
 import { Comments } from '@/components/Comments';
 import { MusicPlayerSection } from '@/components/MusicPlayerSection';
 import { Search } from '@/components/ui/Search';
+import Loader from '@/components/ui/Loader';
 import { Suspense } from 'react';
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -12,11 +13,11 @@ export default function Page({ params }: { params: { id: string } }) {
         <Search />
       </div>
       <div>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loader />}>
           <MusicPlayerSection postId={id} />
         </Suspense>
 
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div></div>}>
           <Comments postId={id} />
         </Suspense>
       </div>

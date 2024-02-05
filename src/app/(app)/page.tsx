@@ -1,5 +1,6 @@
 import { MusicCardList } from '@/components/MusicCardList';
 import { Search } from '@/components/ui/Search';
+import Loader from '@/components/ui/Loader';
 import { Suspense } from 'react';
 
 export default function Page() {
@@ -11,7 +12,7 @@ export default function Page() {
       </div>
 
       <div>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loader />}>
           <MusicCardList />
         </Suspense>
       </div>

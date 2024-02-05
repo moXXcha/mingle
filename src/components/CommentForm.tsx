@@ -32,7 +32,7 @@ export const CommentForm = (props: Props) => {
           ref.current?.reset();
         }}
       >
-        <input className="w-56 h-12 border-none px-2" placeholder='コメントを書き込む' type="text" name="comment" required />
+        <input className="w-56 h-12 border-none px-2 focus:outline-none text-[#646767]" placeholder='コメントを書き込む' type="text" name="comment" required />
         <CommentSubmitButton />
       </form>
 
