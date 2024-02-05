@@ -36,11 +36,11 @@ export const CommentForm = (props: Props) => {
         <CommentSubmitButton />
       </form>
 
-      {state.success ? (
+      {/* {state.success ? (
         <div className="text-green-500">{state.message}</div>
       ) : (
         <div className="text-red-500">{state.message}</div>
-      )}
+      )} */}
     </div>
   );
 };

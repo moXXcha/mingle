@@ -8,7 +8,7 @@ export const CommentSubmitButton = () => {
     <button
       type="submit"
       disabled={pending}
-      className="bg-[#646767] w-16 h-8 rounded-md text-[#DDBFAE]"
+      className="bg-[#646767] w-16 h-9 rounded-md text-[#DDBFAE]"
     >
       {pending ? 'sending' : 'send'}
     </button>

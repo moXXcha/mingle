@@ -7,6 +7,7 @@ import { MusicCard } from '@/components/ui/MusicCard';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Camera } from '@public/camera';
+import Image from 'next/image';
 
 const page = () => {
   const tagsTest = [
@@ -22,7 +23,10 @@ const page = () => {
       <div className="w-11/12 mx-auto mt-6">
         <div className="w-11/12 mx-auto">
           <div className="flex justify-between mb-5">
-            <img
+            <Image
+              width={80}
+              height={80}
+              alt="profile"
               src={profileImage.src}
               className="block w-20 h-20 rounded-full"
             />
@@ -85,8 +89,11 @@ const page = () => {
                 <label className="bg-[#646767] opacity-60 w-20 h-20 rounded-full absolute flex items-center justify-center">
                   <Camera />
                 </label>
-                <img
+                <Image
                   src={profileImage.src}
+                  width={80}
+                  height={80}
+                  alt="profile"
                   className="block w-20 h-20 rounded-full"
                 />
                 <button className="text-[#DDBFAE] bg-[#646767] w-16 h-8 rounded-md font-bold text-[12px] ">
