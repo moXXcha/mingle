@@ -5,6 +5,8 @@ import { formActionResult } from '@/types/types';
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
 import { SubmitButton } from './SubmitButton';
+import { validationMusicName } from '@/types/types';
+import { validationMusicDescription } from '@/types/types';
 
 const initialState: formActionResult = {
   success: false,
@@ -14,6 +16,19 @@ const initialState: formActionResult = {
 export const CreatePostForm = () => {
   const [fileName, setFileName] = useState<string>('');
   const [state, formAction] = useFormState(createPostFormAction, initialState);
+  const [isValidationCheck, setIsValidationCheck] = useState<boolean>(false);
+
+  const validation = (validationTarget: string, textLength: number, text?: string) => {
+    try {
+      if (text) {
+        validationMusicName.parse(text);
+      }
+      setIsValidationCheck(true);
+    } catch {
+      alert(`${validationTarget}の値が不正です。1文字以上${textLength}文字以内で入力してください`);
+      setIsValidationCheck(false);
+    }
+  };
 
   return (
     <div className="mt-7 flex flex-col items-center">
@@ -35,6 +50,7 @@ export const CreatePostForm = () => {
               id="title"
               name="title"
               required
+              onChange={(e) => validation("題名", 30, e.target.value)}
             />
           </div>
           <div className="mb-6">
@@ -64,6 +80,7 @@ export const CreatePostForm = () => {
                 ) {
                   setFileName(e.target.files[0].name);
                 }
+                validation("概要", 100, e.target.value);
               }}
               required
             />
@@ -90,7 +107,7 @@ export const CreatePostForm = () => {
             ></textarea>
           </div>
 
-          <SubmitButton />
+          <SubmitButton isValidationCheck={isValidationCheck} />
         </div>
       </form>
     </div>

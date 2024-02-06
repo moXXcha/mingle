@@ -4,6 +4,7 @@ import { updatePostFormAction } from '@/actions/updatePostFormAction';
 import { AvatarFileInput } from '@/components/AvatarFileInput';
 import { DisplayNameInput } from '@/components/DisplayNameInput';
 import { OverviewInput } from '@/components/OverviewInput';
+import { EditForm } from '@/components/ui/EditForm';
 import { getProfileByUserName } from '@/server/profile';
 import Link from 'next/link';
 
@@ -28,21 +29,7 @@ export default async function Page({
       <p className="mb-8 mt-5 font-bold text-[#646767]">edit user</p>
 
       <form action={updatePostFormActionWithUserName}>
-        <div className="mb-9 flex justify-between">
-          <AvatarFileInput avatarUrl={profile.avatarUrl} />
-          <button
-            type="submit"
-            className="block h-8 w-16 items-center justify-center rounded-md bg-[#646767] text-[12px] font-bold text-[#DDBFAE]"
-          >
-            Save
-          </button>
-        </div>
-        <div className="mb-9">
-          <DisplayNameInput userName={profile.displayName} />
-        </div>
-        <div>
-          <OverviewInput overview={profile.overview} />
-        </div>
+        <EditForm userName={profile.displayName} overview={profile.overview} avatarUrl={profile.avatarUrl} />
       </form>
       {/* <Link href={`/${userName}`}>戻る</Link> */}
     </div>

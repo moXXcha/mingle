@@ -171,3 +171,10 @@ export type formActionResult =
 export type State = {
   message: string | null;
 };
+
+export const validationEmail =  z.string().max(20).min(1)
+export const validationOverView =  z.string().max(100).min(1)
+export const validationMusicName =  z.string().max(30).min(1, {
+  message: `Input must be at least characters long`,
+})
+export const validationMusicDescription =  z.string().max(100).min(0)

@@ -9,22 +9,35 @@ type Props = {
 };
 
 export const AvatarFileInput = (props: Props) => {
-  const [avatarFile, setAvatarFile] = useState<File>();
-  console.log('avatarFile: ', avatarFile);
+  const [avatarFile, setAvatarFile] = useState<string>(props.avatarUrl);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        setAvatarFile(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // TODO uploadした画像のプレビューを表示する
   // TODO 既存の画像を保持しておく
   return (
-    <div>
-      <label htmlFor="avatarFile" className="flex items-center justify-center fixed w-20 h-20 rounded-full bg-[#646767] opacity-60">
+    <div className="relative">
+      <label
+        htmlFor="avatarFile"
+        className="absolute left-0 top-0 flex h-20 w-20 items-center justify-center rounded-full bg-[#646767] opacity-60"
+      >
         <Camera />
       </label>
       <Image
-        src={props.avatarUrl}
+        src={avatarFile}
         alt="Current Avatar"
         width="100"
         height="100"
-        className="h-20 w-20 rounded-full"
+        className="object-cover w-20 h-20 rounded-full"
       />
       <input
         className="hidden"
@@ -32,11 +45,7 @@ export const AvatarFileInput = (props: Props) => {
         name="avatarFile"
         id="avatarFile"
         accept="image/*"
-        onChange={(e) => {
-          if (e.target.files) {
-            setAvatarFile(e.target.files[0]);
-          }
-        }}
+        onChange={(e) => {handleFileChange(e)}}
       />
     </div>
   );

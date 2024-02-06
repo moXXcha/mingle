@@ -15,9 +15,6 @@ export default function Page({ params }: { params: { id: string } }) {
       <div>
         <Suspense fallback={<Loader />}>
           <MusicPlayerSection postId={id} />
-        </Suspense>
-
-        <Suspense fallback={<div></div>}>
           <Comments postId={id} />
         </Suspense>
       </div>
