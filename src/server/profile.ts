@@ -27,6 +27,8 @@ export const getProfileByUserName = async (
       .leftJoin(profiles, eq(users.id, profiles.id))
       .where(eq(users.userName, userName));
 
+    // TODO selectでデータを取れなかった場合の処理を追加する
+
     profile = {
       displayName: result[0].displayName as string,
       overview: result[0].overview as string,
@@ -103,5 +105,58 @@ export const createProfile = async ({
   } catch (error) {
     console.error(error instanceof Error ? error.message : error);
     throw new Error('ERROR: プロフィールを作成できませんでした。');
+  }
+};
+
+// プロフィールを更新する
+export const updateProfile = async ({
+  userName,
+  displayName,
+  overview,
+  avatarFile,
+}: {
+  userName: string;
+  displayName: string;
+  overview: string;
+  avatarFile?: File;
+}): Promise<void> => {
+  try {
+    await db.transaction(async (tx) => {
+      // userNameが存在するか確認する
+      const user = await tx
+        .select({
+          id: users.id,
+          userName: users.userName,
+        })
+        .from(users)
+        .where(eq(users.userName, userName));
+
+      if (user.length === 0) {
+        throw new Error('ERROR: userNameが存在しません。');
+      }
+
+      let avatarUrl = '';
+      if (avatarFile) {
+        // avatarFileの保存
+        avatarUrl = await putImage(avatarFile, `avatar/${userName}`);
+        // TODO 古いavatarFileを削除する
+      } else {
+        // avatarFileがない場合、既存のavatarUrlを取得する
+        avatarUrl = await getAvatarUrlByUserId(user[0].id);
+      }
+
+      // profileを更新する
+      await tx
+        .update(profiles)
+        .set({
+          displayName,
+          overview,
+          avatarUrl,
+        })
+        .where(eq(profiles.id, user[0].id));
+    });
+  } catch (error) {
+    console.log(error instanceof Error ? error.message : error);
+    throw new Error('ERROR: プロフィールを更新できませんでした。');
   }
 };

@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 import { validationEmail } from '@/types/types';
 

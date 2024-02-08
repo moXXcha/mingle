@@ -8,17 +8,16 @@ import { cookies } from 'next/headers';
 // プロフィールを作成する onboardingの時に使う
 export const createProfileFormAction = async (
   userId: string,
-  _prevState: { message: string },
+  _prevState: formActionResult,
   formData: FormData,
 ): Promise<formActionResult> => {
   console.log('START profileFormAction');
-  console.log('avatar: ', formData.get('avatar'));
   // validation
   const validation = profileSchema.safeParse({
     userId,
     displayName: formData.get('displayName'),
     overview: formData.get('overview'),
-    avatarFile: formData.get('avatar'),
+    avatarFile: formData.get('avatarFile'),
   });
 
   if (!validation.success) {

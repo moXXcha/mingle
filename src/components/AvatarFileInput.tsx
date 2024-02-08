@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 type Props = {
-  avatarUrl: string;
+  currentAvatarUrl?: string;
 };
 
 export const AvatarFileInput = (props: Props) => {
@@ -23,7 +23,9 @@ export const AvatarFileInput = (props: Props) => {
   };
 
   // TODO uploadした画像のプレビューを表示する
-  // TODO 既存の画像を保持しておく
+  // TODO 既存の画像を取得する
+  // ! 現状、画像の入力をせずに、submitするとエラーになる
+
   return (
     <div className="relative">
       <label

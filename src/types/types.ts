@@ -2,12 +2,7 @@ import { ExtractTablesWithRelations, InferSelectModel } from 'drizzle-orm';
 import { PgTransaction } from 'drizzle-orm/pg-core';
 import { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js';
 import { z } from 'zod';
-import {
-  posts,
-  profiles,
-  tags,
-  users,
-} from '/Users/kou12345/workspace/mingle-web/drizzle/schema';
+import { posts, profiles, tags, users } from '../../drizzle/schema';
 
 export type Result<T, E> = Success<T, E> | Failure<T, E>;
 
@@ -82,6 +77,21 @@ const avatarFileSchema = z.custom<File>((file) => {
   return file;
 });
 
+// 英数字のみのvalidation
+export const alphanumericSchema = z.string().regex(/^[a-zA-Z0-9]+$/, {
+  message: 'Must contain only alphanumeric characters',
+});
+
+const displayName = z.string().min(1).max(20);
+const overview = z.string().min(1).max(200);
+export const userNameSchema = alphanumericSchema
+  .min(1, {
+    message: 'Username must be at least 1 character long',
+  })
+  .max(20, {
+    message: 'Username must be at most 20 characters long',
+  });
+
 // createPostFormActionのvalidation
 export const createPostSchema = z.object({
   title: z.string().min(1).max(100),
@@ -98,9 +108,17 @@ export const commentSchema = z.object({
 // profileFormActionのvalidation
 export const profileSchema = z.object({
   userId: z.string().uuid(),
-  displayName: z.string().min(1).max(20),
-  overview: z.string().min(1).max(200),
+  displayName: displayName,
+  overview: overview,
   avatarFile: avatarFileSchema,
+});
+
+// updateProfileFormActionのvalidation
+export const updateProfileSchema = z.object({
+  userName: userNameSchema,
+  displayName: displayName,
+  overview: overview,
+  avatarFile: avatarFileSchema.optional(),
 });
 
 export type PostModel = InferSelectModel<typeof posts>;
@@ -168,9 +186,7 @@ export type formActionResult =
       message: string;
     };
 
-export type State = {
-  message: string | null;
-};
+
 
 export const validationEmail =  z.string().max(20).min(1)
 export const validationOverView =  z.string().max(100).min(1)
