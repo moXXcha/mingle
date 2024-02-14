@@ -7,6 +7,7 @@ import { useFormState } from 'react-dom';
 import { SubmitButton } from './SubmitButton';
 import { validationMusicName } from '@/types/types';
 import { validationMusicDescription } from '@/types/types';
+import { TagForm } from './ui/TagForm';
 
 const initialState: formActionResult = {
   success: false,
@@ -85,16 +86,7 @@ export const CreatePostForm = () => {
               required
             />
           </div>
-          <div className="mb-6">
-            <p className="text-xs text-[#646767] opacity-50">タグ</p>
-            <input
-              className="h-10 w-full rounded-md border border-[#6E96A5] bg-transparent  px-2 text-xs text-[#646767] focus:outline-none"
-              type="text"
-              id="tags"
-              name="tags"
-              required
-            />
-          </div>
+          <TagForm />
           <div className="mb-6">
             <p className="text-xs text-[#646767] opacity-50">概要</p>
             <textarea

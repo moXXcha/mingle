@@ -7,9 +7,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { LikeButton } from './LikeButton';
 import { PlayerPlaySlider } from './PlayerPlaySlider';
+import { Session } from 'next-auth';
 
 type Props = {
   postId: string;
+
 };
 
 export const MusicPlayerSection = async (props: Props) => {
@@ -71,7 +73,7 @@ export const MusicPlayerSection = async (props: Props) => {
                   width={500}
                   height={500}
                   priority={true}
-                  className="block h-11 w-11 rounded-full"
+                  className="block h-11 w-11 rounded-full object-cover"
                 />
               </Link>
 

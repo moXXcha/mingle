@@ -99,8 +99,8 @@ export const Header = (props: Props) => {
           </li>
           <li>
             {userName ? (
-              <Link href="#" className="text-[#646767]">
-                Follows
+              <Link href={`/${userName}/followed`} className="text-[#646767]">
+                Followed
               </Link>
             ) : (
               <div></div>

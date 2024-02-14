@@ -2,6 +2,7 @@
 
 import { followButtonAction } from '@/actions/followButton';
 import { useOptimistic, useTransition } from 'react';
+import { useFormState } from 'react-dom';
 
 type Props = {
   userName: string;
@@ -21,6 +22,7 @@ export const FollowButton = (props: Props) => {
   return (
     <div>
       <button
+      type="submit"
         onClick={() =>
           startTransition(async () => {
             changeOptimisticLikes(props.isFollowing);

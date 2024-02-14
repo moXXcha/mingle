@@ -21,7 +21,7 @@ export const CommentList = async (props: Props) => {
             className="mb-1 font-bold text-[#646767]"
           >
             <Image
-              className="mr-2 block h-11 w-11 rounded-full"
+              className="mr-2 block h-11 w-11 rounded-full object-cover"
               src={comment.avatarUrl}
               alt="icon"
               width={100}

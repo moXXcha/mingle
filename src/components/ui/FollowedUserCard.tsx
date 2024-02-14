@@ -3,8 +3,11 @@ import Image from 'next/image';
 import React from 'react';
 import { FollowButton } from '../FollowButton';
 
+
 type Props = {
-  src: StaticImageData;
+  src: string;
+  displayName: string;
+  overview: string;
 };
 
 export const FollowedUserCard = (props: Props) => {
@@ -19,12 +22,10 @@ export const FollowedUserCard = (props: Props) => {
             alt=""
             className="h-11 w-11 rounded-full"
           />
-          <p className="ml-3 text-xl font-bold text-[#646767]">chacha</p>
-          <button className="h-8 w-20 rounded-md bg-[#9AAAA9] text-[#E3DEDA] ml-auto">
-            follow
-          </button>
+          <p className="ml-3 text-xl font-bold text-[#646767]">{props.displayName}</p>
+          <FollowButton userName={props.displayName}  />
         </div>
-        <p className="text-xs text-[#646767] mt-2">概要概要概要概要概要概要概要概要概要概要概要概要概要概要概要概要概要概...</p>
+        <p className="text-xs text-[#646767] mt-2">{props.overview}</p>
       </div>
     </div>
   );

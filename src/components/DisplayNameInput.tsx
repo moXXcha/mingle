@@ -1,25 +1,13 @@
 import { useState } from 'react';
-import { validationEmail } from '@/types/types';
 
 type Props = {
-  userName: string;
-  isValidationCheck: boolean;
-  setIsValidationCheck: React.Dispatch<React.SetStateAction<boolean>>;
+  displayName: string;
 };
 
 export const DisplayNameInput = (props: Props) => {
-  const [userName, setUserName] = useState<string>(props.userName);
+  const [userName, setUserName] = useState<string>(props.displayName);
   console.log('userName: ', userName);
 
-  const validation = (name: string) => {
-    try {
-      validationEmail.parse(name);
-      props.setIsValidationCheck(true)
-    } catch {
-      alert('nameの文字数が多すぎます。20文字以内で入力してください');
-      props.setIsValidationCheck(false);
-    }
-  };
   // TODO バリデーション
   return (
     <div>
@@ -34,7 +22,6 @@ export const DisplayNameInput = (props: Props) => {
           value={userName}
           onChange={(e) => {
             setUserName(e.target.value);
-            validation(e.target.value);
           }}
         />
       </label>

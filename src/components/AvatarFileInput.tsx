@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 type Props = {
-  currentAvatarUrl?: string;
+  avatarUrl: string;
 };
 
 export const AvatarFileInput = (props: Props) => {
