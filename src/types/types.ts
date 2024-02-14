@@ -187,10 +187,15 @@ export type formActionResult =
     };
 
 
-
-export const validationEmail =  z.string().max(20).min(1)
-export const validationOverView =  z.string().max(100).min(1)
+//post
 export const validationMusicName =  z.string().max(30).min(1, {
   message: `Input must be at least characters long`,
 })
-export const validationMusicDescription =  z.string().max(100).min(0)
+export const validationOverView =  z.string().max(200).min(1)
+//login&signin
+export const validationEmail =  z.string().max(20).min(1)
+//create&edit
+export const validationUserName = z.string().max(20).min(1)
+export const validationMusicDescription =  z.string().max(200).min(0)
+//comment
+export const validationComment = z.string().max(200).min(0)
