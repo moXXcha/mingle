@@ -28,7 +28,7 @@ export default function Login() {
         >
           Login
         </button>
-        <Link href="/create" className="text-[#646767] mb-5">or <span className="text-[#6E96A5]">signin</span></Link>
+        <Link href="/signup" className="text-[#646767] mb-5">or <span className="text-[#6E96A5]">signup</span></Link>
       </form>
     </div>
   );

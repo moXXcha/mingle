@@ -5,7 +5,6 @@ import { getFollowListByUserName } from '@/server/follow';
 import { FollowList } from '@/components/FollowList';
 
 const page = async ({ params }: { params: { userName: string } }) => {
-  console.log('fdafjdaklsjfl');
   const { userName } = params;
   const followedList = await getFollowListByUserName(userName);
   console.log(followedList);

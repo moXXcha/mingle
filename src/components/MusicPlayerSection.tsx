@@ -7,11 +7,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { LikeButton } from './LikeButton';
 import { PlayerPlaySlider } from './PlayerPlaySlider';
-import { Session } from 'next-auth';
+import { Session } from 'inspector';
+
+type Data = {
+  session: Session | null;
+};
 
 type Props = {
   postId: string;
-
+  data?: Data;
 };
 
 export const MusicPlayerSection = async (props: Props) => {
@@ -60,7 +64,11 @@ export const MusicPlayerSection = async (props: Props) => {
             {/* <Like /> */}
             {/* </button> */}
             <div className="ml-auto">
-              <LikeButton postId={props.postId} isLiked={isLiked} />
+              <LikeButton
+                postId={props.postId}
+                isLiked={isLiked}
+                data={props.data}
+              />
             </div>
           </div>
           <p className="mb-6 text-xs text-[#646767]">{post.content}</p>
@@ -82,9 +90,14 @@ export const MusicPlayerSection = async (props: Props) => {
               </p>
             </div>
             {/* todo */}
-            <button className="h-9 w-20 rounded-md bg-[#646767] text-[#DDBFAE]">
-              follow
-            </button>
+            {props.data?.session !== null &&
+            props.data?.session !== undefined ? (
+              <button className="h-9 w-20 rounded-md bg-[#646767] text-[#DDBFAE]">
+                follow
+              </button>
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
       </div>
