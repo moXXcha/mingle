@@ -1,7 +1,6 @@
 'use client';
 
 import { followButtonAction } from '@/actions/followButton';
-import { formActionResult } from '@/types/types';
 import { useFormState } from 'react-dom';
 import { FollowButton } from './FollowButton';
 
@@ -23,6 +22,7 @@ export const FollowButtonForm = (props: Props) => {
     followButtonActionWithUserName,
     initialState,
   );
+  console.log(state)
   return (
     <form action={formAction}>
       <FollowButton userName={props.displayName} isFollowing={true} />

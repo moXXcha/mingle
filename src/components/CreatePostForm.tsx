@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { useFormState } from 'react-dom';
 import { SubmitButton } from './SubmitButton';
 import { validationMusicName } from '@/types/types';
-import { validationMusicDescription } from '@/types/types';
 import { TagForm } from './ui/TagForm';
 
 const initialState: formActionResult = {
@@ -19,14 +18,20 @@ export const CreatePostForm = () => {
   const [state, formAction] = useFormState(createPostFormAction, initialState);
   const [isValidationCheck, setIsValidationCheck] = useState<boolean>(false);
 
-  const validation = (validationTarget: string, textLength: number, text?: string) => {
+  const validation = (
+    validationTarget: string,
+    textLength: number,
+    text?: string,
+  ) => {
     try {
       if (text) {
         validationMusicName.parse(text);
       }
       setIsValidationCheck(true);
     } catch {
-      alert(`${validationTarget}の値が不正です。1文字以上${textLength}文字以内で入力してください`);
+      alert(
+        `${validationTarget}の値が不正です。1文字以上${textLength}文字以内で入力してください`,
+      );
       setIsValidationCheck(false);
     }
   };
@@ -51,7 +56,7 @@ export const CreatePostForm = () => {
               id="title"
               name="title"
               required
-              onChange={(e) => validation("題名", 30, e.target.value)}
+              onChange={(e) => validation('題名', 30, e.target.value)}
             />
           </div>
           <div className="mb-6">
@@ -81,7 +86,7 @@ export const CreatePostForm = () => {
                 ) {
                   setFileName(e.target.files[0].name);
                 }
-                validation("概要", 100, e.target.value);
+                validation('概要', 100, e.target.value);
               }}
               required
             />

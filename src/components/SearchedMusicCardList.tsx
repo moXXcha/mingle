@@ -1,5 +1,5 @@
 import { getPostsBySearchValue } from '@/server/post'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { MusicCard } from './ui/MusicCard'
 
 type Props = {
@@ -10,8 +10,8 @@ export const SearchedMusicCard = async(props: Props) => {
   console.log("tag:" ,props.tag)
   return (
     <div>
-      {posts.map((post) => (
-        <MusicCard post={post} />
+      {posts.map((post, key) => (
+        <MusicCard post={post} key={key} />
       ))}
     </div>
   )

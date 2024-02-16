@@ -3,7 +3,6 @@
 import { updateProfileFormAction } from '@/actions/updateProfileFormAction';
 import { ProfileForm } from '@/components/ProfileForm';
 import { getProfileByUserName } from '@/server/profile';
-import Link from 'next/link';
 
 export default async function Page({
   params,

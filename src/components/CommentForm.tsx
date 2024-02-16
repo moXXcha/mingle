@@ -1,6 +1,5 @@
 'use client';
 
-import { SubmitButton } from '@/components/SubmitButton';
 import { formActionResult } from '@/types/types';
 import { useRef } from 'react';
 import { useFormState } from 'react-dom';
@@ -22,6 +21,7 @@ export const CommentForm = (props: Props) => {
   const [state, formAction] = useFormState(props.formAction, initialState);
 
   const ref = useRef<HTMLFormElement>(null);
+  console.log(state)
 
   return (
     <div>
@@ -32,7 +32,13 @@ export const CommentForm = (props: Props) => {
           ref.current?.reset();
         }}
       >
-        <input className="w-56 h-12 border-none px-2 focus:outline-none text-[#646767]" placeholder='コメントを書き込む' type="text" name="comment" required />
+        <input
+          className="h-12 w-56 border-none px-2 text-[#646767] focus:outline-none"
+          placeholder="コメントを書き込む"
+          type="text"
+          name="comment"
+          required
+        />
         <CommentSubmitButton />
       </form>
 

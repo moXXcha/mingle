@@ -18,7 +18,6 @@ export const FollowButton = (props: Props) => {
       onClick={() => {
         if (props.data?.session === undefined || props.data.session === null) {
           router.push('/login');
-        } else {
         }
       }}
     >

@@ -5,7 +5,7 @@ import { MusicCard } from './ui/MusicCard';
 type Props = {
     likes: PostDetail[]
 }
-export const Likedlist = async(props: Props) => {
+export const Likedlist = (props: Props) => {
 
   return (
     <div className="w-11/12 mx-auto">

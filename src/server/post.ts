@@ -1,7 +1,6 @@
-import { PostDetail, Transaction } from '@/types/types';
+import { PostDetail } from '@/types/types';
 import { eq } from 'drizzle-orm';
 import { postTagRelation, posts, users, likes, tags } from 'drizzle/schema';
-import 'server-only';
 import { db } from './db';
 import { uploadMusicFile } from './musicFile';
 import { createOrGetTags } from './tag';
@@ -211,7 +210,7 @@ export const createPost = async ({
 export const getLikedPostsByUserName = async (
   userName: string,
 ): Promise<PostDetail[]> => {
-  let posts: PostDetail[] = [];
+  const posts: PostDetail[] = [];
   // todo 一旦limitを10にしているが、後に無限スクロールにする
   try {
     await db.transaction(async (tx) => {
@@ -297,7 +296,7 @@ export const getLikedPostsByUserName = async (
 export const getPostsBySearchValue = async (
   tag: string,
 ): Promise<PostDetail[]> => {
-  let postResults: PostDetail[] = [];
+  const postResults: PostDetail[] = [];
   // todo 一旦limitを10にしているが、後に無限スクロールにする
   try {
     await db.transaction(async (tx) => {

@@ -1,8 +1,4 @@
-import { FollowButton } from '@/components/FollowButton';
-import { db } from '@/server/db';
 import { createClient } from '@/utils/supabase/server';
-import { eq } from 'drizzle-orm';
-import { follows, profiles, users } from 'drizzle/schema';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import { getFollowListByUserName } from '@/server/follow';

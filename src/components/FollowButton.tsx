@@ -2,9 +2,7 @@
 
 import { followButtonAction } from '@/actions/followButton';
 import { useOptimistic, useTransition } from 'react';
-import { useFormState } from 'react-dom';
 import { Session } from 'inspector';
-import { useRouter } from 'next/navigation';
 
 type Data = {
   session: Session | null;

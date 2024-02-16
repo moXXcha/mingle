@@ -2,7 +2,6 @@
 
 import { Likedlist } from '@/components/Likedlist';
 import { getLikedPostsByUserName } from '@/server/post';
-import { getUserIdByUserName } from '@/server/user';
 
 // TODO
 // eslint-disable-next-line @typescript-eslint/require-await

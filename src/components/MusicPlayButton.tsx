@@ -2,7 +2,7 @@
 
 import { PlayButton } from '@public/playButton';
 import { StopButton } from '@public/stopButton';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Props = {
   musicUrl: string | undefined;
@@ -16,11 +16,19 @@ export const MusicPlayButton = (props: Props) => {
     setIsPlay(!isPlay);
   };
   useEffect(() => {
-    if (isPlay === true) {
-      props.audioElement.current?.play();
-    } else {
-      props.audioElement.current?.pause();
-    }
+    const handlePlayback = async () => {
+      try {
+        if (isPlay === true) {
+          await props.audioElement.current?.play();
+        } else {
+          props.audioElement.current?.pause();
+        }
+      } catch (error) {
+        console.error('Playback error:', error);
+      }
+    };
+  
+    handlePlayback();
   }, [isPlay]);
   return (
     <div className="mt-6">

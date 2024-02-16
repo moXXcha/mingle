@@ -1,11 +1,10 @@
 'use client';
 
 import { likePostAction } from '@/actions/likeButton';
-import { User } from '@/types/types';
 import { Like } from '@public/like';
 import { Liked } from '@public/liked';
 import { useRouter } from 'next/navigation';
-import { useEffect, useOptimistic, useState, useTransition } from 'react';
+import { useEffect, useOptimistic, useTransition } from 'react';
 import { Session } from 'inspector';
 
 type Data = {
@@ -26,6 +25,7 @@ export const LikeButton = (props: Props) => {
     props.isLiked, // 初期値 true
     (prev) => !prev, // 更新関数
   );
+  console.log(isPending)
 
   useEffect(() => {
     console.log(props.data?.session)

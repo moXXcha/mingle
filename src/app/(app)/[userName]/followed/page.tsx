@@ -2,7 +2,7 @@ import React from 'react';
 import { getFollowListByUserName } from '@/server/follow';
 import { FollowList } from '@/components/FollowList';
 
-const page = async ({ params }: { params: { userName: string } }) => {
+export default async function page ({ params }: { params: { userName: string } }) {
   const { userName } = params;
   const followedList = await getFollowListByUserName(userName);
   console.log(followedList);
@@ -13,5 +13,3 @@ const page = async ({ params }: { params: { userName: string } }) => {
     </div>
   );
 };
-
-export default page;
