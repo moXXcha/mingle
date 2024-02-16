@@ -1,5 +1,3 @@
-import { FollowedUserCard } from '@/components/ui/FollowedUserCard';
-import profileImage from '../../../../../public/profImage.png';
 import React from 'react';
 import { getFollowListByUserName } from '@/server/follow';
 import { FollowList } from '@/components/FollowList';
