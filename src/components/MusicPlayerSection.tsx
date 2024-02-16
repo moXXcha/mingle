@@ -76,7 +76,7 @@ export const MusicPlayerSection = async (props: Props) => {
             <div className="flex items-center">
               <Link href={`/${post.author.userName}`}>
                 <Image
-                  src={post.author.avatarUrl as string}
+                  src={post.author.avatarUrl}
                   alt="Picture of the author"
                   width={500}
                   height={500}

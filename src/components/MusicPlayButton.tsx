@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 
 type Props = {
   musicUrl: string | undefined;
-  audioElement: React.RefObject<HTMLAudioElement>
+  audioElement: React.RefObject<HTMLAudioElement>;
 };
 
 export const MusicPlayButton = (props: Props) => {
@@ -27,8 +27,9 @@ export const MusicPlayButton = (props: Props) => {
         console.error('Playback error:', error);
       }
     };
-  
-    handlePlayback();
+
+    // handlePlayback関数を即時実行し、未処理のプロミスを適切に扱う
+    handlePlayback().catch(console.error);
   }, [isPlay]);
   return (
     <div className="mt-6">
