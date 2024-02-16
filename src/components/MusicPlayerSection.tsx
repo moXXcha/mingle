@@ -90,8 +90,7 @@ export const MusicPlayerSection = async (props: Props) => {
               </p>
             </div>
             {/* todo */}
-            {props.data?.session !== null &&
-            props.data?.session !== undefined ? (
+            {props.data?.session? (
               <button className="h-9 w-20 rounded-md bg-[#646767] text-[#DDBFAE]">
                 follow
               </button>

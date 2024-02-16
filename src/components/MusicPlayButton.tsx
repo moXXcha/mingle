@@ -21,7 +21,7 @@ export const MusicPlayButton = (props: Props) => {
         if (isPlay === true) {
           await props.audioElement.current?.play();
         } else {
-          await props.audioElement.current?.pause();
+          props.audioElement.current?.pause();
         }
       } catch (error) {
         console.error('Playback error:', error);
