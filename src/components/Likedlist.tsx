@@ -9,8 +9,8 @@ export const Likedlist = (props: Props) => {
 
   return (
     <div className="w-11/12 mx-auto">
-        {props.likes.map((like) => (
-            <MusicCard post={like} />
+        {props.likes.map((like, key) => (
+            <MusicCard post={like} key={key} />
         ))}
     </div>
   )
